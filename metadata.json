@@ -1,0 +1,6 @@
+{
+  "name": "OlyLife Tashkent - Wellness Landing",
+  "description": "Современный продающий лендинг для продажи приборов OlyLife специалистам сферы здоровья и красоты в Ташкенте с интеграцией Telegram",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
