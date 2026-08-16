@@ -13,6 +13,7 @@ import { ROICalculatorModal } from "./components/ROICalculatorModal";
 import { TelegramSettingsModal } from "./components/TelegramSettingsModal";
 import { SuccessModal } from "./components/SuccessModal";
 import { PrivacyModal } from "./components/PrivacyModal";
+import { ScrollToTopButton } from "./components/ScrollToTopButton";
 import { LeadFormData, LeadRecord } from "./types";
 
 export default function App() {
@@ -195,6 +196,9 @@ export default function App() {
         isOpen={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}
       />
+
+      {/* Floating Scroll-to-Top Button */}
+      <ScrollToTopButton />
 
     </div>
   );
