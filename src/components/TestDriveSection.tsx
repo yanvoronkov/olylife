@@ -185,7 +185,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
 
               <p className="text-center text-xs text-slate-500 mt-4 flex items-center justify-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#1E9646] shrink-0" />
-                <span>Ваши данные конфиденциальны. Наш менеджер свяжется с вами в течение 10 минут.</span>
+                <span>Ваши данные конфиденциальны.</span>
               </p>
 
             </div>
