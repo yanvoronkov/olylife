@@ -55,7 +55,7 @@ export default function App() {
     setIsSubmitting(true);
     try {
       const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-      const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+      const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID || "-5579738380";
 
       if (botToken && chatId) {
         // Direct client-side dispatch for static hosting (GitHub Pages, Cloudflare Pages, etc.)
