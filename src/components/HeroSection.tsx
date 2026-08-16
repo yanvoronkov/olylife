@@ -118,16 +118,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </div>
 
                     {/* Center Play Button in OlyLife Logo Gradient */}
-                    <div className="relative z-10 my-auto flex flex-col items-center justify-center text-center">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-r from-[#1E9646] via-[#22A44E] to-[#25A852] hover:scale-110 active:scale-95 text-white flex items-center justify-center shadow-2xl shadow-black/50 transition-all cursor-pointer group-hover:shadow-[#1E9646]/70">
-                        <Play className="w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8 fill-current ml-0.5 sm:ml-1" />
+                    <div className="relative z-10 my-auto flex items-center justify-center">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-r from-[#1E9646] via-[#22A44E] to-[#25A852] hover:scale-110 active:scale-95 text-white flex items-center justify-center shadow-2xl shadow-black/50 transition-all cursor-pointer group-hover:shadow-[#1E9646]/70">
+                        <Play className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 fill-current ml-0.5 sm:ml-1" />
                       </div>
-                      <p className="mt-2 sm:mt-3 text-[11px] sm:text-xs lg:text-sm font-bold text-white bg-black/70 backdrop-blur-md px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border border-white/20 shadow-md whitespace-nowrap">
-                        Нажмите, чтобы включить презентацию
-                      </p>
                     </div>
 
-                    <div className="h-1 sm:h-4" />
+                    <div className="h-2 sm:h-4" />
                   </div>
                 )}
               </div>
