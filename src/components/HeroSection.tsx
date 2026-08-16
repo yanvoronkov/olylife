@@ -73,6 +73,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* LEFT: Premium Video Frame + 3 Trust Cards (7 Cols) */}
           <div className="lg:col-span-7 flex flex-col items-center w-full">
             
+            {/* Heading Above Video */}
+            <div className="w-full mb-3 flex items-center">
+              <h3 className="text-base sm:text-lg font-bold text-slate-950 leading-tight">
+                🎬 Посмотрите 5-минутное видео о бизнес-модели
+              </h3>
+            </div>
+
             {/* Sleek Modern Video Frame in Accent OlyLife Green */}
             <div className="w-full relative rounded-3xl p-1.5 sm:p-2.5 bg-gradient-to-tr from-[#0E5E2B] via-[#1E9646] to-[#25A852] border border-[#25A852]/50 shadow-2xl shadow-[#1E9646]/30 overflow-hidden">
               <div className="relative aspect-video rounded-2xl bg-slate-950 overflow-hidden shadow-inner">
