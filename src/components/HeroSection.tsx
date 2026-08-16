@@ -67,7 +67,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* Grid Layout: Left Sleek Video Player + Right Lead Capture Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* LEFT: Premium Video Frame + 3 Trust Cards (7 Cols) */}
           <div className="lg:col-span-7 flex flex-col items-center w-full">
