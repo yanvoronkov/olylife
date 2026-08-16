@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Volume2, VolumeX, ArrowRight, User, Phone, Briefcase, ShieldCheck, Sparkles, Droplets, CheckCircle2 } from "lucide-react";
+import { Play, ArrowRight, User, Phone, Briefcase, ShieldCheck, Sparkles, Droplets, CheckCircle2 } from "lucide-react";
 import { PROFESSION_OPTIONS } from "../data";
 import { LeadFormData } from "../types";
 import videoPreviewImg from "../../assets/video_preview.jpg";
@@ -22,7 +22,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   // Interactive VSL State
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
 
   const [isProfessionOpen, setIsProfessionOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -103,19 +102,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
-
-                    {/* Video Top Controls */}
-                    <div className="relative z-10 flex items-center justify-end">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsMuted(!isMuted);
-                        }}
-                        className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-black/50 hover:bg-black/70 text-white border border-white/20 backdrop-blur-md transition-all cursor-pointer"
-                      >
-                        {isMuted ? <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" /> : <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />}
-                      </button>
-                    </div>
 
                     {/* Center Play Button in OlyLife Logo Gradient */}
                     <div className="relative z-10 my-auto flex items-center justify-center">

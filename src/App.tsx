@@ -13,6 +13,7 @@ import { ROICalculatorModal } from "./components/ROICalculatorModal";
 import { TelegramSettingsModal } from "./components/TelegramSettingsModal";
 import { SuccessModal } from "./components/SuccessModal";
 import { PrivacyModal } from "./components/PrivacyModal";
+import { TermsModal } from "./components/TermsModal";
 import { ScrollToTopButton } from "./components/ScrollToTopButton";
 import { LeadFormData, LeadRecord } from "./types";
 
@@ -21,6 +22,7 @@ export default function App() {
   const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [latestLead, setLatestLead] = useState<LeadRecord | null>(null);
@@ -170,6 +172,7 @@ export default function App() {
         onSubmitLead={handleLeadSubmit}
         isSubmitting={isSubmitting}
         onOpenPrivacy={() => setIsPrivacyModalOpen(true)}
+        onOpenTerms={() => setIsTermsModalOpen(true)}
         formRef={footerFormRef}
       />
 
@@ -195,6 +198,11 @@ export default function App() {
       <PrivacyModal
         isOpen={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}
+      />
+
+      <TermsModal
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
       />
 
       {/* Floating Scroll-to-Top Button */}
