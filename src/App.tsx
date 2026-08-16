@@ -142,7 +142,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#04190e] text-white font-sans selection:bg-lime-400 selection:text-emerald-950">
+    <div className="min-h-screen bg-[#F0F7F2] text-slate-900 font-sans selection:bg-[#C3EBD4] selection:text-[#0E5E2B]">
       
       {/* Sticky Header / Navigation Bar */}
       <Navbar />
@@ -172,7 +172,7 @@ export default function App() {
         formRef={footerFormRef}
       />
 
-      {/* Interactive Modals (hidden unless activated) */}
+      {/* Interactive Modals */}
       <ROICalculatorModal
         isOpen={isCalculatorOpen}
         onClose={() => setIsCalculatorOpen(false)}

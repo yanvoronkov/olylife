@@ -71,25 +71,25 @@ export const PAIN_POINTS: PainPoint[] = [
 export const KEY_ADVANTAGES: DeviceFeature[] = [
   {
     id: "duration",
-    title: "⏱️ Сеанс длится 20 минут",
+    title: "Сеанс длится 20 минут",
     description: "",
     iconName: "Clock",
   },
   {
     id: "hands_free",
-    title: "🖐️ Не требует участия",
+    title: "Не требует участия",
     description: "",
     iconName: "UserCheck",
   },
   {
     id: "wow_effect",
-    title: "✨ Вызывает вау-эффект",
+    title: "Вызывает вау-эффект",
     description: "",
-    iconName: "Zap",
+    iconName: "Sparkles",
   },
   {
     id: "compact",
-    title: "📐 Занимает 1 кв. м площади",
+    title: "Занимает 1 кв. м площади",
     description: "",
     iconName: "Maximize2",
   },

@@ -44,23 +44,23 @@ export const LiveSocialProofTicker: React.FC = () => {
   const current = RECENT_ACTIVITIES[currentIndex];
 
   return (
-    <div className="fixed bottom-5 left-5 z-40 max-w-xs sm:max-w-sm bg-[#062916]/95 border border-lime-500/40 rounded-2xl p-3.5 shadow-2xl backdrop-blur-md text-white animate-bounce-short flex items-center gap-3">
-      <div className="w-9 h-9 rounded-xl bg-lime-400 text-emerald-950 flex items-center justify-center shrink-0 font-bold shadow-md shadow-lime-500/30">
-        <Sparkles className="w-5 h-5 animate-spin-slow" />
+    <div className="fixed bottom-5 left-5 z-40 max-w-xs sm:max-w-sm bg-white/95 border border-slate-200/90 rounded-2xl p-3.5 shadow-2xl backdrop-blur-md text-slate-900 animate-fadeIn flex items-center gap-3">
+      <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center shrink-0 font-bold shadow-xs">
+        <Sparkles className="w-5 h-5" />
       </div>
 
       <div className="flex-1 text-xs">
-        <div className="flex items-center gap-1 font-bold text-lime-300">
+        <div className="flex items-center gap-1 font-bold text-emerald-700">
           <CheckCircle2 className="w-3.5 h-3.5" />
           <span>Новая запись на тест-драйв</span>
         </div>
-        <p className="text-white font-medium">{current.name}</p>
-        <p className="text-[10px] text-emerald-300/80">{current.location} • {current.time}</p>
+        <p className="text-slate-900 font-bold">{current.name}</p>
+        <p className="text-[10px] text-slate-500">{current.location} • {current.time}</p>
       </div>
 
       <button
         onClick={() => setIsDismissed(true)}
-        className="text-emerald-400 hover:text-white p-1"
+        className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer transition-colors"
       >
         <X className="w-4 h-4" />
       </button>
