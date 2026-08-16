@@ -32,12 +32,23 @@ export default function App() {
   const footerFormRef = useRef<HTMLDivElement>(null);
 
   const checkTelegramStatus = async () => {
-    try {
-      const res = await fetch("/api/telegram/status");
-      const data = await res.json();
-      setTelegramConfigured(Boolean(data.configured));
-    } catch (e) {
-      console.error("Failed to fetch Telegram status", e);
+    // 1. Direct check in client runtime (GitHub Pages / Static build)
+    if (import.meta.env.VITE_TELEGRAM_BOT_TOKEN && import.meta.env.VITE_TELEGRAM_CHAT_ID) {
+      setTelegramConfigured(true);
+      return;
+    }
+
+    // 2. Fallback to local server API only when running on localhost
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      try {
+        const res = await fetch("/api/telegram/status");
+        if (res.ok) {
+          const data = await res.json();
+          setTelegramConfigured(Boolean(data.configured));
+        }
+      } catch {
+        // Ignore silently on local environment
+      }
     }
   };
 
