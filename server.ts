@@ -49,8 +49,7 @@ function formatTelegramMessage(lead: StoredLead): string {
   message += `👤 <b>Имя:</b> ${escapeHtml(lead.name)}\n`;
   message += `📞 <b>Контакты:</b> ${escapeHtml(lead.phone)}\n`;
   message += `💼 <b>Профессия:</b> ${escapeHtml(lead.profession)}\n`;
-  message += `📍 <b>Локация:</b> Ташкент (Центр)\n`;
-  message += `🕒 <b>Время заявки:</b> ${dateStr} (UZT)\n`;
+  message += `🕒 <b>Время заявки:</b> ${dateStr} (UZT)`;
 
   if (lead.calculatorResults) {
     const calc = lead.calculatorResults;
@@ -58,18 +57,13 @@ function formatTelegramMessage(lead: StoredLead): string {
     const profitFormatted = new Intl.NumberFormat("ru-RU").format(calc.monthlyProfit);
     const priceFormatted = new Intl.NumberFormat("ru-RU").format(calc.sessionPrice);
 
-    message += `\n📊 <b>РАСЧЕТ ОКУПАЕМОСТИ:</b>\n`;
+    message += `\n\n📊 <b>РАСЧЕТ ОКУПАЕМОСТИ:</b>\n`;
     message += `• Клиентов в день: ${calc.clientsPerDay}\n`;
     message += `• Чек процедуры: ${priceFormatted} сум\n`;
     message += `• Выручка в мес: ~${revFormatted} сум\n`;
-    message += `• Чистая прибыль: ~${profitFormatted} сум\n`;
+    message += `• Чистая прибыль: ~${profitFormatted} сум`;
   }
 
-  if (lead.notes) {
-    message += `\n📝 <b>Заметка:</b> ${escapeHtml(lead.notes)}\n`;
-  }
-
-  message += `\n🚀 <i>Заявка с продающего лендинга OlyLife Uzbekistan</i>`;
   return message;
 }
 

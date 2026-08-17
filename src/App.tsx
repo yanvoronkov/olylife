@@ -83,9 +83,7 @@ export default function App() {
         message += `👤 <b>Имя:</b> ${formData.name}\n`;
         message += `📞 <b>Контакты:</b> ${formData.phone}\n`;
         message += `💼 <b>Профессия:</b> ${formData.profession}\n`;
-        message += `📍 <b>Локация:</b> Ташкент (Центр)\n`;
-        message += `🕒 <b>Время заявки:</b> ${dateStr} (UZT)\n\n`;
-        message += `🚀 <i>Заявка с продающего лендинга OlyLife Uzbekistan</i>`;
+        message += `🕒 <b>Время заявки:</b> ${dateStr} (UZT)`;
 
         const url = `https://api.telegram.org/bot${botToken.trim()}/sendMessage`;
         const response = await fetch(url, {
