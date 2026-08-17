@@ -73,7 +73,7 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
         <div className="bg-gradient-to-br from-[#061F15] via-[#0A2B1D] to-[#04160E] rounded-3xl p-6 sm:p-10 lg:p-12 border border-[#134E35] shadow-2xl text-white relative overflow-hidden">
           
           <div className="mb-8 text-center md:text-left">
-            <h3 className="text-xl sm:text-3xl lg:text-[45px] font-extrabold text-white tracking-tight leading-tight">
+            <h3 className="text-[24px] sm:text-3xl lg:text-[45px] font-extrabold text-white tracking-tight leading-tight">
               Каждый рано или поздно сталкивается с этим:
             </h3>
           </div>
