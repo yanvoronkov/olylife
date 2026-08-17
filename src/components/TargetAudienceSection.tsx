@@ -99,7 +99,7 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
                   <h4 className="hidden md:block text-base font-bold text-rose-200 mb-1">
                     {pain.text}
                   </h4>
-                  <p className="text-[18px] md:text-sm text-emerald-100/90 leading-relaxed font-normal">
+                  <p className="text-[17px] md:text-sm text-emerald-100/90 leading-relaxed font-normal">
                     {pain.highlight}
                   </p>
                 </div>
