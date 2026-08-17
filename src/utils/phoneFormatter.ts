@@ -68,13 +68,13 @@ export function formatFlexiblePhone(input: string, prevValue: string = ""): stri
       res += "-" + local.substring(5, 7);
     }
     if (local.length > 7) {
-      res += "-" + local.substring(7, 9);
+      res += "-" + local.substring(7);
     }
     return res;
   }
 
   // 6. Local Uzbekistan input without 998 (e.g. 90, 91, 93, 94, 95, 97, 98, 99, 33, 88, 71, 77)
-  if (digits.length <= 9 && (digits.startsWith("9") || digits.startsWith("3") || digits.startsWith("8") || digits.startsWith("7"))) {
+  if (digits.startsWith("9") || digits.startsWith("3") || digits.startsWith("8") || digits.startsWith("7")) {
     let res = "+998 (" + digits.substring(0, 2);
     if (digits.length > 2) {
       res += ") " + digits.substring(2, 5);
@@ -83,7 +83,7 @@ export function formatFlexiblePhone(input: string, prevValue: string = ""): stri
       res += "-" + digits.substring(5, 7);
     }
     if (digits.length > 7) {
-      res += "-" + digits.substring(7, 9);
+      res += "-" + digits.substring(7);
     }
     return res;
   }
