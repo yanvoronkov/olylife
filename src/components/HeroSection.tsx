@@ -22,6 +22,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   // Interactive VSL State
   const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleStartVideo = () => {
+    setIsPlaying(true);
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  };
 
   const [isProfessionOpen, setIsProfessionOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -82,18 +90,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             {/* Sleek Modern Video Frame in Accent OlyLife Green */}
             <div className="w-full relative rounded-3xl p-1.5 sm:p-2.5 bg-gradient-to-tr from-[#0E5E2B] via-[#1E9646] to-[#25A852] border border-[#25A852]/50 shadow-2xl shadow-[#1E9646]/30 overflow-hidden">
               <div className="relative aspect-video rounded-2xl bg-slate-950 overflow-hidden shadow-inner">
-                {isPlaying ? (
-                  <iframe
-                    src="https://kinescope.io/embed/jwphxyfrYpoDTpXZMwzNBM?autoplay=1"
-                    className="absolute inset-0 w-full h-full"
-                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write;"
-                    frameBorder="0"
-                    allowFullScreen
-                  />
-                ) : (
+                
+                {/* Native HTML5 Video for Instant 0-latency Playback */}
+                <video
+                  ref={videoRef}
+                  src="https://video.inetskills.ru/oliylife_presentation.mp4"
+                  poster={videoPreviewImg}
+                  controls={isPlaying}
+                  playsInline
+                  preload="metadata"
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+
+                {/* Custom Branded Play Button Overlay (shown before user starts playback) */}
+                {!isPlaying && (
                   <div 
-                    onClick={() => setIsPlaying(true)}
-                    className="absolute inset-0 flex flex-col justify-between p-2.5 sm:p-5 lg:p-6 cursor-pointer group overflow-hidden"
+                    onClick={handleStartVideo}
+                    className="absolute inset-0 flex flex-col justify-between p-2.5 sm:p-5 lg:p-6 cursor-pointer group overflow-hidden bg-black/25 hover:bg-black/15 transition-colors"
                   >
                     {/* Video Preview Photo with Subtle Darkening Overlay */}
                     <img 
@@ -105,13 +120,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       loading="eager"
                       fetchPriority="high"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none" 
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10 pointer-events-none" />
 
                     {/* Center Play Button in OlyLife Logo Gradient */}
-                    <div className="relative z-10 my-auto flex items-center justify-center">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-r from-[#1E9646] via-[#22A44E] to-[#25A852] hover:scale-110 active:scale-95 text-white flex items-center justify-center shadow-2xl shadow-black/50 transition-all cursor-pointer group-hover:shadow-[#1E9646]/70">
+                    <div className="relative z-10 my-auto flex items-center justify-center pointer-events-none">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-r from-[#1E9646] via-[#22A44E] to-[#25A852] group-hover:scale-110 active:scale-95 text-white flex items-center justify-center shadow-2xl shadow-black/50 transition-all group-hover:shadow-[#1E9646]/70">
                         <Play className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 fill-current ml-0.5 sm:ml-1" />
                       </div>
                     </div>
@@ -119,6 +134,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <div className="h-2 sm:h-4" />
                   </div>
                 )}
+
               </div>
             </div>
 
