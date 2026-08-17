@@ -70,6 +70,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
                 <img
                   src={beautyCoworkingImg}
                   alt="Бьюти-коворкинг и демонстрационное пространство OlyLife в центре Ташкента"
+                  title="Демонстрационный зал и бьюти-пространство OlyLife в центре Ташкента"
                   width={800}
                   height={533}
                   loading="lazy"

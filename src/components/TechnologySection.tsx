@@ -55,6 +55,7 @@ export const TechnologySection: React.FC = () => {
               <img 
                 src={massageRoomImg} 
                 alt="Уютный массажный кабинет с биохакинг-станцией OlyLife" 
+                title="Пример массажного кабинета с аппаратом OlyLife P90"
                 width={800}
                 height={533}
                 loading="lazy"

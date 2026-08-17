@@ -99,6 +99,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <img 
                       src={videoPreviewImg} 
                       alt="Презентация бизнес-модели и оборудования OlyLife в Ташкенте"
+                      title="Видеопрезентация бизнес-модели и оборудования OlyLife в Ташкенте"
                       width={1280}
                       height={720}
                       loading="eager"

@@ -15,6 +15,7 @@ export const Navbar: React.FC = () => {
           <img 
             src={logoImg} 
             alt="OlyLife Uzbekistan логотип" 
+            title="OlyLife Uzbekistan — официальный логотип"
             width={160}
             height={40}
             loading="eager"
