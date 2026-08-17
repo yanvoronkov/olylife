@@ -72,7 +72,7 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
         {/* Pain Points Block - High Contrast Dark Banner */}
         <div className="bg-gradient-to-br from-[#061F15] via-[#0A2B1D] to-[#04160E] rounded-3xl p-6 sm:p-10 lg:p-12 border border-[#134E35] shadow-2xl text-white relative overflow-hidden">
           
-          <div className="mb-8">
+          <div className="mb-8 text-center md:text-left">
             <h3 className="text-xl sm:text-3xl lg:text-[45px] font-extrabold text-white tracking-tight leading-tight">
               Каждый рано или поздно сталкивается с этим:
             </h3>
@@ -89,7 +89,7 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
                   <div className="w-10 h-10 rounded-xl bg-rose-950/70 border border-rose-800/60 flex items-center justify-center shrink-0">
                     <AlertTriangle className="w-5 h-5 text-rose-400" />
                   </div>
-                  <h4 className="text-base font-bold text-rose-200 md:hidden">
+                  <h4 className="text-[20px] md:text-base font-bold text-rose-200 md:hidden leading-snug">
                     {pain.text}
                   </h4>
                 </div>
@@ -99,7 +99,7 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
                   <h4 className="hidden md:block text-base font-bold text-rose-200 mb-1">
                     {pain.text}
                   </h4>
-                  <p className="text-[20px] md:text-sm text-emerald-100/90 leading-relaxed font-normal">
+                  <p className="text-[18px] md:text-sm text-emerald-100/90 leading-relaxed font-normal">
                     {pain.highlight}
                   </p>
                 </div>
