@@ -11,27 +11,31 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ isOpen, onClose }) =
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full p-6 sm:p-8 text-slate-900 relative shadow-2xl max-h-[85vh] overflow-y-auto">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full text-slate-900 relative shadow-2xl max-h-[85vh] flex flex-col overflow-hidden">
         
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-all cursor-pointer"
-          aria-label="Закрыть"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        {/* Fixed Header with Close Button */}
+        <div className="flex items-center justify-between p-5 sm:p-6 border-b border-slate-100 bg-white/95 backdrop-blur-sm shrink-0 relative z-10">
+          <div className="flex items-center gap-3 pr-4">
+            <div className="w-10 h-10 rounded-xl bg-[#EBF7F0] text-[#1E9646] flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg sm:text-xl font-extrabold text-slate-950">Политика конфиденциальности</h3>
+              <p className="text-[11px] sm:text-xs text-slate-500">Закон Республики Узбекистан № ЗРУ-547 «О персональных данных»</p>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-[#EBF7F0] text-[#1E9646] flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-xl font-extrabold text-slate-950">Политика конфиденциальности</h3>
-            <p className="text-xs text-slate-500">В соответствии с Законом Республики Узбекистан № ЗРУ-547 «О персональных данных»</p>
-          </div>
+          <button
+            onClick={onClose}
+            className="p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-950 transition-all cursor-pointer shrink-0 shadow-xs"
+            aria-label="Закрыть"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        <div className="space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        {/* Scrollable Document Content */}
+        <div className="p-5 sm:p-8 overflow-y-auto space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
           
           {/* Раздел 1 */}
           <section className="space-y-2">

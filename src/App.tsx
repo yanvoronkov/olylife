@@ -191,7 +191,6 @@ export default function App() {
         onSubmitLead={handleLeadSubmit}
         isSubmitting={isSubmitting}
         onOpenPrivacy={() => setIsPrivacyModalOpen(true)}
-        onOpenTerms={() => setIsTermsModalOpen(true)}
         formRef={footerFormRef}
       />
 

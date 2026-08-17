@@ -8,7 +8,6 @@ interface TestDriveSectionProps {
   onSubmitLead: (data: LeadFormData) => Promise<void>;
   isSubmitting: boolean;
   onOpenPrivacy: () => void;
-  onOpenTerms: () => void;
   formRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -16,7 +15,6 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
   onSubmitLead,
   isSubmitting,
   onOpenPrivacy,
-  onOpenTerms,
   formRef,
 }) => {
   const [name, setName] = useState("");
@@ -216,10 +214,6 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
           <div className="flex items-center justify-center gap-4 text-xs pt-1 text-emerald-300">
             <button onClick={onOpenPrivacy} className="hover:text-white transition-colors underline cursor-pointer">
               Политика конфиденциальности
-            </button>
-            <span className="text-emerald-800">•</span>
-            <button onClick={onOpenTerms} className="hover:text-white transition-colors underline cursor-pointer">
-              Условия использования
             </button>
           </div>
         </div>
