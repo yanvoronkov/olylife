@@ -1,23 +1,47 @@
 /**
  * Flexible non-rigid phone formatter for Uzbekistan and messengers.
- * Automatically formats Uzbekistan numbers while allowing Telegram handles (@username)
- * and international phone formats without strict blocking.
+ * Features:
+ * - Clean, natural Backspace deletion (never gets stuck on prefixes or punctuation).
+ * - Automatic formatting for Uzbekistan (+998) and international numbers (+7, etc.).
+ * - Unrestricted input for Telegram/WhatsApp handles (@username) or letters.
  */
-export function formatFlexiblePhone(input: string): string {
+export function formatFlexiblePhone(input: string, prevValue: string = ""): string {
   if (!input) return "";
 
-  // 1. If starts with @ or contains letters (Telegram / WhatsApp handle), leave as free text
+  // 1. If user deleted everything down to the prefix (+, +9, +99, +998, +998 (, etc.), clear completely
+  const isDeleting = prevValue.length > input.length;
+  const trimmed = input.trim();
+  if (isDeleting && (trimmed === "+" || trimmed === "+9" || trimmed === "+99" || trimmed === "+998" || trimmed === "+998 (" || trimmed === "+998 (")) {
+    return "";
+  }
+
+  // 2. If starts with @ or contains letters, allow free typing
   if (input.startsWith("@") || /[a-zA-Zа-яА-ЯёЁ_]/.test(input)) {
     return input;
   }
 
-  // 2. Extract digits only
-  const digits = input.replace(/\D/g, "");
-  if (!digits) return input.startsWith("+") ? "+" : "";
+  // 3. Extract digits
+  let digits = input.replace(/\D/g, "");
+  if (!digits) return "";
 
-  // 3. International number (not Uzbekistan) starting with + (e.g. +7, +375, +994)
+  // If user deleted and only 998 remains, allow clearing to empty
+  if (isDeleting && digits === "998") {
+    return "";
+  }
+
+  // If user hit Backspace on a formatted string and is deleting a formatting character,
+  // ensure we remove the previous digit if needed
+  if (isDeleting && prevValue.endsWith("-") || prevValue.endsWith(" ") || prevValue.endsWith(")")) {
+    const prevDigits = prevValue.replace(/\D/g, "");
+    if (prevDigits === digits && digits.length > 0) {
+      digits = digits.slice(0, -1);
+    }
+  }
+
+  if (!digits) return "";
+
+  // 4. Other international codes (+7, +375, etc.)
   if (input.startsWith("+") && !digits.startsWith("998")) {
-    // If Russian / KZ (+7)
     if (digits.startsWith("7")) {
       const rest = digits.slice(1);
       let res = "+7";
@@ -30,40 +54,39 @@ export function formatFlexiblePhone(input: string): string {
     return "+" + digits;
   }
 
-  // 4. Uzbekistan number starting with 998
+  // 5. Uzbekistan number with 998 prefix
   if (digits.startsWith("998")) {
-    const rest = digits.slice(3);
-    let res = "+998";
-    if (rest.length > 0) {
-      res += " (" + rest.substring(0, 2);
+    const local = digits.slice(3);
+    if (!local) {
+      return isDeleting ? "" : "+998 (";
     }
-    if (rest.length >= 2) {
-      res += ") " + rest.substring(2, 5);
+    let res = "+998 (" + local.substring(0, 2);
+    if (local.length > 2) {
+      res += ") " + local.substring(2, 5);
     }
-    if (rest.length >= 5) {
-      res += "-" + rest.substring(5, 7);
+    if (local.length > 5) {
+      res += "-" + local.substring(5, 7);
     }
-    if (rest.length >= 7) {
-      res += "-" + rest.substring(7, 9);
+    if (local.length > 7) {
+      res += "-" + local.substring(7, 9);
     }
     return res;
   }
 
-  // 5. Local 9-digit Uzbekistan input (e.g. user typed 90..., 91..., 93..., 94..., 95..., 97..., 98..., 99..., 33..., 88..., 71...)
+  // 6. Local Uzbekistan input without 998 (e.g. 90, 91, 93, 94, 95, 97, 98, 99, 33, 88, 71, 77)
   if (digits.length <= 9 && (digits.startsWith("9") || digits.startsWith("3") || digits.startsWith("8") || digits.startsWith("7"))) {
     let res = "+998 (" + digits.substring(0, 2);
-    if (digits.length >= 2) {
+    if (digits.length > 2) {
       res += ") " + digits.substring(2, 5);
     }
-    if (digits.length >= 5) {
+    if (digits.length > 5) {
       res += "-" + digits.substring(5, 7);
     }
-    if (digits.length >= 7) {
+    if (digits.length > 7) {
       res += "-" + digits.substring(7, 9);
     }
     return res;
   }
 
-  // 6. Fallback: keep original with + if started with +
   return input.startsWith("+") ? "+" + digits : digits;
 }

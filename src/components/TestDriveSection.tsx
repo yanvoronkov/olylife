@@ -123,7 +123,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
                       type="text"
                       required
                       value={phone}
-                      onChange={(e) => setPhone(formatFlexiblePhone(e.target.value))}
+                      onChange={(e) => setPhone(formatFlexiblePhone(e.target.value, phone))}
                       placeholder="+998 (90) 123-45-67 или @username"
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1E9646] focus:ring-2 focus:ring-[#1E9646]/20 text-base transition-all"
                     />
