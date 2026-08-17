@@ -23,17 +23,17 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
 
     switch (iconName) {
       case "Massage": 
-        return <img src={massageIcon} alt="Massage" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={massageIcon} alt="Иконка: Массажисты" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Activity": 
-        return <img src={bodyTherapistIcon} alt="Body Therapist" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={bodyTherapistIcon} alt="Иконка: Телесные терапевты" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Sparkles": 
-        return <img src={cosmetologistIcon} alt="Cosmetology" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={cosmetologistIcon} alt="Иконка: Косметологи" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Dumbbell": 
-        return <img src={fitnessIcon} alt="Fitness" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={fitnessIcon} alt="Иконка: Фитнес-тренеры" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Apple": 
-        return <img src={nutritionistIcon} alt="Nutritionist" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={nutritionistIcon} alt="Иконка: Нутрициологи" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Footprints": 
-        return <img src={manicureIcon} alt="Manicure" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={manicureIcon} alt="Иконка: Мастера маникюра и педикюра" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       default: 
         return <Flower2 className="w-8 h-8 text-[#1E9646]" />;
     }

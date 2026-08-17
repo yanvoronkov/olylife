@@ -98,7 +98,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     {/* Video Preview Photo with Subtle Darkening Overlay */}
                     <img 
                       src={videoPreviewImg} 
-                      alt="Презентация оборудования OlyLife"
+                      alt="Презентация бизнес-модели и оборудования OlyLife в Ташкенте"
+                      width={1280}
+                      height={720}
+                      loading="eager"
+                      fetchPriority="high"
+                      decoding="async"
                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />

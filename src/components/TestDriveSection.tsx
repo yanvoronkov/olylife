@@ -69,7 +69,11 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
               <div className="bg-white rounded-3xl p-1 sm:p-1.5 border border-slate-200/90 shadow-xl shadow-slate-200/40 overflow-hidden relative group">
                 <img
                   src={beautyCoworkingImg}
-                  alt="Бьюти-пространство с оборудованием OlyLife"
+                  alt="Бьюти-коворкинг и демонстрационное пространство OlyLife в центре Ташкента"
+                  width={800}
+                  height={533}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-auto rounded-2xl object-cover hover:scale-[1.02] transition-transform duration-500"
                 />
               </div>

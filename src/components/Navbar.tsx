@@ -14,7 +14,11 @@ export const Navbar: React.FC = () => {
         >
           <img 
             src={logoImg} 
-            alt="OlyLife" 
+            alt="OlyLife Uzbekistan логотип" 
+            width={160}
+            height={40}
+            loading="eager"
+            decoding="async"
             className="h-8 sm:h-10 w-auto object-contain hover:opacity-90 transition-opacity" 
           />
         </div>
