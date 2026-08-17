@@ -113,6 +113,11 @@ export default function App() {
 
         setLatestLead(newRecord);
         setIsSuccessModalOpen(true);
+
+        // Yandex.Metrika Conversion Goal
+        if (typeof (window as unknown as { ym?: (id: number, action: string, target: string) => void }).ym === "function") {
+          (window as unknown as { ym: (id: number, action: string, target: string) => void }).ym(103911648, "reachGoal", "lead_form_submitted");
+        }
       } else {
         // Fallback to local server Express API
         const response = await fetch("/api/leads", {
@@ -122,6 +127,9 @@ export default function App() {
         });
 
         const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Ошибка отправки заявки");
+        }
 
         const newRecord: LeadRecord = {
           id: data.leadId || "lead_" + Date.now(),
