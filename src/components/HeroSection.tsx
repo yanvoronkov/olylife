@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Play, ArrowRight, User, Phone, Briefcase, ShieldCheck, Sparkles, Droplets, CheckCircle2 } from "lucide-react";
 import { PROFESSION_OPTIONS } from "../data";
 import { LeadFormData } from "../types";
-import { formatFlexiblePhone } from "../utils/phoneFormatter";
 import videoPreviewImg from "../../assets/video_preview.jpg";
 
 interface HeroSectionProps {
@@ -194,7 +193,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     type="text"
                     required
                     value={phone}
-                    onChange={(e) => setPhone(formatFlexiblePhone(e.target.value, phone))}
+                    onChange={(e) => setPhone(e.target.value)}
                     placeholder="+998 (90) 123-45-67 или @username"
                     className="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1E9646] focus:ring-2 focus:ring-[#1E9646]/20 text-base transition-all"
                   />
