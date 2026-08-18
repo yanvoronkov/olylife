@@ -1,3 +1,5 @@
+import { TrackingData } from "./utils/tracking";
+
 export interface LeadFormData {
   name: string;
   phone: string;
@@ -11,6 +13,7 @@ export interface LeadFormData {
     monthlyRevenue: number;
     monthlyProfit: number;
   };
+  tracking?: TrackingData;
 }
 
 export interface LeadRecord extends LeadFormData {
@@ -18,12 +21,22 @@ export interface LeadRecord extends LeadFormData {
   createdAt: string;
   deliveredToTelegram: boolean;
   telegramError?: string;
+  deliveredToFacebook?: boolean;
+  facebookError?: string;
 }
 
 export interface TelegramConfig {
   hasToken: boolean;
   hasChatId: boolean;
   chatIdMasked?: string;
+}
+
+export interface FacebookConfig {
+  configured: boolean;
+  pixelId: string;
+  hasAccessToken: boolean;
+  accessTokenMasked?: string;
+  testEventCode?: string;
 }
 
 export interface ProfessionInfo {

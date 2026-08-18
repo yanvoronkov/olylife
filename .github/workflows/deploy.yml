@@ -38,6 +38,9 @@ jobs:
         env:
           VITE_TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           VITE_TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          VITE_FB_PIXEL_ID: ${{ secrets.FB_PIXEL_ID }}
+          VITE_FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
+          VITE_FB_TEST_EVENT_CODE: ${{ secrets.FB_TEST_EVENT_CODE }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
