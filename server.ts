@@ -63,7 +63,7 @@ function formatTelegramMessage(lead: StoredLead): string {
     minute: "2-digit",
   });
 
-  let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (ТАШКЕНТ)</b>\n\n`;
+  let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (ТАШКЕНТ) с лендинга</b>\n\n`;
   message += `👤 <b>Имя:</b> ${escapeHtml(lead.name)}\n`;
   message += `📞 <b>Контакты:</b> ${escapeHtml(lead.phone)}\n`;
   message += `💼 <b>Профессия:</b> ${escapeHtml(lead.profession)}\n`;
@@ -94,8 +94,8 @@ function formatTelegramMessage(lead: StoredLead): string {
       message += `\n\n🎯 <b>МАРКЕТИНГОВЫЕ МЕТКИ (META / UTM):</b>\n`;
       if (tr.utm_source) message += `• <b>UTM Source:</b> ${escapeHtml(tr.utm_source)}\n`;
       if (tr.utm_campaign) message += `• <b>UTM Campaign:</b> ${escapeHtml(tr.utm_campaign)}\n`;
+      if (tr.utm_content) message += `• <b>UTM Content (Пост/Объявление):</b> ${escapeHtml(tr.utm_content)}\n`;
       if (tr.utm_medium) message += `• <b>UTM Medium:</b> ${escapeHtml(tr.utm_medium)}\n`;
-      if (tr.utm_content) message += `• <b>UTM Content:</b> ${escapeHtml(tr.utm_content)}\n`;
       if (tr.utm_term) message += `• <b>UTM Term:</b> ${escapeHtml(tr.utm_term)}\n`;
       if (tr.fbclid) message += `• <b>FBCLID:</b> <code>${escapeHtml(tr.fbclid.substring(0, 24))}...</code>\n`;
     }

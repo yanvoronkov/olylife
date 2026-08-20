@@ -71,7 +71,7 @@ export default function App() {
           minute: "2-digit",
         });
 
-        let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (ТАШКЕНТ)</b>\n\n`;
+        let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (ТАШКЕНТ) с лендинга</b>\n\n`;
         message += `👤 <b>Имя:</b> ${formData.name}\n`;
         message += `📞 <b>Контакты:</b> ${formData.phone}\n`;
         message += `💼 <b>Профессия:</b> ${formData.profession}\n`;
@@ -80,11 +80,13 @@ export default function App() {
         }
         message += `🕒 <b>Время заявки:</b> ${dateStr} (UZT)`;
 
-        if (trackingData.utm_source || trackingData.utm_campaign || trackingData.fbclid) {
-          message += `\n\n🎯 <b>МАРКЕТИНГ:</b>\n`;
+        if (trackingData.utm_source || trackingData.utm_campaign || trackingData.utm_content || trackingData.utm_medium || trackingData.utm_term || trackingData.fbclid) {
+          message += `\n\n🎯 <b>МАРКЕТИНГОВЫЕ МЕТКИ (META / UTM):</b>\n`;
           if (trackingData.utm_source) message += `• Source: ${trackingData.utm_source}\n`;
           if (trackingData.utm_campaign) message += `• Campaign: ${trackingData.utm_campaign}\n`;
+          if (trackingData.utm_content) message += `• Content (Пост/Объявление): ${trackingData.utm_content}\n`;
           if (trackingData.utm_medium) message += `• Medium: ${trackingData.utm_medium}\n`;
+          if (trackingData.utm_term) message += `• Term: ${trackingData.utm_term}\n`;
           if (trackingData.fbclid) message += `• FBCLID: ${trackingData.fbclid.substring(0, 20)}...\n`;
         }
 
