@@ -5,6 +5,7 @@ export interface LeadFormData {
   phone: string;
   profession: string;
   source?: string;
+  city?: string;
   notes?: string;
   calculatorResults?: {
     clientsPerDay: number;

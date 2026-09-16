@@ -9,16 +9,16 @@ import { HeroSection } from "./components/HeroSection";
 import { TargetAudienceSection } from "./components/TargetAudienceSection";
 import { TechnologySection } from "./components/TechnologySection";
 import { TestDriveSection } from "./components/TestDriveSection";
-import { ROICalculatorModal } from "./components/ROICalculatorModal";
 import { SuccessModal } from "./components/SuccessModal";
 import { PrivacyModal } from "./components/PrivacyModal";
 import { TermsModal } from "./components/TermsModal";
 import { ScrollToTopButton } from "./components/ScrollToTopButton";
 import { LeadFormData, LeadRecord } from "./types";
+import { getCurrentCity, CityConfig } from "./config/cities";
 import { initTracking, getTrackingPayload, trackMetaBrowserLead, sendMetaCAPIClientSide } from "./utils/tracking";
 
 export default function App() {
-  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [city] = useState<CityConfig>(getCurrentCity());
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
@@ -46,24 +46,30 @@ export default function App() {
       const trackingData = getTrackingPayload();
       const payload: LeadFormData = {
         ...formData,
+        city: city.id,
         tracking: trackingData,
       };
 
       // 1. Отправка события Lead в браузерный Meta Pixel (с eventID для дедупликации с CAPI)
-      trackMetaBrowserLead(trackingData.eventId, formData);
+      trackMetaBrowserLead(trackingData.eventId, {
+        ...formData,
+        source: `${formData.source || "Form"} [${city.cityName}]`,
+      });
 
       // 2. Достижение цели в Яндекс.Метрике
       if (typeof (window as unknown as { ym?: (id: number, action: string, target: string) => void }).ym === "function") {
         (window as unknown as { ym: (id: number, action: string, target: string) => void }).ym(103911648, "reachGoal", "lead_form_submitted");
       }
 
-      const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-      const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+      // Определение Telegram бота и чата (поддержка отдельного потока для Бишкека)
+      const isBishkek = city.id === "bishkek";
+      const botToken = (isBishkek && import.meta.env.VITE_BISHKEK_TELEGRAM_BOT_TOKEN) || import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+      const chatId = (isBishkek && import.meta.env.VITE_BISHKEK_TELEGRAM_CHAT_ID) || import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
       if (botToken && chatId) {
-        // Direct client-side dispatch for static hosting (GitHub Pages, Cloudflare Pages, etc.)
+        // Прямая клиентская отправка для статического хостинга (GitHub Pages)
         const dateStr = new Date().toLocaleString("ru-RU", {
-          timeZone: "Asia/Tashkent",
+          timeZone: city.timeZone,
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
@@ -71,14 +77,15 @@ export default function App() {
           minute: "2-digit",
         });
 
-        let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (ТАШКЕНТ) с лендинга</b>\n\n`;
+        let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${city.tgTag}) с лендинга</b>\n\n`;
         message += `👤 <b>Имя:</b> ${formData.name}\n`;
         message += `📞 <b>Контакты:</b> ${formData.phone}\n`;
         message += `💼 <b>Профессия:</b> ${formData.profession}\n`;
+        message += `📍 <b>Город:</b> ${city.cityName} (${city.countryName} ${city.flag})\n`;
         if (formData.source) {
-          message += `📍 <b>Форма:</b> ${formData.source}\n`;
+          message += `📝 <b>Форма:</b> ${formData.source}\n`;
         }
-        message += `🕒 <b>Время заявки:</b> ${dateStr} (UZT)`;
+        message += `🕒 <b>Время заявки:</b> ${dateStr} (${city.timeZoneLabel})`;
 
         if (trackingData.utm_source || trackingData.utm_campaign || trackingData.utm_content || trackingData.utm_medium || trackingData.utm_term || trackingData.fbclid) {
           message += `\n\n🎯 <b>МАРКЕТИНГОВЫЕ МЕТКИ (META / UTM):</b>\n`;
@@ -112,7 +119,7 @@ export default function App() {
         const fbPixelId = import.meta.env.VITE_FB_PIXEL_ID || "1420624392253746";
         const fbTestCode = import.meta.env.VITE_FB_TEST_EVENT_CODE;
         if (fbAccessToken) {
-          sendMetaCAPIClientSide(formData, trackingData, fbAccessToken, fbPixelId, fbTestCode).catch(() => {});
+          sendMetaCAPIClientSide(formData, trackingData, fbAccessToken, fbPixelId, fbTestCode).catch(() => { });
         }
 
         const newRecord: LeadRecord = {
@@ -158,44 +165,31 @@ export default function App() {
     }
   };
 
-  const handleApplyCalcResultsAndSubmit = (calcResults: LeadFormData["calculatorResults"]) => {
-    scrollToForm();
-    if (calcResults) {
-      handleLeadSubmit({
-        name: "Специалист (Калькулятор)",
-        phone: "+998 90 000 00 00",
-        profession: "Сфера здоровья и красоты",
-        calculatorResults: calcResults,
-        notes: "Заявка с Калькулятора Окупаемости",
-      });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#F0F7F2] text-slate-900 font-sans selection:bg-[#C3EBD4] selection:text-[#0E5E2B]">
-      
+
       {/* Sticky Header / Navigation Bar */}
-      <Navbar />
+      <Navbar city={city} />
 
       {/* Screen 1: Hero Section + VSL + Lead Capture Form */}
       <HeroSection
+        city={city}
         onSubmitLead={handleLeadSubmit}
         isSubmitting={isSubmitting}
-        onOpenCalculator={() => setIsCalculatorOpen(true)}
         formRef={heroFormRef}
       />
 
       {/* Screen 2: Target Audience & Pain Points */}
       <TargetAudienceSection
-        onOpenCalculator={() => setIsCalculatorOpen(true)}
         onScrollToForm={scrollToForm}
       />
 
       {/* Screen 3: Technology Essence & Benefits */}
       <TechnologySection />
 
-      {/* Screen 4: Tashkent Test Drive + Final Form + Footer */}
+      {/* Screen 4: Test Drive + Final Form + Footer */}
       <TestDriveSection
+        city={city}
         onSubmitLead={handleLeadSubmit}
         isSubmitting={isSubmitting}
         onOpenPrivacy={() => setIsPrivacyModalOpen(true)}
@@ -203,16 +197,11 @@ export default function App() {
       />
 
       {/* Interactive Modals */}
-      <ROICalculatorModal
-        isOpen={isCalculatorOpen}
-        onClose={() => setIsCalculatorOpen(false)}
-        onSubmitWithCalc={handleApplyCalcResultsAndSubmit}
-      />
-
       <SuccessModal
         isOpen={isSuccessModalOpen}
         onClose={() => setIsSuccessModalOpen(false)}
         lead={latestLead}
+        managerCity={city.successModalManagerCity}
       />
 
       <PrivacyModal

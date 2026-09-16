@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { ArrowRight, User, Phone, Briefcase, CheckCircle2, Clock } from "lucide-react";
 import { PROFESSION_OPTIONS } from "../data";
 import { LeadFormData } from "../types";
-import beautyCoworkingImg from "../../assets/beauty_coworking.jpeg";
+import { CityConfig } from "../config/cities";
+import { formatFlexiblePhone } from "../utils/phoneFormatter";
 
 interface TestDriveSectionProps {
+  city: CityConfig;
   onSubmitLead: (data: LeadFormData) => Promise<void>;
   isSubmitting: boolean;
   onOpenPrivacy: () => void;
@@ -12,6 +14,7 @@ interface TestDriveSectionProps {
 }
 
 export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
+  city,
   onSubmitLead,
   isSubmitting,
   onOpenPrivacy,
@@ -37,18 +40,23 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
-    onSubmitLead({ name, phone, profession, source: "Footer Form" });
+    onSubmitLead({ name, phone, profession, city: city.id, source: "Footer Form" });
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatFlexiblePhone(e.target.value, phone, city.id);
+    setPhone(formatted);
   };
 
   return (
     <>
       <section className="pt-8 pb-16 sm:pt-12 sm:pb-20 lg:pt-14 lg:pb-24 bg-gradient-to-b from-[#EAF3EC] to-[#E2EFE5] text-slate-900 relative border-t border-[#D5E8D9] overflow-hidden">
-        
+
         {/* Ambient background glow */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#1E9646]/15 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
+
           {/* Section Header */}
           <div className="text-center max-w-4xl mx-auto mb-6 sm:mb-8 lg:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-[45px] font-extrabold text-slate-950 tracking-tight leading-tight mb-4">
@@ -61,14 +69,14 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
 
           {/* Layout: Image on Left (6 cols), Booking Form Block on Right (6 cols) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            
+
             {/* LEFT: Composite Coworking Image (6 cols) */}
             <div className="lg:col-span-6">
               <div className="bg-white rounded-3xl p-1 sm:p-1.5 border border-slate-200/90 shadow-xl shadow-slate-200/40 overflow-hidden relative group">
                 <img
-                  src={beautyCoworkingImg}
-                  alt="Бьюти-коворкинг и демонстрационное пространство OlyLife в центре Ташкента"
-                  title="Демонстрационный зал и бьюти-пространство OlyLife в центре Ташкента"
+                  src={city.coworkingImg}
+                  alt={city.coworkingAlt}
+                  title={city.coworkingTitle}
                   width={800}
                   height={533}
                   loading="lazy"
@@ -80,10 +88,10 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
 
             {/* RIGHT: Final Booking Form Block (6 cols) */}
             <div ref={formRef} className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl shadow-slate-200/60 relative">
-              
+
               <div className="text-center mb-8">
                 <h3 className="text-[24px] font-extrabold text-slate-950 leading-snug mb-4">
-                  🎁 Запишитесь на бесплатный тест-драйв в Ташкенте и получите калькулятор окупаемости
+                  {city.formTitle}
                 </h3>
 
                 {/* Urgency Counter Badge */}
@@ -94,7 +102,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                   {/* Name Input (4 cols) */}
                   <div className="md:col-span-4">
@@ -122,8 +130,8 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
                       type="text"
                       required
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+998 (90) 123-45-67 или @username"
+                      onChange={handlePhoneChange}
+                      placeholder={city.phonePlaceholder}
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1E9646] focus:ring-2 focus:ring-[#1E9646]/20 text-base transition-all"
                     />
                   </div>
@@ -135,7 +143,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
                     <Briefcase className="w-3.5 h-3.5 text-[#1E9646]" />
                     Ваша профессия *
                   </label>
-                  
+
                   {/* Custom Dropdown Trigger */}
                   <button
                     type="button"

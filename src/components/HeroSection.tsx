@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Play, ArrowRight, User, Phone, Briefcase, ShieldCheck, Sparkles, Droplets, CheckCircle2 } from "lucide-react";
+import { Play, ArrowRight, User, Phone, Briefcase, ShieldCheck, Sparkles, Droplets } from "lucide-react";
 import { PROFESSION_OPTIONS } from "../data";
 import { LeadFormData } from "../types";
+import { CityConfig } from "../config/cities";
+import { formatFlexiblePhone } from "../utils/phoneFormatter";
 import videoPreviewImg from "../../assets/video_preview.jpg";
 
 interface HeroSectionProps {
+  city: CityConfig;
   onSubmitLead: (data: LeadFormData) => Promise<void>;
   isSubmitting: boolean;
-  onOpenCalculator: () => void;
   formRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
+  city,
   onSubmitLead,
   isSubmitting,
   formRef,
@@ -47,7 +50,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
-    onSubmitLead({ name, phone, profession, source: "Hero Section Form" });
+    onSubmitLead({ name, phone, profession, city: city.id, source: "Hero Section Form" });
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatFlexiblePhone(e.target.value, phone, city.id);
+    setPhone(formatted);
   };
 
   return (
@@ -58,12 +66,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="absolute top-2/3 -left-20 w-[450px] h-[450px] bg-[#0E5E2B]/10 rounded-full blur-[110px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Main Headline */}
         <div className="text-center max-w-5xl mx-auto mb-10 lg:mb-14">
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.2] mb-5 sm:mb-6">
             Как специалистам сферы здоровья<br className="hidden lg:inline" />
-            {" "}и красоты Ташкента 🇺🇿<br className="hidden lg:inline" />
+            {" "}и красоты {city.heroTitleCity}<br className="hidden lg:inline" />
             {" "}<span className="bg-gradient-to-r from-[#0E5E2B] via-[#1E9646] to-[#25A852] bg-clip-text text-transparent inline-block font-black">
               удвоить (X2) доход в кабинете
             </span>
@@ -76,10 +84,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         {/* Grid Layout: Left Sleek Video Player + Right Lead Capture Form */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
+
           {/* LEFT: Premium Video Frame + 3 Trust Cards (7 Cols) */}
           <div className="lg:col-span-7 flex flex-col items-center w-full">
-            
+
             {/* Heading Above Video */}
             <div className="w-full mb-3 flex items-center">
               <h3 className="text-base sm:text-lg font-bold text-slate-950 leading-tight">
@@ -90,7 +98,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             {/* Sleek Modern Video Frame in Accent OlyLife Green */}
             <div className="w-full relative rounded-3xl p-1.5 sm:p-2.5 bg-gradient-to-tr from-[#0E5E2B] via-[#1E9646] to-[#25A852] border border-[#25A852]/50 shadow-2xl shadow-[#1E9646]/30 overflow-hidden">
               <div className="relative aspect-video rounded-2xl bg-slate-950 overflow-hidden shadow-inner">
-                
+
                 {/* Native HTML5 Video for Instant 0-latency Playback */}
                 <video
                   ref={videoRef}
@@ -106,21 +114,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                 {/* Custom Branded Play Button Overlay (shown before user starts playback) */}
                 {!isPlaying && (
-                  <div 
+                  <div
                     onClick={handleStartVideo}
                     className="absolute inset-0 flex flex-col justify-between p-2.5 sm:p-5 lg:p-6 cursor-pointer group overflow-hidden bg-black/25 hover:bg-black/15 transition-colors"
                   >
                     {/* Video Preview Photo with Subtle Darkening Overlay */}
-                    <img 
-                      src={videoPreviewImg} 
-                      alt="Презентация бизнес-модели и оборудования OlyLife в Ташкенте"
-                      title="Видеопрезентация бизнес-модели и оборудования OlyLife в Ташкенте"
+                    <img
+                      src={videoPreviewImg}
+                      alt={city.videoTitle}
+                      title={city.videoTitle}
                       width={1280}
                       height={720}
                       loading="eager"
                       fetchPriority="high"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none" 
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10 pointer-events-none" />
 
@@ -161,9 +169,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* RIGHT: Main Lead Capture Form Block (5 Cols) - Compact height */}
           <div ref={formRef} className="lg:col-span-5 w-full">
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xl shadow-slate-200/60 relative">
-              
+
               <h3 className="text-[21px] font-bold text-slate-950 leading-tight mb-4">
-                🎁 Запишитесь на бесплатный тест-драйв в Ташкенте и получите калькулятор окупаемости
+                {city.formTitle}
               </h3>
 
               <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -193,8 +201,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     type="text"
                     required
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+998 (90) 123-45-67 или @username"
+                    onChange={handlePhoneChange}
+                    placeholder={city.phonePlaceholder}
                     className="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1E9646] focus:ring-2 focus:ring-[#1E9646]/20 text-base transition-all"
                   />
                 </div>
@@ -205,7 +213,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <Briefcase className="w-3.5 h-3.5 text-[#1E9646]" />
                     Ваша профессия *
                   </label>
-                  
+
                   {/* Custom Dropdown Trigger */}
                   <button
                     type="button"
@@ -269,4 +277,3 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     </section>
   );
 };
-

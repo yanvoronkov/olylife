@@ -31,15 +31,9 @@ interface StoredLead {
   name: string;
   phone: string;
   profession: string;
+  city?: string;
   source?: string;
   notes?: string;
-  calculatorResults?: {
-    clientsPerDay: number;
-    sessionPrice: number;
-    workingDays: number;
-    monthlyRevenue: number;
-    monthlyProfit: number;
-  };
   tracking?: TrackingData;
   createdAt: string;
   deliveredToTelegram: boolean;
@@ -54,8 +48,12 @@ function hashSha256(value: string): string {
 }
 
 function formatTelegramMessage(lead: StoredLead): string {
+  const isBishkek = lead.city === "bishkek";
+  const timeZone = isBishkek ? "Asia/Bishkek" : "Asia/Tashkent";
+  const timeZoneLabel = isBishkek ? "KGT" : "UZT";
+
   const dateStr = new Date(lead.createdAt).toLocaleString("ru-RU", {
-    timeZone: "Asia/Tashkent",
+    timeZone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -63,27 +61,18 @@ function formatTelegramMessage(lead: StoredLead): string {
     minute: "2-digit",
   });
 
-  let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (ТАШКЕНТ) с лендинга</b>\n\n`;
+  const cityTag = isBishkek ? "БИШКЕК 🇰🇬" : "ТАШКЕНТ 🇺🇿";
+  const cityTitle = isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
+
+  let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${cityTag}) с лендинга</b>\n\n`;
   message += `👤 <b>Имя:</b> ${escapeHtml(lead.name)}\n`;
   message += `📞 <b>Контакты:</b> ${escapeHtml(lead.phone)}\n`;
   message += `💼 <b>Профессия:</b> ${escapeHtml(lead.profession)}\n`;
+  message += `📍 <b>Город:</b> ${cityTitle}\n`;
   if (lead.source) {
-    message += `📍 <b>Форма:</b> ${escapeHtml(lead.source)}\n`;
+    message += `📝 <b>Форма:</b> ${escapeHtml(lead.source)}\n`;
   }
-  message += `🕒 <b>Время заявки:</b> ${dateStr} (UZT)`;
-
-  if (lead.calculatorResults) {
-    const calc = lead.calculatorResults;
-    const revFormatted = new Intl.NumberFormat("ru-RU").format(calc.monthlyRevenue);
-    const profitFormatted = new Intl.NumberFormat("ru-RU").format(calc.monthlyProfit);
-    const priceFormatted = new Intl.NumberFormat("ru-RU").format(calc.sessionPrice);
-
-    message += `\n\n📊 <b>РАСЧЕТ ОКУПАЕМОСТИ:</b>\n`;
-    message += `• Клиентов в день: ${calc.clientsPerDay}\n`;
-    message += `• Чек процедуры: ${priceFormatted} сум\n`;
-    message += `• Выручка в мес: ~${revFormatted} сум\n`;
-    message += `• Чистая прибыль: ~${profitFormatted} сум`;
-  }
+  message += `🕒 <b>Время заявки:</b> ${dateStr} (${timeZoneLabel})`;
 
   // Маркетинговая атрибуция и UTM-метки
   if (lead.tracking) {
@@ -161,6 +150,7 @@ async function sendToFacebookCAPI(
   }
 
   try {
+    const isBishkek = lead.city === "bishkek";
     const tracking = lead.tracking || {};
     const normalizedPhone = lead.phone.replace(/\D/g, "");
     const hashedPhone = normalizedPhone ? hashSha256(normalizedPhone) : undefined;
@@ -174,7 +164,7 @@ async function sendToFacebookCAPI(
 
     const eventTime = Math.floor(new Date(lead.createdAt).getTime() / 1000);
     const eventId = tracking.eventId || lead.id;
-    const eventSourceUrl = tracking.eventSourceUrl || "https://yarkozhivi.space/";
+    const eventSourceUrl = tracking.eventSourceUrl || (isBishkek ? "https://yarkozhivi.space/bishkek/" : "https://yarkozhivi.space/");
 
     const payload: any = {
       data: [
@@ -193,11 +183,11 @@ async function sendToFacebookCAPI(
             fbp: tracking.fbp || undefined,
           },
           custom_data: {
-            content_name: "Заявка на тест-драйв OlyLife P90",
+            content_name: isBishkek ? "Заявка на тест-драйв OlyLife P90 (Бишкек)" : "Заявка на тест-драйв OlyLife P90 (Ташкент)",
             content_category: "Wellness & Beauty",
             profession: lead.profession,
             lead_source: lead.source || "Website Form",
-            currency: "UZS",
+            currency: isBishkek ? "KGS" : "UZS",
             value: 0,
             utm_source: tracking.utm_source || undefined,
             utm_medium: tracking.utm_medium || undefined,
@@ -238,7 +228,7 @@ async function sendToFacebookCAPI(
 // Прием заявок с сайта
 app.post("/api/leads", async (req, res) => {
   try {
-    const { name, phone, profession, source, notes, calculatorResults, tracking } = req.body;
+    const { name, phone, profession, city, source, notes, tracking } = req.body;
 
     if (!name || !phone) {
       return res.status(400).json({ success: false, error: "Заполните имя и телефон" });
@@ -270,18 +260,20 @@ app.post("/api/leads", async (req, res) => {
       name: String(name).trim(),
       phone: String(phone).trim(),
       profession: String(profession || "Не указана").trim(),
+      city: city ? String(city).trim() : undefined,
       source: source ? String(source).trim() : "Форма на сайте",
       notes: notes ? String(notes).trim() : undefined,
-      calculatorResults: calculatorResults || undefined,
       tracking: mergedTracking,
       createdAt: new Date().toISOString(),
       deliveredToTelegram: false,
       deliveredToFacebook: false,
     };
 
-    // 1. Отправка в Telegram
-    const tgToken = process.env.TELEGRAM_BOT_TOKEN || "";
-    const tgChatId = process.env.TELEGRAM_CHAT_ID || "";
+    // 1. Отправка в Telegram (поддержка отдельного потока для Бишкека)
+    const isBishkek = newLead.city === "bishkek";
+    const tgToken = (isBishkek && process.env.BISHKEK_TELEGRAM_BOT_TOKEN) || process.env.TELEGRAM_BOT_TOKEN || "";
+    const tgChatId = (isBishkek && process.env.BISHKEK_TELEGRAM_CHAT_ID) || process.env.TELEGRAM_CHAT_ID || "";
+
     if (tgToken && tgChatId) {
       const tgResult = await sendToTelegram(formatTelegramMessage(newLead), tgToken, tgChatId);
       newLead.deliveredToTelegram = tgResult.success;
@@ -314,6 +306,12 @@ app.post("/api/leads", async (req, res) => {
 });
 
 async function startServer() {
+  // Canonical redirect for Bishkek subfolder (preserves query & UTM parameters)
+  app.get(/^\/bishkek$/, (req, res) => {
+    const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
+    res.redirect(301, "/bishkek/" + query);
+  });
+
   // Vite middleware in dev mode
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -324,13 +322,17 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    app.get("/bishkek*", (req, res) => {
+      const bishkekHtml = path.join(distPath, "bishkek", "index.html");
+      res.sendFile(bishkekHtml);
+    });
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`OlyLife Tashkent landing running on http://0.0.0.0:${PORT}`);
+    console.log(`OlyLife landing server running on http://0.0.0.0:${PORT}`);
   });
 }
 

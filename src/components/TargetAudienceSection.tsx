@@ -10,7 +10,6 @@ import bodyTherapistIcon from "../../assets/icon_body_therapist.png";
 import fitnessIcon from "../../assets/icon_fitness.png";
 
 interface TargetAudienceSectionProps {
-  onOpenCalculator: () => void;
   onScrollToForm: () => void;
 }
 
@@ -22,19 +21,19 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
     const olylifeFilter = "invert(42%) sepia(74%) saturate(468%) hue-rotate(94deg) brightness(96%) contrast(92%)";
 
     switch (iconName) {
-      case "Massage": 
+      case "Massage":
         return <img src={massageIcon} alt="Иконка: Массажисты" title="Оборудование OlyLife для массажистов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
-      case "Activity": 
+      case "Activity":
         return <img src={bodyTherapistIcon} alt="Иконка: Телесные терапевты" title="Оборудование OlyLife для телесных терапевтов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
-      case "Sparkles": 
+      case "Sparkles":
         return <img src={cosmetologistIcon} alt="Иконка: Косметологи" title="Оборудование OlyLife для косметологов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
-      case "Dumbbell": 
+      case "Dumbbell":
         return <img src={fitnessIcon} alt="Иконка: Фитнес-тренеры" title="Оборудование OlyLife для фитнес-тренеров" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
-      case "Apple": 
+      case "Apple":
         return <img src={nutritionistIcon} alt="Иконка: Нутрициологи" title="Оборудование OlyLife для нутрициологов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
-      case "Footprints": 
+      case "Footprints":
         return <img src={manicureIcon} alt="Иконка: Мастера маникюра и педикюра" title="Оборудование OlyLife для мастеров маникюра и педикюра" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
-      default: 
+      default:
         return <Flower2 className="w-8 h-8 text-[#1E9646]" />;
     }
   };
@@ -42,7 +41,7 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
   return (
     <section className="pt-8 pb-14 sm:pt-12 sm:pb-20 lg:pt-14 lg:pb-24 bg-[#EAF3EC] text-slate-900 relative border-t border-[#D5E8D9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-10 lg:mb-12">
           <h2 className="text-2xl sm:text-3xl lg:text-[45px] font-extrabold text-slate-950 tracking-tight leading-tight">
@@ -71,7 +70,7 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
 
         {/* Pain Points Block - High Contrast Dark Banner */}
         <div className="bg-gradient-to-br from-[#061F15] via-[#0A2B1D] to-[#04160E] rounded-3xl p-6 sm:p-10 lg:p-12 border border-[#134E35] shadow-2xl text-white relative overflow-hidden">
-          
+
           <div className="mb-8 text-center md:text-left">
             <h3 className="text-[24px] sm:text-3xl lg:text-[45px] font-extrabold text-white tracking-tight leading-tight">
               Каждый рано или поздно сталкивается с этим:
