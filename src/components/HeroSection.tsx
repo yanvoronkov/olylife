@@ -3,7 +3,6 @@ import { Play, ArrowRight, User, Phone, Briefcase, ShieldCheck, Sparkles, Drople
 import { PROFESSION_OPTIONS } from "../data";
 import { LeadFormData } from "../types";
 import { CityConfig } from "../config/cities";
-import { formatFlexiblePhone } from "../utils/phoneFormatter";
 import videoPreviewImg from "../../assets/video_preview.jpg";
 
 interface HeroSectionProps {
@@ -51,11 +50,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
     onSubmitLead({ name, phone, profession, city: city.id, source: "Hero Section Form" });
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatFlexiblePhone(e.target.value, phone, city.id);
-    setPhone(formatted);
   };
 
   return (
@@ -201,7 +195,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     type="text"
                     required
                     value={phone}
-                    onChange={handlePhoneChange}
+                    onChange={(e) => setPhone(e.target.value)}
                     placeholder={city.phonePlaceholder}
                     className="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1E9646] focus:ring-2 focus:ring-[#1E9646]/20 text-base transition-all"
                   />
