@@ -207,11 +207,13 @@ export default function App() {
       <PrivacyModal
         isOpen={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}
+        city={city}
       />
 
       <TermsModal
         isOpen={isTermsModalOpen}
         onClose={() => setIsTermsModalOpen(false)}
+        city={city}
       />
 
       {/* Floating Scroll-to-Top Button */}

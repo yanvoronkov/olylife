@@ -1,13 +1,21 @@
 import React from "react";
 import { X, FileText } from "lucide-react";
+import { CityConfig } from "../config/cities";
 
 interface TermsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  city?: CityConfig;
 }
 
-export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
+export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose, city }) => {
   if (!isOpen) return null;
+
+  const isBishkek = city?.id === "bishkek";
+  const locationWithCountry = isBishkek
+    ? "Бишкеке (Кыргызская Республика)"
+    : "Ташкенте (Республика Узбекистан)";
+  const locationCity = isBishkek ? "Бишкеке" : "Ташкенте";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
@@ -28,13 +36,13 @@ export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
 
         <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
           <p>
-            <strong className="text-slate-900">1. Общие положения:</strong> Настоящие Условия регулируют порядок использования данного информационного ресурса и запись на ознакомительный тест-драйв оборудования OlyLife в Ташкенте (Республика Узбекистан).
+            <strong className="text-slate-900">1. Общие положения:</strong> Настоящие Условия регулируют порядок использования данного информационного ресурса и запись на ознакомительный тест-драйв оборудования OlyLife в {locationWithCountry}.
           </p>
           <p>
             <strong className="text-slate-900">2. Статус продукции:</strong> Оборудование OlyLife относится к бытовой категории оздоровительной продукции (Wellness) и предназначено для индивидуального физио-ухода, релаксации и снятия усталости. Продукция не является медицинским оборудованием или лекарственным средством и не требует наличия медицинской лицензии для приобретения или демонстрации.
           </p>
           <p>
-            <strong className="text-slate-900">3. Условия проведения тест-драйва:</strong> Запись на ознакомительный тест-драйв в демонстрационном пространстве в Ташкенте является бесплатной. Посещение демо-сеанса не обязывает пользователя к покупке оборудования.
+            <strong className="text-slate-900">3. Условия проведения тест-драйва:</strong> Запись на ознакомительный тест-драйв в демонстрационном пространстве в {locationCity} является бесплатной. Посещение демо-сеанса не обязывает пользователя к покупке оборудования.
           </p>
           <p>
             <strong className="text-slate-900">4. Финансовые показатели и доходы:</strong> Все финансовые показатели, упоминаемые на сайте или в видеоматериалах, носят исключительно иллюстративный характер бизнес-моделирования. Фактический доход специалиста зависит от расценок на услуги, графика работы и клиентской базы.
