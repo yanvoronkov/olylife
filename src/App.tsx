@@ -15,10 +15,12 @@ import { TermsModal } from "./components/TermsModal";
 import { ScrollToTopButton } from "./components/ScrollToTopButton";
 import { LeadFormData, LeadRecord } from "./types";
 import { getCurrentCity, CityConfig } from "./config/cities";
+import { getTranslations, Translations } from "./config/translations";
 import { initTracking, getTrackingPayload, trackMetaBrowserLead, sendMetaCAPIClientSide } from "./utils/tracking";
 
 export default function App() {
   const [city] = useState<CityConfig>(getCurrentCity());
+  const [translations] = useState<Translations>(getTranslations());
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
@@ -28,6 +30,8 @@ export default function App() {
 
   const heroFormRef = useRef<HTMLDivElement>(null);
   const footerFormRef = useRef<HTMLDivElement>(null);
+
+  const isKg = translations.locale === "kg";
 
   useEffect(() => {
     initTracking();
@@ -47,13 +51,14 @@ export default function App() {
       const payload: LeadFormData = {
         ...formData,
         city: city.id,
+        notes: isKg ? "Язык заявки: Кыргызский (KG)" : "Язык заявки: Русский",
         tracking: trackingData,
       };
 
       // 1. Отправка события Lead в браузерный Meta Pixel (с eventID для дедупликации с CAPI)
       trackMetaBrowserLead(trackingData.eventId, {
         ...formData,
-        source: `${formData.source || "Form"} [${city.cityName}]`,
+        source: `${formData.source || "Form"} [${city.cityName}${isKg ? " KG" : ""}]`,
       });
 
       // 2. Достижение цели в Яндекс.Метрике
@@ -77,11 +82,15 @@ export default function App() {
           minute: "2-digit",
         });
 
-        let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${city.tgTag}) с лендинга</b>\n\n`;
+        const langTag = isKg ? " [КЫРГЫЗ ТИЛИ 🇰🇬]" : "";
+        let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${city.tgTag}${langTag}) с лендинга</b>\n\n`;
         message += `👤 <b>Имя:</b> ${formData.name}\n`;
         message += `📞 <b>Контакты:</b> ${formData.phone}\n`;
         message += `💼 <b>Профессия:</b> ${formData.profession}\n`;
         message += `📍 <b>Город:</b> ${city.cityName} (${city.countryName} ${city.flag})\n`;
+        if (isKg) {
+          message += `🌐 <b>Язык страницы:</b> Кыргызский (ky/kg)\n`;
+        }
         if (formData.source) {
           message += `📝 <b>Форма:</b> ${formData.source}\n`;
         }
@@ -98,6 +107,7 @@ export default function App() {
         }
 
         const url = `https://api.telegram.org/bot${botToken.trim()}/sendMessage`;
+
         const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -159,7 +169,7 @@ export default function App() {
       }
     } catch (err) {
       console.error("Error submitting lead:", err);
-      alert("Заявка успешно зафиксирована!");
+      alert(isKg ? "Билдирмеңиз кабыл алынды!" : "Заявка успешно зафиксирована!");
     } finally {
       setIsSubmitting(false);
     }
@@ -169,11 +179,12 @@ export default function App() {
     <div className="min-h-screen bg-[#F0F7F2] text-slate-900 font-sans selection:bg-[#C3EBD4] selection:text-[#0E5E2B]">
 
       {/* Sticky Header / Navigation Bar */}
-      <Navbar city={city} />
+      <Navbar city={city} translations={translations} />
 
       {/* Screen 1: Hero Section + VSL + Lead Capture Form */}
       <HeroSection
         city={city}
+        translations={translations}
         onSubmitLead={handleLeadSubmit}
         isSubmitting={isSubmitting}
         formRef={heroFormRef}
@@ -181,18 +192,21 @@ export default function App() {
 
       {/* Screen 2: Target Audience & Pain Points */}
       <TargetAudienceSection
+        translations={translations}
         onScrollToForm={scrollToForm}
       />
 
       {/* Screen 3: Technology Essence & Benefits */}
-      <TechnologySection />
+      <TechnologySection translations={translations} />
 
       {/* Screen 4: Test Drive + Final Form + Footer */}
       <TestDriveSection
         city={city}
+        translations={translations}
         onSubmitLead={handleLeadSubmit}
         isSubmitting={isSubmitting}
         onOpenPrivacy={() => setIsPrivacyModalOpen(true)}
+        onOpenTerms={() => setIsTermsModalOpen(true)}
         formRef={footerFormRef}
       />
 
@@ -202,18 +216,21 @@ export default function App() {
         onClose={() => setIsSuccessModalOpen(false)}
         lead={latestLead}
         managerCity={city.successModalManagerCity}
+        translations={translations}
       />
 
       <PrivacyModal
         isOpen={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}
         city={city}
+        locale={translations.locale}
       />
 
       <TermsModal
         isOpen={isTermsModalOpen}
         onClose={() => setIsTermsModalOpen(false)}
         city={city}
+        locale={translations.locale}
       />
 
       {/* Floating Scroll-to-Top Button */}

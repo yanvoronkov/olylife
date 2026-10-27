@@ -61,7 +61,14 @@ function formatTelegramMessage(lead: StoredLead): string {
     minute: "2-digit",
   });
 
-  const cityTag = isBishkek ? "БИШКЕК 🇰🇬" : "ТАШКЕНТ 🇺🇿";
+  const isKg = Boolean(
+    lead.notes?.toLowerCase().includes("кыргыз") ||
+    lead.source?.toLowerCase().includes("kg") ||
+    lead.source?.toLowerCase().includes("кыргыз") ||
+    lead.tracking?.eventSourceUrl?.includes("/kg")
+  );
+
+  const cityTag = isBishkek ? (isKg ? "БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]" : "БИШКЕК 🇰🇬") : "ТАШКЕНТ 🇺🇿";
   const cityTitle = isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
 
   let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${cityTag}) с лендинга</b>\n\n`;
@@ -69,6 +76,9 @@ function formatTelegramMessage(lead: StoredLead): string {
   message += `📞 <b>Контакты:</b> ${escapeHtml(lead.phone)}\n`;
   message += `💼 <b>Профессия:</b> ${escapeHtml(lead.profession)}\n`;
   message += `📍 <b>Город:</b> ${cityTitle}\n`;
+  if (isKg) {
+    message += `🌐 <b>Язык страницы:</b> Кыргызский (ky/kg)\n`;
+  }
   if (lead.source) {
     message += `📝 <b>Форма:</b> ${escapeHtml(lead.source)}\n`;
   }
@@ -312,6 +322,16 @@ async function startServer() {
     res.redirect(301, "/bishkek/" + query);
   });
 
+  // Canonical redirect for Kyrgyz page (/kg and /bishkek/kg)
+  app.get(/^\/kg$/, (req, res) => {
+    const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
+    res.redirect(301, "/kg/" + query);
+  });
+  app.get(/^\/bishkek\/kg\/?$/, (req, res) => {
+    const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
+    res.redirect(301, "/kg/" + query);
+  });
+
   // Vite middleware in dev mode
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -322,6 +342,10 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    app.get("/kg*", (req, res) => {
+      const kgHtml = path.join(distPath, "kg", "index.html");
+      res.sendFile(kgHtml);
+    });
     app.get("/bishkek*", (req, res) => {
       const bishkekHtml = path.join(distPath, "bishkek", "index.html");
       res.sendFile(bishkekHtml);

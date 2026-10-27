@@ -1,6 +1,7 @@
 import React from "react";
 import { PROFESSIONS_DATA, PAIN_POINTS } from "../data";
 import { AlertTriangle, Flower2, ArrowRight } from "lucide-react";
+import { Translations } from "../config/translations";
 
 import manicureIcon from "../../assets/icon_manicure.png";
 import cosmetologistIcon from "../../assets/icon_cosmetologist.png";
@@ -11,28 +12,36 @@ import fitnessIcon from "../../assets/icon_fitness.png";
 
 interface TargetAudienceSectionProps {
   onScrollToForm: () => void;
+  translations?: Translations;
 }
 
 export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
   onScrollToForm,
+  translations,
 }) => {
+  const professions = translations?.targetAudience?.professions || PROFESSIONS_DATA;
+  const painPoints = translations?.targetAudience?.painPoints || PAIN_POINTS.map(p => ({
+    id: p.id,
+    title: p.text,
+    description: p.highlight,
+  }));
+
   const getIcon = (iconName: string) => {
-    // Custom CSS filter for OlyLife brand green (#1E9646)
     const olylifeFilter = "invert(42%) sepia(74%) saturate(468%) hue-rotate(94deg) brightness(96%) contrast(92%)";
 
     switch (iconName) {
       case "Massage":
-        return <img src={massageIcon} alt="Иконка: Массажисты" title="Оборудование OlyLife для массажистов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={massageIcon} alt="Иконка: Массажист" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Activity":
-        return <img src={bodyTherapistIcon} alt="Иконка: Телесные терапевты" title="Оборудование OlyLife для телесных терапевтов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={bodyTherapistIcon} alt="Иконка: Дене терапевти" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Sparkles":
-        return <img src={cosmetologistIcon} alt="Иконка: Косметологи" title="Оборудование OlyLife для косметологов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={cosmetologistIcon} alt="Иконка: Косметолог" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Dumbbell":
-        return <img src={fitnessIcon} alt="Иконка: Фитнес-тренеры" title="Оборудование OlyLife для фитнес-тренеров" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={fitnessIcon} alt="Иконка: Тренер" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Apple":
-        return <img src={nutritionistIcon} alt="Иконка: Нутрициологи" title="Оборудование OlyLife для нутрициологов" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={nutritionistIcon} alt="Иконка: Нутрициолог" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       case "Footprints":
-        return <img src={manicureIcon} alt="Иконка: Мастера маникюра и педикюра" title="Оборудование OlyLife для мастеров маникюра и педикюра" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
+        return <img src={manicureIcon} alt="Иконка: Подолог / Маникюр" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" style={{ filter: olylifeFilter }} />;
       default:
         return <Flower2 className="w-8 h-8 text-[#1E9646]" />;
     }
@@ -45,13 +54,18 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-10 lg:mb-12">
           <h2 className="text-2xl sm:text-3xl lg:text-[45px] font-extrabold text-slate-950 tracking-tight leading-tight">
-            Для кого подходит наилучшим образом?
+            {translations?.targetAudience?.title || "Для кого подходит наилучшим образом?"}
           </h2>
+          {translations?.targetAudience?.subtitle && (
+            <p className="mt-2 text-base sm:text-lg text-slate-600 font-medium">
+              {translations.targetAudience.subtitle}
+            </p>
+          )}
         </div>
 
-        {/* 3 columns, 2 rows Grid of Professions (Icon to the left of text) */}
+        {/* 3 columns, 2 rows Grid of Professions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-16">
-          {PROFESSIONS_DATA.map((prof) => (
+          {professions.map((prof) => (
             <div
               key={prof.id}
               onClick={onScrollToForm}
@@ -73,12 +87,12 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
 
           <div className="mb-8 text-center md:text-left">
             <h3 className="text-[24px] sm:text-3xl lg:text-[45px] font-extrabold text-white tracking-tight leading-tight">
-              Каждый рано или поздно сталкивается с этим:
+              {translations?.targetAudience?.painPointsTitle || "Каждый рано или поздно сталкивается с этим:"}
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {PAIN_POINTS.map((pain) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+            {painPoints.map((pain) => (
               <div
                 key={pain.id}
                 className="bg-[#03150C]/90 rounded-2xl p-5 border border-[#134E35]/60 flex flex-col md:flex-row md:items-start gap-4 hover:border-rose-500/40 transition-all"
@@ -89,22 +103,31 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
                     <AlertTriangle className="w-5 h-5 text-rose-400" />
                   </div>
                   <h4 className="text-[20px] md:text-base font-bold text-rose-200 md:hidden leading-snug">
-                    {pain.text}
+                    {pain.title}
                   </h4>
                 </div>
 
                 {/* Content section */}
                 <div className="flex-1">
                   <h4 className="hidden md:block text-base font-bold text-rose-200 mb-1">
-                    {pain.text}
+                    {pain.title}
                   </h4>
                   <p className="text-[17px] md:text-sm text-emerald-100/90 leading-relaxed font-normal">
-                    {pain.highlight}
+                    {pain.description}
                   </p>
                 </div>
               </div>
             ))}
           </div>
+
+          {/* Bottom callout note */}
+          {translations?.targetAudience?.painPointsCallout && (
+            <div className="mt-6 pt-6 border-t border-[#134E35]/80 text-center">
+              <p className="text-base sm:text-lg text-emerald-200 font-medium max-w-4xl mx-auto leading-relaxed">
+                {translations.targetAudience.painPointsCallout}
+              </p>
+            </div>
+          )}
 
         </div>
 
@@ -112,3 +135,4 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
     </section>
   );
 };
+

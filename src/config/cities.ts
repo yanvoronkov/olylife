@@ -85,12 +85,14 @@ export const CITIES_CONFIG: Record<CityId, CityConfig> = {
 export function getCurrentCity(): CityConfig {
   if (typeof window !== "undefined") {
     const datasetCity = document.documentElement.dataset.city;
-    if (datasetCity === "bishkek") {
+    const datasetLang = document.documentElement.dataset.lang;
+    const htmlLang = document.documentElement.lang?.toLowerCase();
+    if (datasetCity === "bishkek" || datasetLang === "kg" || htmlLang === "ky" || htmlLang === "kg") {
       return CITIES_CONFIG.bishkek;
     }
 
     const path = window.location.pathname.toLowerCase();
-    if (path.includes("/bishkek")) {
+    if (path.includes("/bishkek") || path.includes("/kg")) {
       return CITIES_CONFIG.bishkek;
     }
   }

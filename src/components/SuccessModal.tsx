@@ -1,21 +1,30 @@
 import React from "react";
 import { CheckCircle2, X } from "lucide-react";
 import { LeadRecord } from "../types";
+import { Translations } from "../config/translations";
 
 interface SuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
   lead: LeadRecord | null;
   managerCity?: string;
+  translations?: Translations;
 }
 
 export const SuccessModal: React.FC<SuccessModalProps> = ({
   isOpen,
   onClose,
   lead,
-  managerCity = "в Ташкенте",
+  managerCity = "в Бишкеке",
+  translations,
 }) => {
   if (!isOpen) return null;
+
+  const title = translations?.successModal?.title || "Заявка успешно принята! 🚀";
+  const name = lead?.name || "";
+  const message = translations?.successModal?.getMessage
+    ? translations.successModal.getMessage(name, managerCity)
+    : `Спасибо, ${name || "уважаемый специалист"}! Наш менеджер ${managerCity} уже получил уведомление и свяжется с вами для согласования времени тест-драйва.`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
@@ -33,14 +42,15 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
         </div>
 
         <h3 className="text-2xl font-extrabold text-slate-950 mb-2">
-          Заявка успешно принята! 🚀
+          {title}
         </h3>
 
         <p className="text-sm text-slate-600 leading-relaxed">
-          Спасибо, <span className="text-[#0E5E2B] font-bold">{lead?.name || "уважаемый специалист"}</span>! Наш менеджер {managerCity} уже получил уведомление и свяжется с вами для согласования времени тест-драйва.
+          {message}
         </p>
 
       </div>
     </div>
   );
 };
+

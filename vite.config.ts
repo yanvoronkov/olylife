@@ -17,6 +17,7 @@ export default defineConfig(() => {
         input: {
           main: path.resolve(__dirname, 'index.html'),
           bishkek: path.resolve(__dirname, 'bishkek/index.html'),
+          kg: path.resolve(__dirname, 'kg/index.html'),
         },
       },
     },
