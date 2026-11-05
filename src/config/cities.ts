@@ -1,7 +1,9 @@
 import beautyCoworkingTashkent from "../../assets/beauty_coworking.jpeg";
 import beautyCoworkingBishkek from "../../assets/beauty_coworking_bishkek.jpeg";
+import beautyCoworkingAlmaty from "../../assets/beauty_coworking_almaty.jpeg";
+import { CityId } from "../types";
 
-export type CityId = "tashkent" | "bishkek";
+export type { CityId };
 
 export interface CityConfig {
   id: CityId;
@@ -77,6 +79,30 @@ export const CITIES_CONFIG: Record<CityId, CityConfig> = {
     coworkingTitle: "Демонстрационный зал и бьюти-пространство OlyLife в центре Бишкека",
     successModalManagerCity: "в Бишкеке",
   },
+  almaty: {
+    id: "almaty",
+    cityName: "Алматы",
+    cityNameGenitive: "Алматы",
+    cityNamePrepositional: "в Алматы",
+    countryName: "Казахстан",
+    flag: "🇰🇿",
+    phoneCode: "+7",
+    phonePlaceholder: "+7 (701) 123-45-67 или @username",
+    currency: "KZT",
+    timeZone: "Asia/Almaty",
+    timeZoneLabel: "ALMT",
+    tgTag: "АЛМАТЫ 🇰🇿",
+    navbarCenterBadge: "В центре Алматы",
+    navbarRightBadge: "Впервые в Казахстане",
+    logoAlt: "OliLife Казахстан логотип",
+    heroTitleCity: "Алматы 🇰🇿",
+    formTitle: "🎁 Запишитесь на бесплатный тест-драйв в Алматы",
+    videoTitle: "Видеопрезентация бизнес-модели и оборудования OlyLife в Алматы",
+    coworkingImg: beautyCoworkingAlmaty,
+    coworkingAlt: "Демонстрационный зал и бьюти-пространство OlyLife в центре Алматы",
+    coworkingTitle: "Демонстрационный зал и бьюти-пространство OlyLife в центре Алматы",
+    successModalManagerCity: "в Алматы",
+  },
 };
 
 /**
@@ -87,12 +113,13 @@ export function getCurrentCity(): CityConfig {
     const datasetCity = document.documentElement.dataset.city;
     const datasetLang = document.documentElement.dataset.lang;
     const htmlLang = document.documentElement.lang?.toLowerCase();
-    if (datasetCity === "bishkek" || datasetLang === "kg" || htmlLang === "ky" || htmlLang === "kg") {
-      return CITIES_CONFIG.bishkek;
+    const path = window.location.pathname.toLowerCase();
+
+    if (datasetCity === "almaty" || path.includes("/almaty")) {
+      return CITIES_CONFIG.almaty;
     }
 
-    const path = window.location.pathname.toLowerCase();
-    if (path.includes("/bishkek") || path.includes("/kg")) {
+    if (datasetCity === "bishkek" || datasetLang === "kg" || htmlLang === "ky" || htmlLang === "kg" || path.includes("/bishkek") || path.includes("/kg")) {
       return CITIES_CONFIG.bishkek;
     }
   }

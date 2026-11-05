@@ -15,12 +15,15 @@ export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose, city, l
 
   const currentLocale = locale || getCurrentLocale();
   const isKg = currentLocale === "kg";
+  const isAlmaty = city?.id === "almaty";
   const isBishkek = city?.id === "bishkek" || isKg;
   
-  const locationWithCountry = isBishkek
-    ? "Бишкеке (Кыргызская Республика)"
-    : "Ташкенте (Республика Узбекистан)";
-  const locationCity = isBishkek ? "Бишкеке" : "Ташкенте";
+  const locationWithCountry = isAlmaty
+    ? "Алматы (Республика Казахстан)"
+    : isBishkek
+      ? "Бишкеке (Кыргызская Республика)"
+      : "Ташкенте (Республика Узбекистан)";
+  const locationCity = isAlmaty ? "Алматы" : isBishkek ? "Бишкеке" : "Ташкенте";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">

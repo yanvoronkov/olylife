@@ -215,6 +215,7 @@ export default function App() {
         isOpen={isSuccessModalOpen}
         onClose={() => setIsSuccessModalOpen(false)}
         lead={latestLead}
+        city={city}
         managerCity={city.successModalManagerCity}
         translations={translations}
       />

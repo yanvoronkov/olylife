@@ -48,9 +48,10 @@ function hashSha256(value: string): string {
 }
 
 function formatTelegramMessage(lead: StoredLead): string {
+  const isAlmaty = lead.city === "almaty";
   const isBishkek = lead.city === "bishkek";
-  const timeZone = isBishkek ? "Asia/Bishkek" : "Asia/Tashkent";
-  const timeZoneLabel = isBishkek ? "KGT" : "UZT";
+  const timeZone = isAlmaty ? "Asia/Almaty" : isBishkek ? "Asia/Bishkek" : "Asia/Tashkent";
+  const timeZoneLabel = isAlmaty ? "ALMT" : isBishkek ? "KGT" : "UZT";
 
   const dateStr = new Date(lead.createdAt).toLocaleString("ru-RU", {
     timeZone,
@@ -68,8 +69,8 @@ function formatTelegramMessage(lead: StoredLead): string {
     lead.tracking?.eventSourceUrl?.includes("/kg")
   );
 
-  const cityTag = isBishkek ? (isKg ? "БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]" : "БИШКЕК 🇰🇬") : "ТАШКЕНТ 🇺🇿";
-  const cityTitle = isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
+  const cityTag = isAlmaty ? "АЛМАТЫ 🇰🇿" : isBishkek ? (isKg ? "БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]" : "БИШКЕК 🇰🇬") : "ТАШКЕНТ 🇺🇿";
+  const cityTitle = isAlmaty ? "Алматы (Казахстан 🇰🇿)" : isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
 
   let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${cityTag}) с лендинга</b>\n\n`;
   message += `👤 <b>Имя:</b> ${escapeHtml(lead.name)}\n`;
@@ -160,6 +161,7 @@ async function sendToFacebookCAPI(
   }
 
   try {
+    const isAlmaty = lead.city === "almaty";
     const isBishkek = lead.city === "bishkek";
     const tracking = lead.tracking || {};
     const normalizedPhone = lead.phone.replace(/\D/g, "");
@@ -174,7 +176,7 @@ async function sendToFacebookCAPI(
 
     const eventTime = Math.floor(new Date(lead.createdAt).getTime() / 1000);
     const eventId = tracking.eventId || lead.id;
-    const eventSourceUrl = tracking.eventSourceUrl || (isBishkek ? "https://yarkozhivi.space/bishkek/" : "https://yarkozhivi.space/");
+    const eventSourceUrl = tracking.eventSourceUrl || (isAlmaty ? "https://yarkozhivi.space/almaty/" : isBishkek ? "https://yarkozhivi.space/bishkek/" : "https://yarkozhivi.space/");
 
     const payload: any = {
       data: [
@@ -193,11 +195,11 @@ async function sendToFacebookCAPI(
             fbp: tracking.fbp || undefined,
           },
           custom_data: {
-            content_name: isBishkek ? "Заявка на тест-драйв OlyLife P90 (Бишкек)" : "Заявка на тест-драйв OlyLife P90 (Ташкент)",
+            content_name: isAlmaty ? "Заявка на тест-драйв OlyLife P90 (Алматы)" : isBishkek ? "Заявка на тест-драйв OlyLife P90 (Бишкек)" : "Заявка на тест-драйв OlyLife P90 (Ташкент)",
             content_category: "Wellness & Beauty",
             profession: lead.profession,
             lead_source: lead.source || "Website Form",
-            currency: isBishkek ? "KGS" : "UZS",
+            currency: isAlmaty ? "KZT" : isBishkek ? "KGS" : "UZS",
             value: 0,
             utm_source: tracking.utm_source || undefined,
             utm_medium: tracking.utm_medium || undefined,
@@ -279,10 +281,11 @@ app.post("/api/leads", async (req, res) => {
       deliveredToFacebook: false,
     };
 
-    // 1. Отправка в Telegram (поддержка отдельного потока для Бишкека)
+    // 1. Отправка в Telegram (поддержка отдельных потоков для Алматы и Бишкека)
+    const isAlmaty = newLead.city === "almaty";
     const isBishkek = newLead.city === "bishkek";
-    const tgToken = (isBishkek && process.env.BISHKEK_TELEGRAM_BOT_TOKEN) || process.env.TELEGRAM_BOT_TOKEN || "";
-    const tgChatId = (isBishkek && process.env.BISHKEK_TELEGRAM_CHAT_ID) || process.env.TELEGRAM_CHAT_ID || "";
+    const tgToken = (isAlmaty && process.env.ALMATY_TELEGRAM_BOT_TOKEN) || (isBishkek && process.env.BISHKEK_TELEGRAM_BOT_TOKEN) || process.env.TELEGRAM_BOT_TOKEN || "";
+    const tgChatId = (isAlmaty && process.env.ALMATY_TELEGRAM_CHAT_ID) || (isBishkek && process.env.BISHKEK_TELEGRAM_CHAT_ID) || process.env.TELEGRAM_CHAT_ID || "";
 
     if (tgToken && tgChatId) {
       const tgResult = await sendToTelegram(formatTelegramMessage(newLead), tgToken, tgChatId);
@@ -316,6 +319,12 @@ app.post("/api/leads", async (req, res) => {
 });
 
 async function startServer() {
+  // Canonical redirect for Almaty subfolder (preserves query & UTM parameters)
+  app.get(/^\/almaty$/, (req, res) => {
+    const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
+    res.redirect(301, "/almaty/" + query);
+  });
+
   // Canonical redirect for Bishkek subfolder (preserves query & UTM parameters)
   app.get(/^\/bishkek$/, (req, res) => {
     const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
@@ -342,6 +351,10 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    app.get("/almaty*", (req, res) => {
+      const almatyHtml = path.join(distPath, "almaty", "index.html");
+      res.sendFile(almatyHtml);
+    });
     app.get("/kg*", (req, res) => {
       const kgHtml = path.join(distPath, "kg", "index.html");
       res.sendFile(kgHtml);

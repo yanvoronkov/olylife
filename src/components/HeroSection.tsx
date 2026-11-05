@@ -203,7 +203,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xl shadow-slate-200/60 relative">
 
               <h3 className="text-[20px] sm:text-[21px] font-bold text-slate-950 leading-tight mb-4">
-                {translations?.hero?.form?.title || city.formTitle}
+                {(isKg ? translations?.hero?.form?.title : city.formTitle) || "🎁 Запишитесь на бесплатный тест-драйв"}
               </h3>
 
               <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -234,7 +234,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     required
                     value={phone}
                     onChange={handlePhoneChange}
-                    placeholder={translations?.hero?.form?.phonePlaceholder || city.phonePlaceholder}
+                    placeholder={(isKg ? translations?.hero?.form?.phonePlaceholder : city.phonePlaceholder) || "+7 (701) 123-45-67 или @username"}
                     className="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1E9646] focus:ring-2 focus:ring-[#1E9646]/20 text-base transition-all"
                   />
                 </div>

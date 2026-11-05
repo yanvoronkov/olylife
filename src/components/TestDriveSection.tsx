@@ -83,13 +83,19 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
           {/* Section Header */}
           <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-10 lg:mb-12">
             <span className="inline-block px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#EBF7F0] text-[#0E5E2B] border border-[#C3EBD4] mb-3">
-              {translations?.testDrive?.badge || "БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ В БИШКЕКЕ"}
+              {city.id === "almaty"
+                ? "ТЕСТ-ДРАЙВ В АЛМАТЫ"
+                : (isKg ? translations?.testDrive?.badge : `ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`) || `ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`}
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-[45px] font-extrabold text-slate-950 tracking-tight leading-tight mb-4">
               {translations?.testDrive?.title || "Проверьте на себе и оцените результат!"}
             </h2>
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-              {translations?.testDrive?.description || "Приезжайте в наше демо-пространство, пройдите сеанс, задайте уточняющие вопросы, и мы обсудим персональный план запуска под ваш график."}
+              {city.id === "almaty"
+                ? "Приезжайте в наше демо-пространство в центре Алматы, пройдите сеанс, задайте уточняющие вопросы, и мы обсудим персональный план запуска под ваш график."
+                : (isKg
+                    ? translations?.testDrive?.description
+                    : `Приезжайте в наше демо-пространство в центре ${city.cityNameGenitive}, пройдите сеанс, задайте уточняющие вопросы, и мы обсудим персональный план запуска под ваш график.`)}
             </p>
           </div>
 
@@ -132,7 +138,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
 
               <div className="text-center mb-8">
                 <h3 className="text-[22px] sm:text-[24px] font-extrabold text-slate-950 leading-snug mb-4">
-                  {translations?.testDrive?.formTitle || city.formTitle}
+                  {(isKg ? translations?.testDrive?.formTitle : city.formTitle) || "🎁 Запишитесь на бесплатный тест-драйв"}
                 </h3>
 
                 {/* Urgency Counter Badge */}
@@ -172,7 +178,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
                       required
                       value={phone}
                       onChange={handlePhoneChange}
-                      placeholder={translations?.hero?.form?.phonePlaceholder || city.phonePlaceholder}
+                      placeholder={(isKg ? translations?.hero?.form?.phonePlaceholder : city.phonePlaceholder) || "+7 (701) 123-45-67 или @username"}
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1E9646] focus:ring-2 focus:ring-[#1E9646]/20 text-base transition-all"
                     />
                   </div>

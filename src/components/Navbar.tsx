@@ -10,9 +10,16 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ city, translations }) => {
-  const locationBadge = translations?.navbar?.locationBadge || city.navbarCenterBadge;
-  const rightBadge = translations?.navbar?.firstInCountryBadge || city.navbarRightBadge;
-  const logoAlt = translations?.navbar?.logoAlt || city.logoAlt;
+  const isKg = translations?.locale === "kg";
+  const locationBadge = isKg
+    ? (translations?.navbar?.locationBadge || city.navbarCenterBadge)
+    : (city.navbarCenterBadge || translations?.navbar?.locationBadge);
+  const rightBadge = isKg
+    ? (translations?.navbar?.firstInCountryBadge || city.navbarRightBadge)
+    : (city.navbarRightBadge || translations?.navbar?.firstInCountryBadge);
+  const logoAlt = isKg
+    ? (translations?.navbar?.logoAlt || city.logoAlt)
+    : (city.logoAlt || translations?.navbar?.logoAlt);
 
   return (
     <header className="sticky top-0 z-40 bg-[#F0F7F2]/90 backdrop-blur-md border-b border-[#D8EADB] shadow-xs transition-all">
@@ -43,12 +50,21 @@ export const Navbar: React.FC<NavbarProps> = ({ city, translations }) => {
           </span>
         </div>
 
-        {/* Right: Country First Badge (sized strictly to content, single line on mobile) */}
-        <div className="flex items-center justify-end shrink-0">
+        {/* Right: Country First Badge (sized strictly to content, single line on mobile) & Lang Switcher only for Bishkek */}
+        <div className="flex items-center justify-end gap-2 shrink-0">
           <span className="w-fit inline-flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-full text-[9.5px] sm:text-xs md:text-sm font-bold bg-[#EBF7F0] text-[#0A3C28] border border-[#A5DEBC] shadow-xs whitespace-nowrap">
             <Zap className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-[#1E9646] shrink-0" />
             <span>{rightBadge}</span>
           </span>
+
+          {city.id === "bishkek" && translations?.navbar?.switchLangText && (
+            <a
+              href={translations.navbar.switchLangHref}
+              className="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:border-[#1E9646] hover:text-[#1E9646] transition-colors shadow-xs"
+            >
+              {translations.navbar.switchLangText}
+            </a>
+          )}
         </div>
 
       </div>

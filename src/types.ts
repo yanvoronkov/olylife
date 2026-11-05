@@ -1,5 +1,7 @@
 import { TrackingData } from "./utils/tracking";
 
+export type CityId = "tashkent" | "bishkek" | "almaty";
+
 export interface LeadFormData {
   name: string;
   phone: string;
