@@ -45,6 +45,7 @@ export default function App() {
 
   const handleLeadSubmit = async (formData: LeadFormData) => {
     setIsSubmitting(true);
+    let newRecord: LeadRecord | null = null;
     try {
       // Сбор данных трекинга (fbclid, UTM-метки, _fbc, _fbp, eventId)
       const trackingData = getTrackingPayload();
@@ -55,15 +56,30 @@ export default function App() {
         tracking: trackingData,
       };
 
+      newRecord = {
+        id: trackingData.eventId,
+        ...payload,
+        createdAt: new Date().toISOString(),
+        deliveredToTelegram: false,
+      };
+
       // 1. Отправка события Lead в браузерный Meta Pixel (с eventID для дедупликации с CAPI)
-      trackMetaBrowserLead(trackingData.eventId, {
-        ...formData,
-        source: `${formData.source || "Form"} [${city.cityName}${isKg ? " KG" : ""}]`,
-      });
+      try {
+        trackMetaBrowserLead(trackingData.eventId, {
+          ...formData,
+          source: `${formData.source || "Form"} [${city.cityName}${isKg ? " KG" : ""}]`,
+        });
+      } catch (pixelErr) {
+        console.error("Meta Browser Lead tracking error:", pixelErr);
+      }
 
       // 2. Достижение цели в Яндекс.Метрике
-      if (typeof (window as unknown as { ym?: (id: number, action: string, target: string) => void }).ym === "function") {
-        (window as unknown as { ym: (id: number, action: string, target: string) => void }).ym(103911648, "reachGoal", "lead_form_submitted");
+      try {
+        if (typeof (window as unknown as { ym?: (id: number, action: string, target: string) => void }).ym === "function") {
+          (window as unknown as { ym: (id: number, action: string, target: string) => void }).ym(103911648, "reachGoal", "lead_form_submitted");
+        }
+      } catch (ymErr) {
+        console.error("Yandex Metrika tracking error:", ymErr);
       }
 
       // Определение Telegram бота и чата (поддержка отдельного потока для Бишкека)
@@ -108,20 +124,28 @@ export default function App() {
 
         const url = `https://api.telegram.org/bot${botToken.trim()}/sendMessage`;
 
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: chatId.trim(),
-            text: message,
-            parse_mode: "HTML",
-            disable_web_page_preview: true,
-          }),
-        });
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: chatId.trim(),
+              text: message,
+              parse_mode: "HTML",
+              disable_web_page_preview: true,
+            }),
+          });
 
-        const data = await response.json();
-        if (!data.ok) {
-          throw new Error(data.description || "Ошибка Telegram API");
+          const data = await response.json();
+          if (!data.ok) {
+            console.error("Telegram API response error:", data);
+            newRecord.telegramError = data.description || "Ошибка Telegram API";
+          } else {
+            newRecord.deliveredToTelegram = true;
+          }
+        } catch (tgNetworkErr) {
+          console.error("Telegram network dispatch error:", tgNetworkErr);
+          newRecord.telegramError = tgNetworkErr instanceof Error ? tgNetworkErr.message : "Сетевая ошибка Telegram";
         }
 
         // Meta Conversions API (CAPI) client-side dispatch
@@ -129,47 +153,51 @@ export default function App() {
         const fbPixelId = import.meta.env.VITE_FB_PIXEL_ID || "1420624392253746";
         const fbTestCode = import.meta.env.VITE_FB_TEST_EVENT_CODE;
         if (fbAccessToken) {
-          sendMetaCAPIClientSide(formData, trackingData, fbAccessToken, fbPixelId, fbTestCode).catch(() => { });
+          sendMetaCAPIClientSide(formData, trackingData, fbAccessToken, fbPixelId, fbTestCode).catch((capiErr) => {
+            console.error("Meta CAPI dispatch error:", capiErr);
+          });
         }
-
-        const newRecord: LeadRecord = {
-          id: trackingData.eventId,
-          ...payload,
-          createdAt: new Date().toISOString(),
-          deliveredToTelegram: true,
-        };
-
-        setLatestLead(newRecord);
-        setIsSuccessModalOpen(true);
       } else {
         // Отправка на бэкенд Express API (Telegram + Facebook Conversions API)
-        const response = await fetch("/api/leads", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        try {
+          const response = await fetch("/api/leads", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
 
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.error || data.message || "Ошибка отправки заявки");
+          const data = await response.json();
+          if (!response.ok) {
+            console.error("Express API error:", data);
+            newRecord.telegramError = data.error || data.message || "Ошибка отправки заявки";
+          } else {
+            newRecord.id = data.leadId || newRecord.id;
+            newRecord.deliveredToTelegram = data.deliveredToTelegram || false;
+            newRecord.deliveredToFacebook = data.deliveredToFacebook || false;
+            newRecord.telegramError = data.telegramError;
+            newRecord.facebookError = data.facebookError;
+          }
+        } catch (apiErr) {
+          console.error("Express API network error:", apiErr);
+          newRecord.telegramError = apiErr instanceof Error ? apiErr.message : "Сетевая ошибка бэкенда";
         }
-
-        const newRecord: LeadRecord = {
-          id: data.leadId || trackingData.eventId,
-          ...payload,
-          createdAt: new Date().toISOString(),
-          deliveredToTelegram: data.deliveredToTelegram || false,
-          deliveredToFacebook: data.deliveredToFacebook || false,
-          telegramError: data.telegramError,
-          facebookError: data.facebookError,
-        };
-
-        setLatestLead(newRecord);
-        setIsSuccessModalOpen(true);
       }
+
+      setLatestLead(newRecord);
+      setIsSuccessModalOpen(true);
     } catch (err) {
       console.error("Error submitting lead:", err);
-      alert(isKg ? "Билдирмеңиз кабыл алынды!" : "Заявка успешно зафиксирована!");
+      // Гарантируем открытие красивого модального окна Спасибо даже при непредвиденном сбое
+      const fallbackRecord: LeadRecord = newRecord || {
+        id: `lead_${Date.now()}`,
+        ...formData,
+        city: city.id,
+        createdAt: new Date().toISOString(),
+        deliveredToTelegram: false,
+        telegramError: err instanceof Error ? err.message : String(err),
+      };
+      setLatestLead(fallbackRecord);
+      setIsSuccessModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
