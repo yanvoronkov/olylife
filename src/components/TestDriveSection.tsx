@@ -84,8 +84,8 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
           <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-10 lg:mb-12">
             <span className="inline-block px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#EBF7F0] text-[#0E5E2B] border border-[#C3EBD4] mb-3">
               {city.id === "almaty"
-                ? "ТЕСТ-ДРАЙВ В АЛМАТЫ"
-                : (isKg ? translations?.testDrive?.badge : `ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`) || `ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`}
+                ? "БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ В АЛМАТЫ"
+                : (isKg ? translations?.testDrive?.badge : `БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`) || `БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`}
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-[45px] font-extrabold text-slate-950 tracking-tight leading-tight mb-4">
               {translations?.testDrive?.title || "Проверьте на себе и оцените результат!"}
