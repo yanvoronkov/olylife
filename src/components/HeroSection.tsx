@@ -179,18 +179,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Trust Elements Under Video */}
-            <div className="w-full flex flex-wrap items-center justify-around gap-y-2 gap-x-4 pt-3.5 text-slate-600 text-xs sm:text-sm font-medium">
-              <div className="flex items-center gap-1.5">
+            <div className="w-full flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-start gap-2 sm:gap-x-4 sm:gap-y-2 pt-3.5 text-slate-600 text-xs sm:text-sm font-medium">
+              <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-[#1E9646] shrink-0" />
                 <span>{translations?.hero?.trustCards?.guarantee || "Сертифицированная продукция и официальная гарантия"}</span>
               </div>
-              <span className="hidden sm:inline text-slate-300">•</span>
-              <div className="flex items-center gap-1.5">
+              <span className="hidden sm:inline text-slate-300 select-none">•</span>
+              <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#1E9646] shrink-0" />
                 <span>{translations?.hero?.trustCards?.noMedEducation || "Не требуется медицинское образование"}</span>
               </div>
-              <span className="hidden sm:inline text-slate-300">•</span>
-              <div className="flex items-center gap-1.5">
+              <span className="hidden sm:inline text-slate-300 select-none">•</span>
+              <div className="flex items-center gap-2">
                 <Droplets className="w-4 h-4 text-[#1E9646] shrink-0" />
                 <span>{translations?.hero?.trustCards?.noConsumables || "Без расходов на расходные материалы"}</span>
               </div>
