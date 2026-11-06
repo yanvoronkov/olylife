@@ -56,11 +56,6 @@ export const TargetAudienceSection: React.FC<TargetAudienceSectionProps> = ({
           <h2 className="text-2xl sm:text-3xl lg:text-[45px] font-extrabold text-slate-950 tracking-tight leading-tight">
             {translations?.targetAudience?.title || "Для кого подходит наилучшим образом?"}
           </h2>
-          {translations?.targetAudience?.subtitle && (
-            <p className="mt-2 text-base sm:text-lg text-slate-600 font-medium">
-              {translations.targetAudience.subtitle}
-            </p>
-          )}
         </div>
 
         {/* 3 columns, 2 rows Grid of Professions */}

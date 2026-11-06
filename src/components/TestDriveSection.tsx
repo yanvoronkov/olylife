@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowRight, User, Phone, Briefcase, CheckCircle2, Clock, Check } from "lucide-react";
+import { ArrowRight, User, Phone, Briefcase, CheckCircle2, Clock } from "lucide-react";
 import { PROFESSION_OPTIONS } from "../data";
 import { LeadFormData } from "../types";
 import { CityConfig } from "../config/cities";
@@ -63,14 +63,6 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
     onSubmitLead({ name, phone, profession, city: city.id, source: sourceLabel });
   };
 
-  const bullets = translations?.testDrive?.bullets || [
-    "Ознакомление с принципом работы оборудования",
-    "Прохождение тестового сеанса",
-    "Ответы на все ваши вопросы",
-    "Обсуждение возможностей внедрения в ваш кабинет",
-    "План запуска с учетом вашего рабочего графика",
-  ];
-
   return (
     <>
       <section className="pt-8 pb-16 sm:pt-12 sm:pb-20 lg:pt-14 lg:pb-24 bg-gradient-to-b from-[#EAF3EC] to-[#E2EFE5] text-slate-900 relative border-t border-[#D5E8D9] overflow-hidden">
@@ -102,8 +94,8 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
           {/* Layout: Image + Checklist on Left (6 cols), Booking Form Block on Right (6 cols) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
-            {/* LEFT: Composite Coworking Image & Bullet Checkpoints (6 cols) */}
-            <div className="lg:col-span-6 space-y-5">
+            {/* LEFT: Composite Coworking Image (6 cols) */}
+            <div className="lg:col-span-6">
               <div className="bg-white rounded-3xl p-1 sm:p-1.5 border border-slate-200/90 shadow-xl shadow-slate-200/40 overflow-hidden relative group">
                 <img
                   src={city.coworkingImg}
@@ -115,21 +107,6 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
                   decoding="async"
                   className="w-full h-auto rounded-2xl object-cover hover:scale-[1.02] transition-transform duration-500"
                 />
-              </div>
-
-              {/* Checklist points */}
-              <div className="bg-white/90 backdrop-blur-xs rounded-2xl p-5 border border-slate-200/90 shadow-xs space-y-2.5">
-                <h4 className="text-sm font-bold text-slate-950 uppercase tracking-wider mb-2">
-                  {isKg ? "Сиз төмөнкүлөргө мүмкүнчүлүк аласыз:" : "На тест-драйве вы сможете:"}
-                </h4>
-                {bullets.map((bullet, idx) => (
-                  <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                    <div className="w-5 h-5 rounded-full bg-[#EBF7F0] border border-[#C3EBD4] text-[#1E9646] flex items-center justify-center shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span className="leading-snug">{bullet}</span>
-                  </div>
-                ))}
               </div>
             </div>
 

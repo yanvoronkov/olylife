@@ -1,6 +1,6 @@
 import React from "react";
 import { KEY_ADVANTAGES, CLIENT_BENEFITS } from "../data";
-import { RefreshCw, Moon, Activity, Salad, Smile, BatteryCharging, Zap, Sparkles, Clock, UserCheck, Maximize2, ShieldAlert } from "lucide-react";
+import { RefreshCw, Moon, Activity, Salad, Smile, BatteryCharging, Zap, Sparkles, Clock, UserCheck, Maximize2 } from "lucide-react";
 import { Translations } from "../config/translations";
 import massageRoomImg from "../../assets/Cozy_massage_room.jpeg";
 
@@ -119,7 +119,7 @@ export const TechnologySection: React.FC<TechnologySectionProps> = ({ translatio
           </div>
 
           {/* 3x2 Grid of Client Benefits */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {clientBenefits.map((benefit) => (
               <div
                 key={benefit.id}
@@ -135,14 +135,6 @@ export const TechnologySection: React.FC<TechnologySectionProps> = ({ translatio
               </div>
             ))}
           </div>
-
-          {/* Important disclaimer */}
-          {translations?.technology?.disclaimer && (
-            <div className="bg-white/80 rounded-2xl p-4 sm:p-5 border border-emerald-200 text-xs sm:text-sm text-slate-600 leading-relaxed flex items-start gap-3">
-              <ShieldAlert className="w-5 h-5 text-[#1E9646] shrink-0 mt-0.5" />
-              <p>{translations.technology.disclaimer}</p>
-            </div>
-          )}
 
         </div>
 
