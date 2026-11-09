@@ -33,7 +33,7 @@ export const TurnstileWidget: React.FC<TurnstileWidgetProps> = ({
   onSuccess,
   onError,
   onExpire,
-  className = "my-2 flex justify-center",
+  className = "min-h-[65px] flex justify-center my-2",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
@@ -56,7 +56,7 @@ export const TurnstileWidget: React.FC<TurnstileWidgetProps> = ({
             if (isMounted && onExpire) onExpire();
           },
           theme: "light",
-          size: "flexible",
+          size: "normal",
         });
         widgetIdRef.current = id;
       } catch (err) {
@@ -67,10 +67,15 @@ export const TurnstileWidget: React.FC<TurnstileWidgetProps> = ({
     if (typeof window !== "undefined" && window.turnstile) {
       renderWidget();
     } else {
+      let attempts = 0;
       const interval = setInterval(() => {
+        attempts++;
         if (typeof window !== "undefined" && window.turnstile) {
           clearInterval(interval);
           renderWidget();
+        } else if (attempts >= 50) {
+          // Завершаем опрос через 5 сек при блокировке Turnstile блокировщиками рекламы
+          clearInterval(interval);
         }
       }, 100);
 
