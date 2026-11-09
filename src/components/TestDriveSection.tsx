@@ -5,6 +5,7 @@ import { LeadFormData } from "../types";
 import { CityConfig } from "../config/cities";
 import { Translations } from "../config/translations";
 import { formatFlexiblePhone } from "../utils/phoneFormatter";
+import { TurnstileWidget } from "./TurnstileWidget";
 
 interface TestDriveSectionProps {
   city: CityConfig;
@@ -31,6 +32,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [profession, setProfession] = useState(professionOptions[0]);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   useEffect(() => {
     if (!professionOptions.includes(profession)) {
@@ -60,7 +62,7 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
     const sourceLabel = isKg ? "Акыркы форма (Footer Form KG)" : "Footer Form";
-    onSubmitLead({ name, phone, profession, city: city.id, source: sourceLabel });
+    onSubmitLead({ name, phone, profession, city: city.id, source: sourceLabel, turnstileToken });
   };
 
   return (
@@ -198,6 +200,9 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
                     </div>
                   )}
                 </div>
+
+                {/* Cloudflare Turnstile Spam Protection */}
+                <TurnstileWidget onSuccess={setTurnstileToken} />
 
                 {/* Submit Button */}
                 <button

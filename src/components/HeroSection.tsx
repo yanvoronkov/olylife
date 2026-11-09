@@ -5,6 +5,7 @@ import { LeadFormData } from "../types";
 import { CityConfig } from "../config/cities";
 import { Translations } from "../config/translations";
 import { formatFlexiblePhone } from "../utils/phoneFormatter";
+import { TurnstileWidget } from "./TurnstileWidget";
 import videoPreviewImg from "../../assets/video_preview.jpg";
 
 interface HeroSectionProps {
@@ -28,6 +29,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [profession, setProfession] = useState(professionOptions[0]);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   // Update profession if options change
   useEffect(() => {
@@ -69,7 +71,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
     const sourceLabel = isKg ? "Башкы бет формасы (Hero Section KG)" : "Hero Section Form";
-    onSubmitLead({ name, phone, profession, city: city.id, source: sourceLabel });
+    onSubmitLead({ name, phone, profession, city: city.id, source: sourceLabel, turnstileToken });
   };
 
   // Video source & poster
@@ -277,6 +279,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </div>
                   )}
                 </div>
+
+                {/* Cloudflare Turnstile Spam Protection */}
+                <TurnstileWidget onSuccess={setTurnstileToken} />
 
                 {/* SUBMIT BUTTON */}
                 <button

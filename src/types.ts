@@ -9,6 +9,7 @@ export interface LeadFormData {
   source?: string;
   city?: string;
   notes?: string;
+  turnstileToken?: string;
   calculatorResults?: {
     clientsPerDay: number;
     sessionPrice: number;
