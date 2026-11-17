@@ -75,7 +75,6 @@ export default function App() {
         timeZone: city.timeZone,
         language: isKg ? "kg" : "ru",
         source: formData.source || "Website Form",
-        turnstileToken: formData.turnstileToken || "",
         tracking: {
           ...trackingData,
           eventSourceUrl: typeof window !== "undefined" ? window.location.href : trackingData.eventSourceUrl,

@@ -36,7 +36,6 @@ jobs:
       - name: Build static site
         run: npx vite build
         env:
-          VITE_TURNSTILE_SITE_KEY: 0x4AAAAAAF6AZxG6zWS064W1
           VITE_LEAD_WEBHOOK_URL: https://automations.inetskills.ru/webhook/olylife-lead
           VITE_FB_PIXEL_ID: 1420624392253746
 
