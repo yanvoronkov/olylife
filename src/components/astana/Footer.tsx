@@ -17,17 +17,18 @@ export const AstanaFooter: React.FC<FooterProps> = ({ onOpenPrivacy }) => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-emerald-800/40">
           
           <div className="md:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
+            {/* Логотип выше на мобильных, заголовок и подзаголовок строго под ним */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
               <img
                 src="/images/osam-logo.png"
                 alt="Клиника OSAM"
-                className="h-10 w-auto bg-white/95 p-1 rounded-lg"
+                className="h-10 w-auto bg-white/95 p-1 rounded-lg shrink-0"
               />
               <div>
-                <span className="text-white font-bold text-base block">
+                <span className="text-white font-bold text-base sm:text-lg block">
                   {ASTANA_CLINIC_CONFIG.clinicFullName}
                 </span>
-                <span className="text-xs text-emerald-300/80 block">
+                <span className="text-xs text-emerald-300/80 block mt-0.5">
                   {ASTANA_CLINIC_CONFIG.hostClinicName} • г. {ASTANA_CLINIC_CONFIG.city}
                 </span>
               </div>
