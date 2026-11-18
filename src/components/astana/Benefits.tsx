@@ -24,9 +24,6 @@ export const AstanaBenefits: React.FC = () => {
       description: 'нервная система выходит из режима выживания, приходит глубокое спокойствие.',
       bgGradient: 'bg-gradient-to-b from-[#EDF6F1] to-[#FFFFFF]',
       borderColor: 'border-[#2E5E4A]/15',
-      blobBg1: 'bg-[#CBE4D3]',
-      blobBg2: 'bg-[#DFEFE5]',
-      blobBg3: 'bg-[#B5DAC0]',
     },
     {
       id: 2,
@@ -35,9 +32,6 @@ export const AstanaBenefits: React.FC = () => {
       description: 'разгоняется кровоток и лимфоток, уходят застойные жидкости.',
       bgGradient: 'bg-gradient-to-b from-[#EBF3F8] to-[#FFFFFF]',
       borderColor: 'border-[#2B5470]/15',
-      blobBg1: 'bg-[#CCE1EE]',
-      blobBg2: 'bg-[#DFECF5]',
-      blobBg3: 'bg-[#B7D6E9]',
     },
     {
       id: 3,
@@ -46,9 +40,6 @@ export const AstanaBenefits: React.FC = () => {
       description: 'восстанавливается естественный потенциал организма, возвращается бодрость и ясность ума.',
       bgGradient: 'bg-gradient-to-b from-[#F7F4EB] to-[#FFFFFF]',
       borderColor: 'border-[#7A6038]/15',
-      blobBg1: 'bg-[#EFE4CF]',
-      blobBg2: 'bg-[#F7EFE1]',
-      blobBg3: 'bg-[#E3D1B1]',
     },
   ];
 
@@ -74,30 +65,12 @@ export const AstanaBenefits: React.FC = () => {
               key={item.id}
               className={`group relative rounded-[32px] p-7 sm:p-8 ${item.bgGradient} border ${item.borderColor} shadow-lg shadow-emerald-950/5 hover:shadow-2xl hover:shadow-emerald-950/12 transition-all duration-300 hover:-translate-y-1.5 flex flex-col h-full overflow-hidden`}
             >
-              {/* 1. Зона иллюстрации строго фиксированной высоты с органическими скрещивающимися овалами */}
+              {/* 1. Зона иллюстрации строго фиксированной высоты (без подложки, чистые 3D-модели как просил клиент) */}
               <div className="w-full h-52 sm:h-56 flex items-center justify-center relative shrink-0">
-                
-                {/* Скрещивающиеся органические овалы разных оттенков на фоне */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-                  {/* Первый овал */}
-                  <div
-                    className={`absolute w-36 h-48 sm:w-40 sm:h-50 rounded-[45%_55%_60%_40%/50%_60%_40%_50%] ${item.blobBg1} opacity-70 blur-[1px] transform -rotate-12 group-hover:scale-105 transition-transform duration-500`}
-                  />
-                  {/* Второй скрещивающийся овал другого оттенка */}
-                  <div
-                    className={`absolute w-44 h-32 sm:w-48 sm:h-36 rounded-[55%_45%_40%_60%/40%_50%_60%_50%] ${item.blobBg2} opacity-80 blur-[1px] transform rotate-18 group-hover:rotate-12 transition-transform duration-500`}
-                  />
-                  {/* Небольшой акцентный блик/пятно */}
-                  <div
-                    className={`absolute w-24 h-24 rounded-full ${item.blobBg3} opacity-50 blur-md transform translate-x-3 -translate-y-2`}
-                  />
-                </div>
-
-                {/* Чистая 3D-иллюстрация без рамок */}
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="relative z-10 max-h-full max-w-full object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-500 ease-out"
+                  className="relative z-10 max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
               </div>
 

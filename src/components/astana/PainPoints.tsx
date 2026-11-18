@@ -27,7 +27,6 @@ export const AstanaPainPoints: React.FC = () => {
       borderColor: 'border-[#2E5E4A]/10',
       blobBg1: 'bg-[#D6E7DC]',
       blobBg2: 'bg-[#E5F1E9]',
-      blobBg3: 'bg-[#BFDBC8]',
     },
     {
       id: 2,
@@ -38,7 +37,6 @@ export const AstanaPainPoints: React.FC = () => {
       borderColor: 'border-[#3A5D73]/10',
       blobBg1: 'bg-[#D6E5EE]',
       blobBg2: 'bg-[#E4EEF5]',
-      blobBg3: 'bg-[#BCD4E4]',
     },
     {
       id: 3,
@@ -49,7 +47,6 @@ export const AstanaPainPoints: React.FC = () => {
       borderColor: 'border-[#7C6343]/10',
       blobBg1: 'bg-[#EDE2D2]',
       blobBg2: 'bg-[#F6EFE4]',
-      blobBg3: 'bg-[#DECABA]',
     },
   ];
 
@@ -81,19 +78,15 @@ export const AstanaPainPoints: React.FC = () => {
               {/* 1. Зона иллюстрации строго фиксированной высоты с органическими скрещивающимися овалами */}
               <div className="w-full h-52 sm:h-56 flex items-center justify-center relative shrink-0">
                 
-                {/* Скрещивающиеся органические овалы разных оттенков на фоне */}
+                {/* Скрещивающиеся мягкие органические овалы разных оттенков на фоне (без кружков) */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
                   {/* Первый овал */}
                   <div
-                    className={`absolute w-36 h-48 sm:w-40 sm:h-50 rounded-[45%_55%_60%_40%/50%_60%_40%_50%] ${item.blobBg1} opacity-70 blur-[1px] transform -rotate-12 group-hover:scale-105 transition-transform duration-500`}
+                    className={`absolute w-40 h-52 sm:w-44 sm:h-56 rounded-[45%_55%_65%_35%/50%_60%_40%_50%] ${item.blobBg1} opacity-75 blur-xs transform -rotate-12 group-hover:scale-105 transition-transform duration-500`}
                   />
                   {/* Второй скрещивающийся овал другого оттенка */}
                   <div
-                    className={`absolute w-44 h-32 sm:w-48 sm:h-36 rounded-[55%_45%_40%_60%/40%_50%_60%_50%] ${item.blobBg2} opacity-80 blur-[1px] transform rotate-18 group-hover:rotate-12 transition-transform duration-500`}
-                  />
-                  {/* Небольшой акцентный блик/пятно */}
-                  <div
-                    className={`absolute w-24 h-24 rounded-full ${item.blobBg3} opacity-50 blur-md transform translate-x-3 -translate-y-2`}
+                    className={`absolute w-48 h-36 sm:w-52 sm:h-40 rounded-[55%_45%_35%_65%/40%_50%_60%_50%] ${item.blobBg2} opacity-85 blur-xs transform rotate-18 group-hover:rotate-12 transition-transform duration-500`}
                   />
                 </div>
 
