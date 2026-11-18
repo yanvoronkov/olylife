@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Phone, MessageCircle } from 'lucide-react';
 import { ASTANA_CLINIC_CONFIG } from '@/src/config/astanaClinic';
 
@@ -7,11 +7,49 @@ import { ASTANA_CLINIC_CONFIG } from '@/src/config/astanaClinic';
  * Выделенная стеклянная плавающая капсула (Glassmorphism):
  * - Мягкое матовое стекло (backdrop-blur-xl, white/90)
  * - Четкая рамка со стеклянным бликом (border-white/80, shadow-lg)
- * - Логотип клиники, телефон в элегантном бейдже и кнопка «Написать в WhatsApp» с онлайн-индикатором.
+ * - Умное скрытие: при скролле вниз аккуратно сворачивается вверх, открывая контент,
+ *   а при подъеме вверх (скролле вверх) плавно показывается.
+ * - У самого верха страницы (до 60px) всегда видна.
  */
 export const AstanaNavbar: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (currentScrollY <= 60) {
+            // У самого верха страницы всегда открыта
+            setIsVisible(true);
+          } else if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+            // Скроллим вниз — аккуратно сворачиваем шапку
+            setIsVisible(false);
+          } else if (currentScrollY < lastScrollY.current) {
+            // Скроллим вверх (поднимаем сайт) — показываем шапку
+            setIsVisible(true);
+          }
+
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-2 sm:top-3 z-50 w-full px-3 sm:px-6 pointer-events-none">
+    <header className={`sticky top-2 sm:top-3 z-50 w-full px-3 sm:px-6 pointer-events-none transition-all duration-300 ease-out ${
+      isVisible ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0 pointer-events-none'
+    }`}>
       <div className="max-w-7xl mx-auto rounded-[24px] sm:rounded-full bg-white/90 backdrop-blur-xl border border-white/90 shadow-xl shadow-emerald-950/8 px-4 sm:px-7 py-3 flex items-center justify-between pointer-events-auto transition-all duration-300">
         
         {/* Логотип клиники */}

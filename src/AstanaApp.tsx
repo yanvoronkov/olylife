@@ -8,6 +8,7 @@ import { AstanaOfferCta } from '@/src/components/astana/OfferCta';
 import { AstanaFooter } from '@/src/components/astana/Footer';
 import { AstanaSuccessModal } from '@/src/components/astana/SuccessModal';
 import { AstanaPrivacyModal } from '@/src/components/astana/PrivacyModal';
+import { AstanaScrollNavButton } from '@/src/components/astana/ScrollNavButton';
 import { initAstanaTrackingParams } from '@/src/utils/astanaTracking';
 import { AstanaTrackingData } from '@/src/types/astanaClinic';
 
@@ -100,6 +101,8 @@ export const AstanaApp: React.FC = () => {
         isOpen={isPrivacyOpen}
         onClose={() => setIsPrivacyOpen(false)}
       />
+      {/* Интерактивная Liquid Glass кнопка быстрой прокрутки (вверх/вниз) */}
+      <AstanaScrollNavButton />
     </div>
   );
 };
