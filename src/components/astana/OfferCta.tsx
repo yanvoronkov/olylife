@@ -137,17 +137,17 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-200/50 rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="absolute bottom-0 right-10 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl -z-10 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
         
         {/* Главная карточка блока со стеклянной рамкой */}
-        <div className="rounded-[36px] bg-gradient-to-b from-white via-white/95 to-[#F4FAF6]/90 backdrop-blur-xl border border-white/90 shadow-2xl shadow-emerald-950/10 p-7 sm:p-12 lg:p-14 relative overflow-hidden">
+        <div className="rounded-[28px] sm:rounded-[36px] bg-gradient-to-b from-white via-white/95 to-[#F4FAF6]/90 backdrop-blur-xl border border-white/90 shadow-2xl shadow-emerald-950/10 p-4 sm:p-8 lg:p-14 relative overflow-hidden">
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             
             {/* Левая колонка: Заголовок, подзаголовок и стильная стеклянная плашка цен */}
-            <div className="lg:col-span-7 space-y-7">
+            <div className="lg:col-span-7 space-y-6 sm:space-y-7">
               
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black text-[#0A2B1D] tracking-tight leading-[1.2]">
                   Не откладывайте себя «на потом» и не привыкайте жить вполсилы.
                 </h2>
@@ -158,8 +158,8 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
               </div>
 
               {/* Стильная стеклянная визитка цены */}
-              <div className="pt-2">
-                <div className="inline-flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-[24px] bg-gradient-to-br from-white via-[#F4FAF6] to-[#EEF7F2] border border-white/90 shadow-md shadow-emerald-950/5">
+              <div className="pt-1 sm:pt-2">
+                <div className="inline-flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 p-4 sm:p-6 rounded-[22px] sm:rounded-[24px] bg-gradient-to-br from-white via-[#F4FAF6] to-[#EEF7F2] border border-white/90 shadow-md shadow-emerald-950/5 w-full sm:w-auto">
                   
                   <div className="flex items-center gap-4 flex-wrap">
                     <div className="flex flex-col whitespace-nowrap">
@@ -188,12 +188,12 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
 
             </div>
 
-            {/* Правая колонка: Форма в стеклянной плашке */}
+            {/* Правая колонка: Форма в стеклянной плашке (просторная на мобильных устройствах) */}
             <div className="lg:col-span-5">
-              <div className="p-7 sm:p-9 rounded-[30px] bg-gradient-to-b from-white via-[#F2F8F4] to-emerald-50/60 backdrop-blur-md border border-white/90 shadow-xl shadow-emerald-950/8">
+              <div className="p-4 sm:p-7 md:p-9 rounded-[22px] sm:rounded-[30px] bg-gradient-to-b from-white via-[#F2F8F4] to-emerald-50/60 backdrop-blur-md border border-white/90 shadow-xl shadow-emerald-950/8">
                 
                 {/* Заголовок над полями формы */}
-                <h3 className="text-xl sm:text-2xl font-black text-[#0A2B1D] text-center mb-6">
+                <h3 className="text-xl sm:text-2xl font-black text-[#0A2B1D] text-center mb-5 sm:mb-6">
                   Запись на сеанс
                 </h3>
 

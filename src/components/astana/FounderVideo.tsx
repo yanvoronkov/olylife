@@ -130,40 +130,40 @@ export const AstanaFounderVideo: React.FC = () => {
           {/* Правая колонка: Расширенный блок контактов и карта в стеклянной рамке */}
           <div className="lg:col-span-8 space-y-6">
             
-            <div className="p-7 sm:p-10 rounded-[36px] bg-gradient-to-b from-white/95 via-white/85 to-[#F0F7F2]/90 backdrop-blur-md border border-white/90 shadow-2xl shadow-emerald-950/10 space-y-6 relative overflow-hidden">
+            <div className="p-4 sm:p-7 lg:p-10 rounded-[28px] sm:rounded-[36px] bg-gradient-to-b from-white/95 via-white/85 to-[#F0F7F2]/90 backdrop-blur-md border border-white/90 shadow-2xl shadow-emerald-950/10 space-y-4 sm:space-y-6 relative overflow-hidden">
               
               <div>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0A2B1D] tracking-tight">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0A2B1D] tracking-tight">
                   Клиника «Умай» / Клиника OSAM
                 </h3>
               </div>
 
-              {/* Контакты: Адрес в одну строку и Телефон */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-base">
+              {/* Контакты: Компактные отступы на мобильных, чтобы адрес помещался целиком */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 text-base">
                 
                 {/* Карточка Адреса в стеклянном стиле */}
-                <div className="md:col-span-7 flex items-center gap-3.5 p-4 sm:p-5 rounded-[22px] bg-gradient-to-b from-[#F2F8F4] to-white border border-emerald-200/80 shadow-xs hover:shadow-md transition-all">
-                  <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5" />
+                <div className="md:col-span-7 flex items-center gap-2.5 sm:gap-3.5 p-3 sm:p-4 md:p-5 rounded-[18px] sm:rounded-[22px] bg-gradient-to-b from-[#F2F8F4] to-white border border-emerald-200/80 shadow-xs hover:shadow-md transition-all">
+                  <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-xs text-slate-500 font-medium block">Адрес</span>
-                    <span className="font-bold text-[#0A2B1D] block whitespace-nowrap text-sm sm:text-base">
+                    <span className="text-[11px] sm:text-xs text-slate-500 font-medium block">Адрес</span>
+                    <span className="font-bold text-[#0A2B1D] block text-xs sm:text-sm md:text-base leading-tight">
                       г. Астана, ул. Бокейхана, 16/3
                     </span>
                   </div>
                 </div>
 
                 {/* Карточка Телефона в стеклянном стиле */}
-                <div className="md:col-span-5 flex items-center gap-3.5 p-4 sm:p-5 rounded-[22px] bg-gradient-to-b from-[#F2F8F4] to-white border border-emerald-200/80 shadow-xs hover:shadow-md transition-all">
-                  <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                    <Phone className="w-5 h-5" />
+                <div className="md:col-span-5 flex items-center gap-2.5 sm:gap-3.5 p-3 sm:p-4 md:p-5 rounded-[18px] sm:rounded-[22px] bg-gradient-to-b from-[#F2F8F4] to-white border border-emerald-200/80 shadow-xs hover:shadow-md transition-all">
+                  <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-xs text-slate-500 font-medium block">Телефон</span>
+                    <span className="text-[11px] sm:text-xs text-slate-500 font-medium block">Телефон</span>
                     <a
                       href={`tel:+${ASTANA_CLINIC_CONFIG.phoneRaw}`}
-                      className="font-bold text-[#0A2B1D] hover:text-emerald-700 transition-colors block whitespace-nowrap text-sm sm:text-base"
+                      className="font-bold text-[#0A2B1D] hover:text-emerald-700 transition-colors block text-xs sm:text-sm md:text-base leading-tight"
                     >
                       +7 (700) 965-12-34
                     </a>

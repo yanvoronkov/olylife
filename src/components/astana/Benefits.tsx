@@ -74,15 +74,13 @@ export const AstanaBenefits: React.FC = () => {
                 />
               </div>
 
-              {/* 2. Разделитель строго на одном фиксированном уровне во всех карточках */}
-              <div className="w-full border-t border-slate-200/70 my-6 shrink-0" />
+              {/* 2. Разделитель */}
+              <div className="w-full border-t border-slate-200/70 my-5 sm:my-6 shrink-0" />
 
-              {/* 3. Заголовок с фиксированной высотой контейнера, чтобы текст шел строго вровень */}
-              <div className="min-h-[2.5rem] flex items-start mb-2 shrink-0">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] leading-snug">
-                  {item.title}
-                </h3>
-              </div>
+              {/* 3. Заголовок */}
+              <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] leading-snug mb-2 sm:mb-2.5">
+                {item.title}
+              </h3>
 
               {/* 4. Описание строго по ТЗ */}
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">

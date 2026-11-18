@@ -39,7 +39,7 @@ export const AstanaHero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           <div className="lg:col-span-7 flex flex-col space-y-6 sm:space-y-7">
             
             {/* H1 (SEO-заголовок) */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0A2B1D] tracking-tight leading-[1.18]">
+            <h1 className="text-[25px] sm:text-4xl md:text-5xl font-black text-[#0A2B1D] tracking-tight leading-[1.22] sm:leading-[1.18]">
               Устали от хронического стресса, сидячей работы и постоянной нехватки сил в Астане?
             </h1>
 
