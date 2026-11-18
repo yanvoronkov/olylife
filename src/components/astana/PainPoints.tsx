@@ -1,26 +1,28 @@
 import React from 'react';
 
 /**
+ * Вариант отображения иллюстраций в карточках болей:
+ * - 'photos': Экспериментальный вариант — органические широкие пузырьки с живыми фото женщин азиатской внешности и плавным переходом краев
+ * - '3d': Базовый вариант — минималистичные 3D-модели (чашка кофе, ноутбук, батарейка)
+ * 
+ * Легкий откат назад: достаточно переключить значение на '3d'.
+ */
+export const PAIN_POINTS_STYLE: 'photos' | '3d' = 'photos';
+
+/**
  * Разворот 2: Проблематика (Боли).
  * Премиальные карточки в стиле медицинского велнеса:
  * - Скругленные мягкие плашки-«облачки» (rounded-[32px])
  * - Мягкие пастельные оттенки фона под каждую карточку
- * - В зоне иллюстраций — стильные скрещивающиеся органические овалы разных оттенков
- * - Центрированные 3D-модели без артефактов и рамок
+ * - В зоне иллюстраций — органические широкие пузырьки с плавным переходом краев
  * - Строгое выравнивание: зона иллюстраций, разделитель и заголовки идут строго на одном уровне
- * 
- * Строго по ТЗ (без лишнего текста, без бейджей перегрузки и стрелочек):
- * - Заголовок (H2): Знакомо состояние?
- * - Тезисы:
- *    * Кофе не бодрит: накопилась тревожность, а отпустить мысли не получается.
- *    * Подолгу засиживаетесь за компьютером, в пробках и кафе — появляются отечность и лишний вес.
- *    * Нет искры на жизнь: проснулись — а сил уже не хватает ни на спорт, ни на семью, ни на амбициозные цели.
  */
 export const AstanaPainPoints: React.FC = () => {
   const painPoints = [
     {
       id: 1,
-      image: '/images/3d-coffee-exhaustion.png',
+      image3D: '/images/3d-coffee-exhaustion.png',
+      imagePhoto: '/images/woman-coffee-bubble.png',
       title: 'Кофе не бодрит',
       description: 'накопилась тревожность, а отпустить мысли не получается.',
       bgGradient: 'bg-gradient-to-b from-[#F2F6F3] to-[#FFFFFF]',
@@ -30,7 +32,8 @@ export const AstanaPainPoints: React.FC = () => {
     },
     {
       id: 2,
-      image: '/images/3d-sedentary-work.png',
+      image3D: '/images/3d-sedentary-work.png',
+      imagePhoto: '/images/woman-sedentary-bubble.png',
       title: 'Подолгу засиживаетесь за компьютером, в пробках и кафе',
       description: 'появляются отечность и лишний вес.',
       bgGradient: 'bg-gradient-to-b from-[#F1F5F8] to-[#FFFFFF]',
@@ -40,7 +43,8 @@ export const AstanaPainPoints: React.FC = () => {
     },
     {
       id: 3,
-      image: '/images/3d-low-battery.png',
+      image3D: '/images/3d-low-battery.png',
+      imagePhoto: '/images/woman-exhausted-bubble.png',
       title: 'Нет искры на жизнь',
       description: 'проснулись — а сил уже не хватает ни на спорт, ни на семью, ни на амбициозные цели.',
       bgGradient: 'bg-gradient-to-b from-[#F7F4EE] to-[#FFFFFF]',
@@ -68,34 +72,44 @@ export const AstanaPainPoints: React.FC = () => {
           </h2>
         </div>
 
-        {/* 3 карточки с 3D-моделями и скрещивающимися овалами */}
+        {/* 3 карточки с увеличенными органическими пузырьками и плавным переходом краев */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           {painPoints.map((item) => (
             <div
               key={item.id}
               className={`group relative rounded-[32px] p-7 sm:p-8 ${item.bgGradient} border ${item.borderColor} shadow-md shadow-slate-900/5 hover:shadow-2xl hover:shadow-emerald-950/10 transition-all duration-300 hover:-translate-y-1.5 flex flex-col h-full overflow-hidden`}
             >
-              {/* 1. Зона иллюстрации строго фиксированной высоты с органическими скрещивающимися овалами */}
-              <div className="w-full h-52 sm:h-56 flex items-center justify-center relative shrink-0">
+              {/* 1. Зона иллюстрации увеличенного размера с органическими пузырьками */}
+              <div className="w-full h-56 sm:h-60 flex items-center justify-center relative shrink-0">
                 
-                {/* Скрещивающиеся мягкие органические овалы разных оттенков на фоне (без кружков) */}
+                {/* Скрещивающиеся мягкие органические ауры пузырька */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-                  {/* Первый овал */}
+                  {/* Первый фоновый овал (расширен под пузырек) */}
                   <div
-                    className={`absolute w-40 h-52 sm:w-44 sm:h-56 rounded-[45%_55%_65%_35%/50%_60%_40%_50%] ${item.blobBg1} opacity-75 blur-xs transform -rotate-12 group-hover:scale-105 transition-transform duration-500`}
+                    className={`absolute w-56 h-44 sm:w-64 sm:h-48 rounded-[52%_48%_62%_38%/48%_55%_45%_52%] ${item.blobBg1} opacity-70 blur-md transform -rotate-6 group-hover:scale-105 transition-transform duration-500`}
                   />
                   {/* Второй скрещивающийся овал другого оттенка */}
                   <div
-                    className={`absolute w-48 h-36 sm:w-52 sm:h-40 rounded-[55%_45%_35%_65%/40%_50%_60%_50%] ${item.blobBg2} opacity-85 blur-xs transform rotate-18 group-hover:rotate-12 transition-transform duration-500`}
+                    className={`absolute w-60 h-40 sm:w-68 sm:h-44 rounded-[58%_42%_45%_55%/45%_52%_48%_55%] ${item.blobBg2} opacity-80 blur-sm transform rotate-6 group-hover:rotate-3 transition-transform duration-500`}
                   />
                 </div>
 
-                {/* Чистая 3D-иллюстрация без рамок поверх фоновых овалов */}
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="relative z-10 max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
+                {/* Фото/3D внутри органического пузырька с плавным переходом краев */}
+                {PAIN_POINTS_STYLE === 'photos' ? (
+                  <div className="relative z-10 w-full max-w-[280px] sm:max-w-[310px] h-48 sm:h-52 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 ease-out">
+                    <img
+                      src={item.imagePhoto}
+                      alt={item.title}
+                      className="w-full h-full object-contain filter drop-shadow-md select-none"
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={item.image3D}
+                    alt={item.title}
+                    className="relative z-10 max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                )}
               </div>
 
               {/* 2. Разделитель */}
