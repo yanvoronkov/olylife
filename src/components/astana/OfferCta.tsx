@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Phone } from 'lucide-react';
+import { User, Phone, Sparkles, CheckCircle2 } from 'lucide-react';
 import { ASTANA_CLINIC_CONFIG } from '@/src/config/astanaClinic';
 import { AstanaTrackingData, AstanaLeadFormData } from '@/src/types/astanaClinic';
 import { submitAstanaLead } from '@/src/utils/astanaTracking';
@@ -129,55 +129,80 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
   };
 
   return (
-    <section id="booking-form" className="py-16 sm:py-24 bg-[#F0F7F2] relative overflow-hidden">
+    <section id="booking-form" className="py-20 sm:py-28 bg-[#F0F7F2] relative overflow-hidden">
       {/* Декоративное мягкое свечение на фоне */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-200/40 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-200/50 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute bottom-0 right-10 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl -z-10 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Главная карточка блока */}
-        <div className="rounded-[32px] bg-white border border-emerald-100 shadow-2xl p-6 sm:p-10 lg:p-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        {/* Главная карточка блока с мягкой рамкой и тенью */}
+        <div className="rounded-[36px] bg-white/95 backdrop-blur-sm border border-emerald-900/10 shadow-2xl shadow-emerald-950/10 p-7 sm:p-12 lg:p-14 relative">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
             {/* Левая колонка: Заголовок, подзаголовок и стильная плашка цен */}
-            <div className="lg:col-span-7 space-y-6">
+            <div className="lg:col-span-7 space-y-7">
               
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0A2B1D] tracking-tight leading-tight">
-                Не откладывайте себя «на потом» и не привыкайте жить вполсилы.
-              </h2>
-              
-              <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
-                Подарите себе глубокую перезагрузку по специальной цене.
-              </p>
+              <div className="space-y-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black text-[#0A2B1D] tracking-tight leading-[1.2]">
+                  Не откладывайте себя «на потом» и не привыкайте жить вполсилы.
+                </h2>
+                
+                <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
+                  Подарите себе глубокую перезагрузку по специальной цене.
+                </p>
+              </div>
 
-              {/* Стильная карточка цен */}
+              {/* Стильная визитка цены */}
               <div className="pt-2">
-                <div className="inline-flex items-center gap-4 sm:gap-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-50/90 via-emerald-100/40 to-white border border-emerald-200/90 shadow-sm">
-                  <div className="flex flex-col">
-                    <span className="text-xs sm:text-sm font-semibold text-slate-400 line-through decoration-slate-400/80 decoration-2">
-                      10 000 тг
-                    </span>
-                    <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#064E3B] tracking-tight">
-                      5 000 тг
+                <div className="inline-flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-[24px] bg-gradient-to-br from-[#F4FAF6] via-white to-[#EEF7F2] border border-emerald-300/80 shadow-md shadow-emerald-950/5">
+                  
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <div className="flex flex-col whitespace-nowrap">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-400 line-through decoration-slate-400 decoration-2">
+                        10 000 тг
+                      </span>
+                      <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#064E3B] tracking-tight whitespace-nowrap">
+                        5 000 тг
+                      </span>
+                    </div>
+
+                    <span className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-extrabold text-xs sm:text-sm tracking-wide shadow-sm shadow-emerald-800/25 shrink-0">
+                      -50%
                     </span>
                   </div>
 
-                  <div className="h-10 w-px bg-emerald-200" />
+                  <div className="hidden sm:block h-10 w-px bg-emerald-200" />
 
-                  <span className="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-extrabold text-xs sm:text-sm tracking-wide shadow-sm shadow-emerald-700/20">
-                    -50%
-                  </span>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-900 font-medium">
+                    <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Специальная цена на первый сеанс</span>
+                  </div>
+
                 </div>
+              </div>
+
+              {/* Дополнительные преимущества записи */}
+              <div className="flex flex-wrap items-center gap-y-2 gap-x-6 pt-1 text-xs sm:text-sm text-slate-600">
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  Без раздевания и подготовки
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  Всего 20 минут в центре Астаны
+                </span>
               </div>
 
             </div>
 
             {/* Правая колонка: Форма */}
             <div className="lg:col-span-5">
-              <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-b from-[#F0F7F2] to-emerald-50/40 border border-emerald-200/80 shadow-md shadow-emerald-950/5">
+              <div className="p-7 sm:p-9 rounded-[28px] bg-gradient-to-b from-[#F2F8F4] to-emerald-50/50 border border-emerald-200/90 shadow-lg shadow-emerald-950/5">
                 
                 {/* Заголовок над полями формы */}
-                <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] text-center mb-6">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-[#0A2B1D] text-center mb-6">
                   Запись на сеанс
                 </h3>
 
@@ -199,7 +224,7 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
                       value={name}
                       onChange={handleNameChange}
                       placeholder="Имя"
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-300/90 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-[#0A2B1D] placeholder:text-slate-400 bg-white transition-all text-base shadow-xs"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-300/90 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-[#0A2B1D] placeholder:text-slate-400 bg-white transition-all text-base shadow-2xs"
                     />
                   </div>
 
@@ -214,7 +239,7 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
                       value={phone}
                       onChange={handlePhoneChange}
                       placeholder="+7 (7XX) XXX-XX-XX"
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-300/90 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-[#0A2B1D] placeholder:text-slate-400 bg-white transition-all text-base font-medium shadow-xs"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-300/90 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-[#0A2B1D] placeholder:text-slate-400 bg-white transition-all text-base font-medium shadow-2xs"
                     />
                   </div>
 
@@ -232,7 +257,7 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
                       <button
                         type="button"
                         onClick={onOpenPrivacy}
-                        className="text-emerald-700 underline font-semibold hover:text-emerald-800"
+                        className="text-emerald-700 underline font-semibold hover:text-emerald-800 cursor-pointer"
                       >
                         политикой конфиденциальности
                       </button>
@@ -243,7 +268,7 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full mt-2 py-4 px-6 rounded-xl font-bold text-base text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 active:scale-95 transition-all shadow-md shadow-emerald-700/25 flex items-center justify-center cursor-pointer disabled:opacity-75"
+                    className="w-full mt-2 py-4 px-6 rounded-xl font-extrabold text-base text-white bg-gradient-to-r from-[#0E6244] to-[#137A55] hover:from-[#0B5037] hover:to-[#0F6547] active:scale-[0.98] transition-all shadow-md shadow-emerald-900/25 flex items-center justify-center cursor-pointer disabled:opacity-75"
                   >
                     {isSubmitting ? 'Отправка...' : 'Записаться со скидкой 50%'}
                   </button>
@@ -255,8 +280,8 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
           </div>
         </div>
 
-        {/* Финальная мысль (слоган) */}
-        <div className="mt-12 text-center max-w-3xl mx-auto">
+        {/* Финальная мысль (слоган) строго по ТЗ */}
+        <div className="mt-14 text-center max-w-3xl mx-auto">
           <p className="text-base sm:text-lg font-bold text-[#0A2B1D] leading-snug">
             Здоровье — это фундамент, на котором держится всё: ваше дело, семья и радость каждого дня.
           </p>
