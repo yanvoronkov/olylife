@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Phone, Sparkles, CheckCircle2 } from 'lucide-react';
+import { User, Phone, Sparkles } from 'lucide-react';
 import { ASTANA_CLINIC_CONFIG } from '@/src/config/astanaClinic';
 import { AstanaTrackingData, AstanaLeadFormData } from '@/src/types/astanaClinic';
 import { submitAstanaLead } from '@/src/utils/astanaTracking';
@@ -181,18 +181,6 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
                   </div>
 
                 </div>
-              </div>
-
-              {/* Дополнительные преимущества записи */}
-              <div className="flex flex-wrap items-center gap-y-2 gap-x-6 pt-1 text-xs sm:text-sm text-slate-600">
-                <span className="inline-flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Без раздевания и подготовки
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Всего 20 минут в центре Астаны
-                </span>
               </div>
 
             </div>
