@@ -1,13 +1,14 @@
 import React from 'react';
-import { Sparkles, ArrowUpRight } from 'lucide-react';
 
 /**
  * Разворот 3: Решение и выгоды (Как работает).
  * Премиальные 3D-карточки велнес-эффектов:
  * - Модели: Мозг (антистресс), Кристальная вода (детокс и лимфа), Энергетическое ядро клетки (подзарядка).
- * - Скругление rounded-[32px], деликатные пастельные градиенты, круглый бейдж в верхнем углу.
+ * - Скругление rounded-[32px], деликатные пастельные градиенты.
+ * - Скрещивающиеся мягкие органические овалы за 3D-объектами.
+ * - Строгое выравнивание: зона иллюстраций, разделитель и заголовки идут строго на одном уровне.
  * 
- * Строго по ТЗ:
+ * Строго по ТЗ (без лишнего текста, без бейджей сеанса, без тегов и стрелочек):
  * - Заголовок (H2): Что происходит с телом за процедуру?
  * - Плашки выгод:
  *    * Антистресс: нервная система выходит из режима выживания, приходит глубокое спокойствие.
@@ -21,30 +22,33 @@ export const AstanaBenefits: React.FC = () => {
       image: '/images/3d-antistress-brain.png',
       title: 'Антистресс',
       description: 'нервная система выходит из режима выживания, приходит глубокое спокойствие.',
-      tag: 'Баланс нервной системы',
       bgGradient: 'bg-gradient-to-b from-[#EDF6F1] to-[#FFFFFF]',
-      badgeBg: 'bg-[#2E5E4A]/10 text-[#1F4C39]',
       borderColor: 'border-[#2E5E4A]/15',
+      blobBg1: 'bg-[#CBE4D3]',
+      blobBg2: 'bg-[#DFEFE5]',
+      blobBg3: 'bg-[#B5DAC0]',
     },
     {
       id: 2,
       image: '/images/3d-detox-water.png',
       title: 'Детокс и метаболизм',
       description: 'разгоняется кровоток и лимфоток, уходят застойные жидкости.',
-      tag: 'Лимфодренаж и циркуляция',
       bgGradient: 'bg-gradient-to-b from-[#EBF3F8] to-[#FFFFFF]',
-      badgeBg: 'bg-[#2B5470]/10 text-[#1E3F56]',
       borderColor: 'border-[#2B5470]/15',
+      blobBg1: 'bg-[#CCE1EE]',
+      blobBg2: 'bg-[#DFECF5]',
+      blobBg3: 'bg-[#B7D6E9]',
     },
     {
       id: 3,
       image: '/images/3d-cellular-energy.png',
       title: 'Клеточная подзарядка',
       description: 'восстанавливается естественный потенциал организма, возвращается бодрость и ясность ума.',
-      tag: 'Митохондриальный тонус',
       bgGradient: 'bg-gradient-to-b from-[#F7F4EB] to-[#FFFFFF]',
-      badgeBg: 'bg-[#7A6038]/10 text-[#5F4926]',
       borderColor: 'border-[#7A6038]/15',
+      blobBg1: 'bg-[#EFE4CF]',
+      blobBg2: 'bg-[#F7EFE1]',
+      blobBg3: 'bg-[#E3D1B1]',
     },
   ];
 
@@ -56,54 +60,61 @@ export const AstanaBenefits: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Заголовок (H2) строго по ТЗ */}
+        {/* Заголовок (H2) строго по ТЗ — без лишних плашек над ним */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-900/5 border border-emerald-900/10 text-emerald-800 text-xs sm:text-sm font-semibold tracking-wide uppercase mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-            Эффект одного 20-минутного сеанса
-          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0A2B1D] tracking-tight leading-tight">
             Что происходит с телом за процедуру?
           </h2>
         </div>
 
         {/* 3 карточки эффектов */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           {benefits.map((item) => (
             <div
               key={item.id}
-              className={`group relative rounded-[32px] p-7 sm:p-8 ${item.bgGradient} border ${item.borderColor} shadow-lg shadow-emerald-950/5 hover:shadow-2xl hover:shadow-emerald-950/12 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden`}
+              className={`group relative rounded-[32px] p-7 sm:p-8 ${item.bgGradient} border ${item.borderColor} shadow-lg shadow-emerald-950/5 hover:shadow-2xl hover:shadow-emerald-950/12 transition-all duration-300 hover:-translate-y-1.5 flex flex-col h-full overflow-hidden`}
             >
-              {/* Верхняя панель: тег эффекта и круглый бейдж */}
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-semibold text-slate-500 bg-white/70 backdrop-blur-xs px-3 py-1 rounded-full border border-slate-200/60 shadow-2xs">
-                  {item.tag}
-                </span>
-                <div
-                  className={`w-9 h-9 rounded-full ${item.badgeBg} flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shadow-xs`}
-                >
-                  <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+              {/* 1. Зона иллюстрации строго фиксированной высоты с органическими скрещивающимися овалами */}
+              <div className="w-full h-52 sm:h-56 flex items-center justify-center relative shrink-0">
+                
+                {/* Скрещивающиеся органические овалы разных оттенков на фоне */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+                  {/* Первый овал */}
+                  <div
+                    className={`absolute w-36 h-48 sm:w-40 sm:h-50 rounded-[45%_55%_60%_40%/50%_60%_40%_50%] ${item.blobBg1} opacity-70 blur-[1px] transform -rotate-12 group-hover:scale-105 transition-transform duration-500`}
+                  />
+                  {/* Второй скрещивающийся овал другого оттенка */}
+                  <div
+                    className={`absolute w-44 h-32 sm:w-48 sm:h-36 rounded-[55%_45%_40%_60%/40%_50%_60%_50%] ${item.blobBg2} opacity-80 blur-[1px] transform rotate-18 group-hover:rotate-12 transition-transform duration-500`}
+                  />
+                  {/* Небольшой акцентный блик/пятно */}
+                  <div
+                    className={`absolute w-24 h-24 rounded-full ${item.blobBg3} opacity-50 blur-md transform translate-x-3 -translate-y-2`}
+                  />
                 </div>
-              </div>
 
-              {/* Центрированная 3D-иллюстрация (бесшовный блендинг с фоном карточки) */}
-              <div className="w-full h-48 sm:h-56 flex items-center justify-center my-2 relative">
+                {/* Чистая 3D-иллюстрация без рамок */}
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="max-h-full max-w-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out"
+                  className="relative z-10 max-h-full max-w-full object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
               </div>
 
-              {/* Текст: Название эффекта и описание строго по ТЗ */}
-              <div className="pt-4 border-t border-slate-200/60">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] mb-2.5 leading-snug">
+              {/* 2. Разделитель строго на одном фиксированном уровне во всех карточках */}
+              <div className="w-full border-t border-slate-200/70 my-6 shrink-0" />
+
+              {/* 3. Заголовок с фиксированной высотой контейнера, чтобы текст шел строго вровень */}
+              <div className="min-h-[2.5rem] flex items-start mb-2 shrink-0">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] leading-snug">
                   {item.title}
                 </h3>
-                <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
-                  {item.description}
-                </p>
               </div>
+
+              {/* 4. Описание строго по ТЗ */}
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                {item.description}
+              </p>
             </div>
           ))}
         </div>
