@@ -102,7 +102,7 @@ export const AstanaPainPoints: React.FC = () => {
 
                   {/* 3. Текстовая зона карточки с комфортными отступами */}
                   <div className={`p-6 sm:p-7 flex flex-col flex-1 ${item.bgGradient}`}>
-                    <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] leading-snug mb-2.5">
+                    <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] tracking-tight leading-snug mb-2.5">
                       {item.title}
                     </h3>
                     <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">

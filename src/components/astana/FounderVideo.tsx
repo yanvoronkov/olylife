@@ -133,7 +133,7 @@ export const AstanaFounderVideo: React.FC = () => {
             <div className="p-4 sm:p-7 lg:p-10 rounded-[28px] sm:rounded-[36px] bg-gradient-to-b from-white/95 via-white/85 to-[#F0F7F2]/90 backdrop-blur-md border border-white/90 shadow-2xl shadow-emerald-950/10 space-y-4 sm:space-y-6 relative overflow-hidden">
               
               <div>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0A2B1D] tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] tracking-tight">
                   Клиника «Умай» / Клиника OSAM
                 </h3>
               </div>

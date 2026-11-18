@@ -78,7 +78,7 @@ export const AstanaBenefits: React.FC = () => {
               <div className="w-full border-t border-slate-200/70 my-5 sm:my-6 shrink-0" />
 
               {/* 3. Заголовок */}
-              <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] leading-snug mb-2 sm:mb-2.5">
+              <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] tracking-tight leading-snug mb-2 sm:mb-2.5">
                 {item.title}
               </h3>
 
