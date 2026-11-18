@@ -19,6 +19,7 @@ export default defineConfig(() => {
           bishkek: path.resolve(__dirname, 'bishkek/index.html'),
           kg: path.resolve(__dirname, 'kg/index.html'),
           almaty: path.resolve(__dirname, 'almaty/index.html'),
+          astana: path.resolve(__dirname, 'astana/index.html'),
         },
       },
     },

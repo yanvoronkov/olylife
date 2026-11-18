@@ -48,10 +48,11 @@ function hashSha256(value: string): string {
 }
 
 function formatTelegramMessage(lead: StoredLead): string {
+  const isAstana = lead.city === "astana";
   const isAlmaty = lead.city === "almaty";
   const isBishkek = lead.city === "bishkek";
-  const timeZone = isAlmaty ? "Asia/Almaty" : isBishkek ? "Asia/Bishkek" : "Asia/Tashkent";
-  const timeZoneLabel = isAlmaty ? "ALMT" : isBishkek ? "KGT" : "UZT";
+  const timeZone = (isAstana || isAlmaty) ? "Asia/Almaty" : isBishkek ? "Asia/Bishkek" : "Asia/Tashkent";
+  const timeZoneLabel = (isAstana || isAlmaty) ? "ALMT" : isBishkek ? "KGT" : "UZT";
 
   const dateStr = new Date(lead.createdAt).toLocaleString("ru-RU", {
     timeZone,
@@ -69,10 +70,12 @@ function formatTelegramMessage(lead: StoredLead): string {
     lead.tracking?.eventSourceUrl?.includes("/kg")
   );
 
-  const cityTag = isAlmaty ? "АЛМАТЫ 🇰🇿" : isBishkek ? (isKg ? "БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]" : "БИШКЕК 🇰🇬") : "ТАШКЕНТ 🇺🇿";
-  const cityTitle = isAlmaty ? "Алматы (Казахстан 🇰🇿)" : isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
+  const cityTag = isAstana ? "АСТАНА 🇰🇿" : isAlmaty ? "АЛМАТЫ 🇰🇿" : isBishkek ? (isKg ? "БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]" : "БИШКЕК 🇰🇬") : "ТАШКЕНТ 🇺🇿";
+  const cityTitle = isAstana ? "Астана (Клиника OSAM / Умай 🇰🇿)" : isAlmaty ? "Алматы (Казахстан 🇰🇿)" : isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
 
-  let message = `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${cityTag}) с лендинга</b>\n\n`;
+  let message = isAstana
+    ? `<b>⚡ НОВАЯ ЗАЯВКА В КЛИНИКУ OSAM (${cityTag}) со скидкой 50%</b>\n\n`
+    : `<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (${cityTag}) с лендинга</b>\n\n`;
   message += `👤 <b>Имя:</b> ${escapeHtml(lead.name)}\n`;
   message += `📞 <b>Контакты:</b> ${escapeHtml(lead.phone)}\n`;
   message += `💼 <b>Профессия:</b> ${escapeHtml(lead.profession)}\n`;
@@ -161,6 +164,7 @@ async function sendToFacebookCAPI(
   }
 
   try {
+    const isAstana = lead.city === "astana";
     const isAlmaty = lead.city === "almaty";
     const isBishkek = lead.city === "bishkek";
     const tracking = lead.tracking || {};
@@ -176,7 +180,7 @@ async function sendToFacebookCAPI(
 
     const eventTime = Math.floor(new Date(lead.createdAt).getTime() / 1000);
     const eventId = tracking.eventId || lead.id;
-    const eventSourceUrl = tracking.eventSourceUrl || (isAlmaty ? "https://yarkozhivi.space/almaty/" : isBishkek ? "https://yarkozhivi.space/bishkek/" : "https://yarkozhivi.space/");
+    const eventSourceUrl = tracking.eventSourceUrl || (isAstana ? "https://yarkozhivi.space/astana/" : isAlmaty ? "https://yarkozhivi.space/almaty/" : isBishkek ? "https://yarkozhivi.space/bishkek/" : "https://yarkozhivi.space/");
 
     const payload: any = {
       data: [
@@ -195,12 +199,12 @@ async function sendToFacebookCAPI(
             fbp: tracking.fbp || undefined,
           },
           custom_data: {
-            content_name: isAlmaty ? "Заявка на тест-драйв OlyLife P90 (Алматы)" : isBishkek ? "Заявка на тест-драйв OlyLife P90 (Бишкек)" : "Заявка на тест-драйв OlyLife P90 (Ташкент)",
-            content_category: "Wellness & Beauty",
+            content_name: isAstana ? "Сеанс биохакинга OSAM (Астана) со скидкой 50%" : isAlmaty ? "Заявка на тест-драйв OlyLife P90 (Алматы)" : isBishkek ? "Заявка на тест-драйв OlyLife P90 (Бишкек)" : "Заявка на тест-драйв OlyLife P90 (Ташкент)",
+            content_category: isAstana ? "Preventive Medicine & Biohacking" : "Wellness & Beauty",
             profession: lead.profession,
             lead_source: lead.source || "Website Form",
-            currency: isAlmaty ? "KZT" : isBishkek ? "KGS" : "UZS",
-            value: 0,
+            currency: (isAstana || isAlmaty) ? "KZT" : isBishkek ? "KGS" : "UZS",
+            value: isAstana ? 5000 : 0,
             utm_source: tracking.utm_source || undefined,
             utm_medium: tracking.utm_medium || undefined,
             utm_campaign: tracking.utm_campaign || undefined,
@@ -281,11 +285,12 @@ app.post("/api/leads", async (req, res) => {
       deliveredToFacebook: false,
     };
 
-    // 1. Отправка в Telegram (поддержка отдельных потоков для Алматы и Бишкека)
+    // 1. Отправка в Telegram (поддержка отдельных потоков для Астаны, Алматы и Бишкека)
+    const isAstana = newLead.city === "astana";
     const isAlmaty = newLead.city === "almaty";
     const isBishkek = newLead.city === "bishkek";
-    const tgToken = (isAlmaty && process.env.ALMATY_TELEGRAM_BOT_TOKEN) || (isBishkek && process.env.BISHKEK_TELEGRAM_BOT_TOKEN) || process.env.TELEGRAM_BOT_TOKEN || "";
-    const tgChatId = (isAlmaty && process.env.ALMATY_TELEGRAM_CHAT_ID) || (isBishkek && process.env.BISHKEK_TELEGRAM_CHAT_ID) || process.env.TELEGRAM_CHAT_ID || "";
+    const tgToken = (isAstana && (process.env.ASTANA_TELEGRAM_BOT_TOKEN || process.env.ALMATY_TELEGRAM_BOT_TOKEN)) || (isAlmaty && process.env.ALMATY_TELEGRAM_BOT_TOKEN) || (isBishkek && process.env.BISHKEK_TELEGRAM_BOT_TOKEN) || process.env.TELEGRAM_BOT_TOKEN || "";
+    const tgChatId = (isAstana && (process.env.ASTANA_TELEGRAM_CHAT_ID || process.env.ALMATY_TELEGRAM_CHAT_ID)) || (isAlmaty && process.env.ALMATY_TELEGRAM_CHAT_ID) || (isBishkek && process.env.BISHKEK_TELEGRAM_CHAT_ID) || process.env.TELEGRAM_CHAT_ID || "";
 
     if (tgToken && tgChatId) {
       const tgResult = await sendToTelegram(formatTelegramMessage(newLead), tgToken, tgChatId);
@@ -319,6 +324,12 @@ app.post("/api/leads", async (req, res) => {
 });
 
 async function startServer() {
+  // Canonical redirect for Astana subfolder (preserves query & UTM parameters)
+  app.get(/^\/astana$/, (req, res) => {
+    const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
+    res.redirect(301, "/astana/" + query);
+  });
+
   // Canonical redirect for Almaty subfolder (preserves query & UTM parameters)
   app.get(/^\/almaty$/, (req, res) => {
     const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
@@ -351,6 +362,10 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    app.get("/astana*", (req, res) => {
+      const astanaHtml = path.join(distPath, "astana", "index.html");
+      res.sendFile(astanaHtml);
+    });
     app.get("/almaty*", (req, res) => {
       const almatyHtml = path.join(distPath, "almaty", "index.html");
       res.sendFile(almatyHtml);
