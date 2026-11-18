@@ -4,8 +4,9 @@ import { ASTANA_CLINIC_CONFIG } from '@/src/config/astanaClinic';
 
 /**
  * Разворот 4: Экспертность, контакты и карта.
- * Строго по ТЗ:
- * - Видео-вставка в премиальном титановом мокапе смартфона (Space Gray / Metallic)
+ * Оформлен с эффектом матового стекла (Glassmorphism), повторяющим стилистику 2 и 3 разворотов:
+ * - Стеклянная подложка и рамки карточек (rounded-[36px], border-white/90, shadow-2xl)
+ * - Видео-вставка в премиальном титановом мокапе смартфона (Space Gray Metallic)
  * - Подпись под видео: Татьяна Маркина — директор и основатель клиники OSAM
  * - Расширенный блок контактов и карта (адрес строго в одну строку):
  *    * Клиника «Умай» / Клиника OSAM
@@ -37,34 +38,41 @@ export const AstanaFounderVideo: React.FC = () => {
   };
 
   return (
-    <section className="py-20 sm:py-28 bg-white border-y border-emerald-100/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 sm:py-28 bg-[#FAFCFB] relative overflow-hidden border-y border-emerald-100/80">
+      {/* Декоративная фоновая текстура сетки */}
+      <div className="absolute inset-0 bg-[radial-gradient(#0A2B1D_0.75px,transparent_0.75px)] [background-size:28px_28px] opacity-[0.03] pointer-events-none" />
+
+      {/* Мягкие фоновые световые акценты */}
+      <div className="absolute top-1/4 -right-32 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-10 -left-32 w-96 h-96 bg-teal-100/30 rounded-full blur-3xl pointer-events-none -z-10" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Левая колонка: Видео-вставка в современном мокапе iPhone (Space Gray / Metallic Titanium) */}
           <div className="lg:col-span-4 flex flex-col items-center">
             
-            {/* Премиальная металлическая рамка iPhone */}
-            <div className="relative w-full max-w-[275px] sm:max-w-[295px] aspect-[9/19] rounded-[52px] p-[3.5px] bg-gradient-to-b from-[#8C9196] via-[#4A4E53] to-[#25272A] shadow-[0_30px_70px_-15px_rgba(15,23,42,0.4),0_0_0_1px_rgba(255,255,255,0.2)] select-none">
+            {/* Премиальная металлическая рамка iPhone (Natural Titanium / Space Gray) */}
+            <div className="relative w-full max-w-[280px] sm:max-w-[305px] aspect-[9/19.2] rounded-[52px] p-[9px] sm:p-[10px] bg-gradient-to-tr from-[#6E7378] via-[#A5ABB0] to-[#E2E6EA] shadow-[0_30px_70px_-12px_rgba(15,23,42,0.45),0_0_0_1px_rgba(255,255,255,0.5)_inset,0_0_0_1px_rgba(0,0,0,0.15)] select-none">
               
               {/* Металлические аппаратные кнопки сбоку */}
               {/* Action button */}
-              <div className="absolute -left-[4px] top-24 w-[3.5px] h-7 bg-[#585C61] rounded-l-xs shadow-xs" />
+              <div className="absolute -left-[4.5px] top-24 w-[4px] h-7 bg-gradient-to-r from-[#8C9197] to-[#B0B5BA] rounded-l-xs shadow-xs" />
               {/* Volume Up */}
-              <div className="absolute -left-[4px] top-35 w-[3.5px] h-12 bg-[#585C61] rounded-l-xs shadow-xs" />
+              <div className="absolute -left-[4.5px] top-35 w-[4px] h-12 bg-gradient-to-r from-[#8C9197] to-[#B0B5BA] rounded-l-xs shadow-xs" />
               {/* Volume Down */}
-              <div className="absolute -left-[4px] top-50 w-[3.5px] h-12 bg-[#585C61] rounded-l-xs shadow-xs" />
+              <div className="absolute -left-[4.5px] top-50 w-[4px] h-12 bg-gradient-to-r from-[#8C9197] to-[#B0B5BA] rounded-l-xs shadow-xs" />
               {/* Power button */}
-              <div className="absolute -right-[4px] top-36 w-[3.5px] h-16 bg-[#585C61] rounded-r-xs shadow-xs" />
+              <div className="absolute -right-[4.5px] top-36 w-[4px] h-16 bg-gradient-to-l from-[#8C9197] to-[#B0B5BA] rounded-r-xs shadow-xs" />
 
-              {/* Внутренняя черная рамка экрана (тонкий симметричный безель) */}
-              <div className="w-full h-full rounded-[49px] p-[8px] bg-black relative flex flex-col justify-between overflow-hidden">
+              {/* Тонкий симметричный OLED-безель экрана (стиль iPhone 15/16 Pro) */}
+              <div className="w-full h-full rounded-[43px] p-[2.5px] bg-[#0E1013] relative flex flex-col justify-between overflow-hidden shadow-inner">
                 
                 {/* Dynamic Island */}
-                <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-24 h-[21px] bg-black rounded-full z-30 flex items-center justify-between px-2.5 shadow-md">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#0E121A] border border-[#232938]" />
-                  <div className="w-2 h-2 rounded-full bg-emerald-500/80 animate-pulse" />
+                <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-22 h-[18px] bg-black rounded-full z-30 flex items-center justify-between px-2 shadow-sm">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#181D26] border border-[#2B3240]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/90 animate-pulse" />
                 </div>
 
                 {/* Экранная область видео */}
@@ -106,7 +114,7 @@ export const AstanaFounderVideo: React.FC = () => {
                 </div>
 
                 {/* Home Bar */}
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 bg-white/40 rounded-full z-20" />
+                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-28 h-1 bg-white/40 rounded-full z-20" />
               </div>
             </div>
 
@@ -119,10 +127,10 @@ export const AstanaFounderVideo: React.FC = () => {
 
           </div>
 
-          {/* Правая колонка: Расширенный блок контактов и карта строго по ТЗ */}
+          {/* Правая колонка: Расширенный блок контактов и карта в стеклянной рамке */}
           <div className="lg:col-span-8 space-y-6">
             
-            <div className="p-7 sm:p-9 rounded-[32px] bg-[#F0F7F2] border border-emerald-200/80 shadow-md shadow-emerald-950/5 space-y-6">
+            <div className="p-7 sm:p-10 rounded-[36px] bg-gradient-to-b from-white/95 via-white/85 to-[#F0F7F2]/90 backdrop-blur-md border border-white/90 shadow-2xl shadow-emerald-950/10 space-y-6 relative overflow-hidden">
               
               <div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0A2B1D] tracking-tight">
@@ -133,8 +141,8 @@ export const AstanaFounderVideo: React.FC = () => {
               {/* Контакты: Адрес в одну строку и Телефон */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-base">
                 
-                {/* Карточка Адреса (7 колонок из 12 — гарантированно помещается весь адрес в одну строку) */}
-                <div className="md:col-span-7 flex items-center gap-3.5 p-4 sm:p-5 rounded-2xl bg-white border border-emerald-100 shadow-2xs">
+                {/* Карточка Адреса в стеклянном стиле */}
+                <div className="md:col-span-7 flex items-center gap-3.5 p-4 sm:p-5 rounded-[22px] bg-gradient-to-b from-[#F2F8F4] to-white border border-emerald-200/80 shadow-xs hover:shadow-md transition-all">
                   <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
@@ -146,8 +154,8 @@ export const AstanaFounderVideo: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Карточка Телефона (5 колонок из 12) */}
-                <div className="md:col-span-5 flex items-center gap-3.5 p-4 sm:p-5 rounded-2xl bg-white border border-emerald-100 shadow-2xs">
+                {/* Карточка Телефона в стеклянном стиле */}
+                <div className="md:col-span-5 flex items-center gap-3.5 p-4 sm:p-5 rounded-[22px] bg-gradient-to-b from-[#F2F8F4] to-white border border-emerald-200/80 shadow-xs hover:shadow-md transition-all">
                   <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
@@ -164,12 +172,12 @@ export const AstanaFounderVideo: React.FC = () => {
 
               </div>
 
-              {/* Интерактивная карта (просторная) */}
-              <div className="rounded-2xl overflow-hidden border border-emerald-200 bg-white shadow-inner">
+              {/* Интерактивная карта с аккуратной рамкой */}
+              <div className="rounded-[24px] overflow-hidden p-1.5 bg-white border border-emerald-200/90 shadow-md">
                 <iframe
                   title="Карта расположения клиники OSAM в Астане"
                   src="https://yandex.ru/map-widget/v1/?ll=71.432742%2C51.104618&z=16&pt=71.432742,51.104618,pm2rdm"
-                  className="w-full h-72 sm:h-80 border-0"
+                  className="w-full h-72 sm:h-80 rounded-[20px] border-0"
                   loading="lazy"
                   allowFullScreen
                 />
@@ -181,7 +189,7 @@ export const AstanaFounderVideo: React.FC = () => {
                   href="https://2gis.kz/astana/search/%D0%9A%D0%BB%D0%B8%D0%BD%D0%B8%D0%BA%D0%B0%C2%BB%20%D0%A3%D0%BC%D0%B0%D0%B9%C2%BB%20%D0%91%D0%BE%D0%BA%D0%B5%D0%B9%D1%85%D0%B0%D0%BD%D0%B0%2016%2F3%20%D0%B3.%20%D0%90%D1%81%D1%82%D0%B0%D0%BD%D0%B0/firm/70000001103491052/71.432727%2C51.104591?m=71.432742%2C51.104618%2F17.67"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-extrabold text-emerald-950 bg-white/90 hover:bg-white border border-emerald-200/80 shadow-xs hover:shadow-md transition-all cursor-pointer"
                 >
                   <Navigation className="w-4 h-4 text-emerald-700" />
                   <span>Открыть в 2GIS</span>

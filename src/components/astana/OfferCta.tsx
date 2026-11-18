@@ -12,9 +12,9 @@ interface OfferCtaProps {
 
 /**
  * Разворот 5: Финальный призыв к действию (CTA).
- * Двухколоночная структура в премиальном оформлении:
- * - Слева: Заголовок (жирным), подзаголовок (не жирным), стильная ценовая плашка (10 000 тг ➔ 5 000 тг).
- * - Справа: Заголовок «Запись на сеанс», поля ввода (Имя, Телефон), кнопка.
+ * Двухколоночная структура в премиальном оформлении со стеклянными рамками:
+ * - Слева: Заголовок (жирным), подзаголовок (не жирным), стильная стеклянная ценовая плашка (10 000 тг ➔ 5 000 тг).
+ * - Справа: Стеклянная карточка «Запись на сеанс», поля ввода (Имя, Телефон), кнопка.
  * - В самом конце: Финальный слоган/призыв.
  */
 export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, onOpenPrivacy }) => {
@@ -129,19 +129,22 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
   };
 
   return (
-    <section id="booking-form" className="py-20 sm:py-28 bg-[#F0F7F2] relative overflow-hidden">
+    <section id="booking-form" className="py-20 sm:py-28 bg-[#FAFCFB] relative overflow-hidden">
+      {/* Декоративная фоновая текстура сетки */}
+      <div className="absolute inset-0 bg-[radial-gradient(#0A2B1D_0.75px,transparent_0.75px)] [background-size:28px_28px] opacity-[0.03] pointer-events-none" />
+
       {/* Декоративное мягкое свечение на фоне */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-200/50 rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="absolute bottom-0 right-10 w-96 h-96 bg-teal-100/40 rounded-full blur-3xl -z-10 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Главная карточка блока с мягкой рамкой и тенью */}
-        <div className="rounded-[36px] bg-white/95 backdrop-blur-sm border border-emerald-900/10 shadow-2xl shadow-emerald-950/10 p-7 sm:p-12 lg:p-14 relative">
+        {/* Главная карточка блока со стеклянной рамкой */}
+        <div className="rounded-[36px] bg-gradient-to-b from-white via-white/95 to-[#F4FAF6]/90 backdrop-blur-xl border border-white/90 shadow-2xl shadow-emerald-950/10 p-7 sm:p-12 lg:p-14 relative overflow-hidden">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
-            {/* Левая колонка: Заголовок, подзаголовок и стильная плашка цен */}
+            {/* Левая колонка: Заголовок, подзаголовок и стильная стеклянная плашка цен */}
             <div className="lg:col-span-7 space-y-7">
               
               <div className="space-y-4">
@@ -154,9 +157,9 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
                 </p>
               </div>
 
-              {/* Стильная визитка цены */}
+              {/* Стильная стеклянная визитка цены */}
               <div className="pt-2">
-                <div className="inline-flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-[24px] bg-gradient-to-br from-[#F4FAF6] via-white to-[#EEF7F2] border border-emerald-300/80 shadow-md shadow-emerald-950/5">
+                <div className="inline-flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-[24px] bg-gradient-to-br from-white via-[#F4FAF6] to-[#EEF7F2] border border-white/90 shadow-md shadow-emerald-950/5">
                   
                   <div className="flex items-center gap-4 flex-wrap">
                     <div className="flex flex-col whitespace-nowrap">
@@ -185,12 +188,12 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
 
             </div>
 
-            {/* Правая колонка: Форма */}
+            {/* Правая колонка: Форма в стеклянной плашке */}
             <div className="lg:col-span-5">
-              <div className="p-7 sm:p-9 rounded-[28px] bg-gradient-to-b from-[#F2F8F4] to-emerald-50/50 border border-emerald-200/90 shadow-lg shadow-emerald-950/5">
+              <div className="p-7 sm:p-9 rounded-[30px] bg-gradient-to-b from-white via-[#F2F8F4] to-emerald-50/60 backdrop-blur-md border border-white/90 shadow-xl shadow-emerald-950/8">
                 
                 {/* Заголовок над полями формы */}
-                <h3 className="text-xl sm:text-2xl font-extrabold text-[#0A2B1D] text-center mb-6">
+                <h3 className="text-xl sm:text-2xl font-black text-[#0A2B1D] text-center mb-6">
                   Запись на сеанс
                 </h3>
 
