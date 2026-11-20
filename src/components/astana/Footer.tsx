@@ -16,13 +16,31 @@ export const AstanaFooter: React.FC<FooterProps> = ({ onOpenPrivacy }) => {
         
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-emerald-800/40">
           
-          {/* Колонка 1: Бренд (логотип клиники) */}
-          <div className="md:col-span-5 flex items-start">
-            <img
-              src="/images/osam-logo.png"
-              alt="Клиника OSAM"
-              className="h-11 sm:h-12 w-auto bg-white/95 p-1.5 rounded-xl shrink-0 shadow-sm"
-            />
+          {/* Колонка 1: Бренд (логотип клиники, политика конфиденциальности, копирайт) */}
+          <div className="md:col-span-5 flex flex-col justify-between space-y-6 md:space-y-0">
+            <div>
+              <img
+                src="/images/osam-logo.png"
+                alt="Клиника OSAM"
+                className="h-11 sm:h-12 w-auto bg-white/95 p-1.5 rounded-xl shrink-0 shadow-sm"
+              />
+            </div>
+
+            <div className="space-y-2 text-xs">
+              <button
+                type="button"
+                onClick={onOpenPrivacy}
+                className="flex items-center gap-1.5 text-emerald-300 hover:text-white transition-colors cursor-pointer group"
+              >
+                <FileText className="w-3.5 h-3.5 text-emerald-400 group-hover:text-emerald-300" />
+                <span className="underline underline-offset-4 decoration-emerald-700 hover:decoration-white">
+                  Политика конфиденциальности
+                </span>
+              </button>
+              <p className="text-emerald-300/60 text-[11px] sm:text-xs">
+                © {new Date().getFullYear()} {ASTANA_CLINIC_CONFIG.legal.legalEntity}. Все права защищены.
+              </p>
+            </div>
           </div>
 
           <div className="md:col-span-3 space-y-3">
@@ -69,20 +87,8 @@ export const AstanaFooter: React.FC<FooterProps> = ({ onOpenPrivacy }) => {
 
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-300/60">
-          <p>© {new Date().getFullYear()} {ASTANA_CLINIC_CONFIG.legal.legalEntity}. Все права защищены.</p>
-
-          <button
-            type="button"
-            onClick={onOpenPrivacy}
-            className="flex items-center gap-1.5 text-emerald-300 hover:text-white transition-colors cursor-pointer"
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Политика конфиденциальности</span>
-          </button>
-        </div>
-
-        <div className="mt-6 text-center text-[11px] text-emerald-400/50 leading-relaxed border-t border-emerald-900/40 pt-4">
+        {/* Предупреждение о противопоказаниях и оферте */}
+        <div className="pt-6 text-center text-[11px] text-emerald-400/50 leading-relaxed max-w-4xl mx-auto">
           Информация на сайте не является публичной офертой. Имеются противопоказания (беременность, наличие кардиостимулятора, острые воспалительные процессы). Требуется консультация специалиста клиники.
         </div>
 
