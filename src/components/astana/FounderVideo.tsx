@@ -121,7 +121,7 @@ export const AstanaFounderVideo: React.FC = () => {
             {/* Подпись под видео строго по ТЗ */}
             <div className="text-center mt-5 max-w-[320px]">
               <p className="text-base sm:text-lg font-bold text-[#0A2B1D] leading-snug">
-                Татьяна Маркина — директор и основатель клиники OSAM
+                Татьяна Маркина — основатель клиники OSAM
               </p>
             </div>
 
@@ -134,7 +134,7 @@ export const AstanaFounderVideo: React.FC = () => {
               
               <div>
                 <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] tracking-tight">
-                  Клиника «Умай» / Клиника OSAM
+                  Клиника OSAM
                 </h3>
               </div>
 

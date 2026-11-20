@@ -11,7 +11,7 @@ export const ASTANA_CLINIC_CONFIG: ClinicConfig = {
   city: 'Астана',
   cityId: 'astana',
   address: 'ул. Алихана Бокейхана, 16/3',
-  fullAddress: 'г. Астана, ул. Алихана Бокейхана, 16/3 (Клиника «Умай»)',
+  fullAddress: 'г. Астана, ул. Алихана Бокейхана, 16/3',
   coordinates: {
     lat: 51.104618,
     lng: 71.432742,
@@ -24,7 +24,7 @@ export const ASTANA_CLINIC_CONFIG: ClinicConfig = {
   twoGisMapUrl: 'https://2gis.kz/astana/search/Алихана%20Бокейхана%2C%2016%2F3',
   workingHours: 'Ежедневно с 09:00 до 20:00, по предварительной записи',
   founderName: 'Татьяна Маркина',
-  founderTitle: 'Директор и основатель клиники OSAM',
+  founderTitle: 'Основатель клиники OSAM',
   founderBio:
     'Эксперт в сфере превентивной медицины и биохакинга. Наша миссия — возвращать жителям Астаны высокий уровень жизненной энергии и здоровье без изнурительных процедур.',
   prices: {

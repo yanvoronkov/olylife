@@ -50,7 +50,7 @@ export const AstanaPainPoints: React.FC = () => {
       imageSquare: '/images/pain-point-exhausted-woman.jpg',
       imagePhoto: '/images/woman-exhausted-bubble.png',
       image3D: '/images/3d-low-battery.png',
-      title: 'Нет искры на жизнь',
+      title: 'Нет энергии на жизнь',
       description: 'проснулись — а сил уже не хватает ни на спорт, ни на семью, ни на амбициозные цели.',
       bgGradient: 'bg-gradient-to-b from-[#F7F4EE] to-[#FFFFFF]',
       borderColor: 'border-[#7C6343]/12',
@@ -73,7 +73,7 @@ export const AstanaPainPoints: React.FC = () => {
         {/* Заголовок (H2) строго по ТЗ — без лишних плашек над ним */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0A2B1D] tracking-tight leading-tight">
-            Знакомо состояние?
+            Знакомо чувство?
           </h2>
         </div>
 

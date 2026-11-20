@@ -29,7 +29,7 @@ export const AstanaFooter: React.FC<FooterProps> = ({ onOpenPrivacy }) => {
                   {ASTANA_CLINIC_CONFIG.clinicFullName}
                 </span>
                 <span className="text-xs text-emerald-300/80 block mt-0.5">
-                  {ASTANA_CLINIC_CONFIG.hostClinicName} • г. {ASTANA_CLINIC_CONFIG.city}
+                  г. {ASTANA_CLINIC_CONFIG.city}
                 </span>
               </div>
             </div>
