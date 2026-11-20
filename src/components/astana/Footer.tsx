@@ -16,28 +16,13 @@ export const AstanaFooter: React.FC<FooterProps> = ({ onOpenPrivacy }) => {
         
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-emerald-800/40">
           
-          <div className="md:col-span-5 space-y-4">
-            {/* Логотип выше на мобильных, заголовок и подзаголовок строго под ним */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-              <img
-                src="/images/osam-logo.png"
-                alt="Клиника OSAM"
-                className="h-10 w-auto bg-white/95 p-1 rounded-lg shrink-0"
-              />
-              <div>
-                <span className="text-white font-bold text-base sm:text-lg block">
-                  {ASTANA_CLINIC_CONFIG.clinicFullName}
-                </span>
-                <span className="text-xs text-emerald-300/80 block mt-0.5">
-                  г. {ASTANA_CLINIC_CONFIG.city}
-                </span>
-              </div>
-            </div>
-
-            <p className="text-xs sm:text-sm text-emerald-200/70 leading-relaxed max-w-sm">
-              Инновационные аппаратные методики снятия хронического стресса, нормализации лимфотока
-              и восстановления энергетического баланса организма.
-            </p>
+          {/* Колонка 1: Бренд (логотип клиники) */}
+          <div className="md:col-span-5 flex items-start">
+            <img
+              src="/images/osam-logo.png"
+              alt="Клиника OSAM"
+              className="h-11 sm:h-12 w-auto bg-white/95 p-1.5 rounded-xl shrink-0 shadow-sm"
+            />
           </div>
 
           <div className="md:col-span-3 space-y-3">

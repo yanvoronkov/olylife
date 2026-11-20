@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Phone, Sparkles } from 'lucide-react';
+import { User, Phone } from 'lucide-react';
 import { ASTANA_CLINIC_CONFIG } from '@/src/config/astanaClinic';
 import { AstanaTrackingData, AstanaLeadFormData } from '@/src/types/astanaClinic';
 import { submitAstanaLead } from '@/src/utils/astanaTracking';
@@ -159,28 +159,23 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
 
               {/* Стильная стеклянная визитка цены */}
               <div className="pt-1 sm:pt-2">
-                <div className="inline-flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 p-4 sm:p-6 rounded-[22px] sm:rounded-[24px] bg-gradient-to-br from-white via-[#F4FAF6] to-[#EEF7F2] border border-white/90 shadow-md shadow-emerald-950/5 w-full sm:w-auto">
+                <div className="inline-flex flex-col gap-2.5 p-4 sm:p-5 rounded-[22px] sm:rounded-[24px] bg-gradient-to-br from-white via-[#F4FAF6] to-[#EEF7F2] border border-white/90 shadow-md shadow-emerald-950/5 w-full sm:w-auto">
                   
-                  <div className="flex items-center gap-4 flex-wrap">
-                    <div className="flex flex-col whitespace-nowrap">
-                      <span className="text-xs sm:text-sm font-semibold text-slate-400 line-through decoration-slate-400 decoration-2">
-                        10 000 тг
-                      </span>
-                      <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#064E3B] tracking-tight whitespace-nowrap">
-                        5 000 тг
-                      </span>
-                    </div>
-
-                    <span className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-extrabold text-xs sm:text-sm tracking-wide shadow-sm shadow-emerald-800/25 shrink-0">
-                      -50%
+                  {/* В одну линию 10 000 ₸ и рядом 5 000 ₸ */}
+                  <div className="flex items-baseline gap-3 sm:gap-4 flex-wrap">
+                    <span className="text-base sm:text-lg lg:text-xl font-bold text-slate-400 line-through decoration-slate-400 decoration-2 whitespace-nowrap">
+                      10 000 ₸
+                    </span>
+                    <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#064E3B] tracking-tight whitespace-nowrap">
+                      5 000 ₸
                     </span>
                   </div>
 
-                  <div className="hidden sm:block h-10 w-px bg-emerald-200" />
-
-                  <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-900 font-medium">
-                    <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Специальная цена на первый сеанс</span>
+                  {/* Ниже в плашке -50% на первый сеанс */}
+                  <div>
+                    <span className="inline-flex items-center px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-extrabold text-xs sm:text-sm tracking-wide shadow-sm shadow-emerald-800/25">
+                      -50% на первый сеанс
+                    </span>
                   </div>
 
                 </div>
@@ -194,7 +189,7 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
                 
                 {/* Заголовок над полями формы */}
                 <h3 className="text-xl sm:text-2xl font-bold text-[#0A2B1D] tracking-tight text-center mb-5 sm:mb-6">
-                  Запись на сеанс
+                  Заполните данные
                 </h3>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -274,7 +269,8 @@ export const AstanaOfferCta: React.FC<OfferCtaProps> = ({ tracking, onSuccess, o
         {/* Финальная мысль (слоган) строго по ТЗ */}
         <div className="mt-14 text-center max-w-3xl mx-auto">
           <p className="text-base sm:text-lg font-bold text-[#0A2B1D] leading-snug">
-            Здоровье — это фундамент, на котором держится всё: ваше дело, семья и радость каждого дня.
+            Здоровье — это фундамент, на котором держится всё:<br className="hidden sm:inline" />{' '}
+            ваше дело, семья и радость каждого дня.
           </p>
         </div>
 
