@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { ASTANA_CLINIC_CONFIG } from '@/src/config/astanaClinic';
 
 /**
@@ -68,20 +68,8 @@ export const AstanaNavbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Правая часть: Телефон и «Написать в WhatsApp» */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          
-          {/* Телефон в элегантном овале (вровень по высоте с WhatsApp, без кружка фона за иконкой) */}
-          <a
-            href={`tel:+${ASTANA_CLINIC_CONFIG.phoneRaw}`}
-            className="h-9 sm:h-10 px-3 sm:px-4 rounded-full bg-emerald-50/80 hover:bg-emerald-100/70 border border-emerald-200/70 text-xs sm:text-sm font-bold text-[#0A2B1D] transition-all shadow-2xs inline-flex items-center justify-center gap-2 group"
-            title="Позвонить в клинику"
-          >
-            <Phone className="w-4 h-4 text-emerald-800 shrink-0 group-hover:scale-105 transition-transform" />
-            <span className="hidden md:inline">{ASTANA_CLINIC_CONFIG.phoneFormatted}</span>
-          </a>
-
-          {/* Написать в WhatsApp (по высоте строго вровень, без мигающей точки) */}
+        {/* Правая часть: «Написать в WhatsApp» */}
+        <div className="flex items-center">
           <a
             href={`https://wa.me/${ASTANA_CLINIC_CONFIG.whatsappPhone}?text=${encodeURIComponent(ASTANA_CLINIC_CONFIG.whatsappDefaultMessage)}`}
             target="_blank"
@@ -93,7 +81,6 @@ export const AstanaNavbar: React.FC = () => {
             <span className="hidden sm:inline">Написать в WhatsApp</span>
             <span className="sm:hidden">WhatsApp</span>
           </a>
-
         </div>
 
       </div>
