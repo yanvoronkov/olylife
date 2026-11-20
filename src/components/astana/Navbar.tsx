@@ -64,7 +64,7 @@ export const AstanaNavbar: React.FC = () => {
           {/* Город на всех экранах, кроме мобильных */}
           <div className="hidden sm:inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#0A2B1D]/85">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
-            <span>Астана город</span>
+            <span>Астана</span>
           </div>
         </div>
 
