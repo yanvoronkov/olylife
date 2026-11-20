@@ -38,16 +38,31 @@ export const AstanaHero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           {/* Левая колонка: Тексты и кнопка строго по ТЗ */}
           <div className="lg:col-span-7 flex flex-col space-y-6 sm:space-y-7">
             
-            {/* H1 (SEO-заголовок) */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0A2B1D] tracking-tight leading-[1.2] sm:leading-[1.18]">
-              Устали от хронического стресса, сидячей работы и постоянной нехватки сил в Астане?
+            {/* H1 (SEO-заголовок в 3 строки без «в Астане») */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0A2B1D] tracking-tight leading-[1.2] sm:leading-[1.18] max-w-2xl">
+              Устали от хронического стресса, сидячей работы и постоянной нехватки сил?
             </h1>
 
-            {/* Подзаголовок */}
-            <p className="text-base sm:text-lg text-emerald-950/85 leading-relaxed font-normal">
-              Приходите на 20-минутный сеанс на биохакинг-платформе. Процедура снимет нервное напряжение,
-              ускорит обмен веществ и вернет ресурсное состояние с 1-ого применения
-            </p>
+            {/* Подзаголовок и буллиты преимуществ */}
+            <div className="space-y-3 sm:space-y-3.5">
+              <p className="text-base sm:text-lg text-emerald-950/90 leading-relaxed font-normal">
+                Приходите на 20-минутный сеанс на биохакинг-платформе. Процедура с первого применения:
+              </p>
+              <ul className="space-y-2 text-sm sm:text-base text-emerald-950/85 font-medium">
+                <li className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+                  <span>снимет нервное напряжение</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+                  <span>ускорит обмен веществ</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+                  <span>вернет ресурсное состояние</span>
+                </li>
+              </ul>
+            </div>
 
             {/* Кнопка CTA */}
             <div className="pt-2">

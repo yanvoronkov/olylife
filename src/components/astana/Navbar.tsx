@@ -53,7 +53,7 @@ export const AstanaNavbar: React.FC = () => {
       <div className="max-w-7xl mx-auto rounded-[24px] sm:rounded-full bg-white/90 backdrop-blur-xl border border-white/90 shadow-xl shadow-emerald-950/8 px-4 sm:px-7 py-3 flex items-center justify-between pointer-events-auto transition-all duration-300">
         
         {/* Логотип клиники */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
           <a href="#" className="flex items-center group focus:outline-none">
             <img
               src="/images/osam-logo.png"
@@ -61,6 +61,11 @@ export const AstanaNavbar: React.FC = () => {
               className="h-9 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
             />
           </a>
+          {/* Город на всех экранах, кроме мобильных */}
+          <div className="hidden sm:inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#0A2B1D]/85">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
+            <span>Астана город</span>
+          </div>
         </div>
 
         {/* Правая часть: Телефон и «Написать в WhatsApp» */}
