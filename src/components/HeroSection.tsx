@@ -90,10 +90,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.2] mb-5 sm:mb-6">
             {isKg ? (
               <>
-                Ден соолук жана сулуулук тармагындагы<br className="hidden lg:inline" />
-                {" "}адистер Бишкекте<br className="hidden lg:inline" />
+                Кантип Бишкектеги,<br className="hidden lg:inline" />
+                {" "}ден соолук жана сулуулук тармагындагы адистер,<br className="hidden lg:inline" />
                 {" "}<span className="bg-gradient-to-r from-[#0E5E2B] via-[#1E9646] to-[#25A852] bg-clip-text text-transparent inline-block font-black">
-                  кирешесин 2 эсеге кантип көбөйтө алышат?
+                  кирешесин 2 эсеге көбөйтө алышат?
                 </span>
               </>
             ) : (

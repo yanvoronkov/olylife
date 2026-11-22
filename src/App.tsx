@@ -61,9 +61,11 @@ export default function App() {
 
       // 2. Сбор данных трекинга (fbclid, UTM-метки, _fbc, _fbp, eventId)
       const trackingData = getTrackingPayload();
-      const webhookUrl =
-        import.meta.env.VITE_LEAD_WEBHOOK_URL ||
-        "https://automations.inetskills.ru/webhook/olylife-lead";
+      const isBishkekOrKg = isKg || city.id === "bishkek";
+      const webhookUrl = isBishkekOrKg
+        ? "https://automations.inetskills.ru/webhook/olylife-nuriza-lead"
+        : (import.meta.env.VITE_LEAD_WEBHOOK_URL ||
+           "https://automations.inetskills.ru/webhook/olylife-lead");
 
       const payload = {
         name: formData.name.trim(),
@@ -102,6 +104,7 @@ export default function App() {
         trackMetaBrowserLead(trackingData.eventId, {
           profession: formData.profession,
           source: `${formData.source || "Form"} [${city.cityName}${isKg ? " KG" : ""}]`,
+          currency: isBishkekOrKg ? "KGS" : (city.currency || "UZS"),
         });
       } catch (pixelErr) {
         console.error("Meta Browser Lead tracking error:", pixelErr);

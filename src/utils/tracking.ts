@@ -141,7 +141,10 @@ export function getTrackingPayload(customEventId?: string): TrackingData {
 /**
  * Отправка события Lead через браузерный Meta Pixel с eventID для дедупликации
  */
-export function trackMetaBrowserLead(eventId: string, leadData: { profession?: string; source?: string }): void {
+export function trackMetaBrowserLead(
+  eventId: string,
+  leadData: { profession?: string; source?: string; currency?: string }
+): void {
   if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
     (window as any).fbq(
       "track",
@@ -151,7 +154,7 @@ export function trackMetaBrowserLead(eventId: string, leadData: { profession?: s
         content_category: "Wellness & Beauty",
         profession: leadData.profession || "Не указана",
         lead_source: leadData.source || "Website Form",
-        currency: "UZS",
+        currency: leadData.currency || "UZS",
         value: 0,
       },
       { eventID: eventId }
@@ -178,7 +181,7 @@ export async function sha256Browser(message: string): Promise<string> {
  * Отправка события в Meta Conversions API напрямую из браузера при сборке со статическими секретами
  */
 export async function sendMetaCAPIClientSide(
-  lead: { name: string; phone: string; profession?: string; source?: string },
+  lead: { name: string; phone: string; profession?: string; source?: string; currency?: string },
   tracking: TrackingData,
   accessToken: string,
   pixelId = "1420624392253746",
@@ -211,7 +214,7 @@ export async function sendMetaCAPIClientSide(
             content_category: "Wellness & Beauty",
             profession: lead.profession,
             lead_source: lead.source || "Website Form",
-            currency: "UZS",
+            currency: lead.currency || "UZS",
             value: 0,
             utm_source: tracking.utm_source || undefined,
             utm_medium: tracking.utm_medium || undefined,
