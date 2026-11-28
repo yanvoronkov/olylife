@@ -111,7 +111,7 @@ export const TRANSLATIONS: Record<Locale, Translations> = {
     navbar: {
       locationBadge: "Центр Бишкека",
       firstInCountryBadge: "Впервые в Кыргызстане",
-      logoAlt: "OliLife Кыргызстан логотип",
+      logoAlt: "OlyLife Кыргызстан логотип",
       switchLangText: "🇰🇬 КЫР",
       switchLangHref: "/kg/",
     },

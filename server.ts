@@ -48,11 +48,12 @@ function hashSha256(value: string): string {
 }
 
 function formatTelegramMessage(lead: StoredLead): string {
+  const isBali = lead.city === "bali";
   const isAstana = lead.city === "astana";
   const isAlmaty = lead.city === "almaty";
   const isBishkek = lead.city === "bishkek";
-  const timeZone = (isAstana || isAlmaty) ? "Asia/Almaty" : isBishkek ? "Asia/Bishkek" : "Asia/Tashkent";
-  const timeZoneLabel = (isAstana || isAlmaty) ? "ALMT" : isBishkek ? "KGT" : "UZT";
+  const timeZone = isBali ? "Asia/Makassar" : (isAstana || isAlmaty) ? "Asia/Almaty" : isBishkek ? "Asia/Bishkek" : "Asia/Tashkent";
+  const timeZoneLabel = isBali ? "WITA" : (isAstana || isAlmaty) ? "ALMT" : isBishkek ? "KGT" : "UZT";
 
   const dateStr = new Date(lead.createdAt).toLocaleString("ru-RU", {
     timeZone,
@@ -70,8 +71,8 @@ function formatTelegramMessage(lead: StoredLead): string {
     lead.tracking?.eventSourceUrl?.includes("/kg")
   );
 
-  const cityTag = isAstana ? "АСТАНА 🇰🇿" : isAlmaty ? "АЛМАТЫ 🇰🇿" : isBishkek ? (isKg ? "БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]" : "БИШКЕК 🇰🇬") : "ТАШКЕНТ 🇺🇿";
-  const cityTitle = isAstana ? "Астана (Клиника OSAM / Умай 🇰🇿)" : isAlmaty ? "Алматы (Казахстан 🇰🇿)" : isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
+  const cityTag = isBali ? "БАЛИ 🇮🇩" : isAstana ? "АСТАНА 🇰🇿" : isAlmaty ? "АЛМАТЫ 🇰🇿" : isBishkek ? (isKg ? "БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]" : "БИШКЕК 🇰🇬") : "ТАШКЕНТ 🇺🇿";
+  const cityTitle = isBali ? "Бали (Индонезия 🇮🇩)" : isAstana ? "Астана (Клиника OSAM / Умай 🇰🇿)" : isAlmaty ? "Алматы (Казахстан 🇰🇿)" : isBishkek ? "Бишкек (Кыргызстан 🇰🇬)" : "Ташкент (Узбекистан 🇺🇿)";
 
   let message = isAstana
     ? `<b>⚡ НОВАЯ ЗАЯВКА В КЛИНИКУ OSAM (${cityTag}) со скидкой 50%</b>\n\n`
@@ -164,6 +165,7 @@ async function sendToFacebookCAPI(
   }
 
   try {
+    const isBali = lead.city === "bali";
     const isAstana = lead.city === "astana";
     const isAlmaty = lead.city === "almaty";
     const isBishkek = lead.city === "bishkek";
@@ -180,7 +182,7 @@ async function sendToFacebookCAPI(
 
     const eventTime = Math.floor(new Date(lead.createdAt).getTime() / 1000);
     const eventId = tracking.eventId || lead.id;
-    const eventSourceUrl = tracking.eventSourceUrl || (isAstana ? "https://yarkozhivi.space/astana/" : isAlmaty ? "https://yarkozhivi.space/almaty/" : isBishkek ? "https://yarkozhivi.space/bishkek/" : "https://yarkozhivi.space/");
+    const eventSourceUrl = tracking.eventSourceUrl || (isBali ? "https://yarkozhivi.space/bali/" : isAstana ? "https://yarkozhivi.space/astana/" : isAlmaty ? "https://yarkozhivi.space/almaty/" : isBishkek ? "https://yarkozhivi.space/bishkek/" : "https://yarkozhivi.space/");
 
     const payload: any = {
       data: [
@@ -199,11 +201,11 @@ async function sendToFacebookCAPI(
             fbp: tracking.fbp || undefined,
           },
           custom_data: {
-            content_name: isAstana ? "Сеанс биохакинга OSAM (Астана) со скидкой 50%" : isAlmaty ? "Заявка на тест-драйв OlyLife P90 (Алматы)" : isBishkek ? "Заявка на тест-драйв OlyLife P90 (Бишкек)" : "Заявка на тест-драйв OlyLife P90 (Ташкент)",
+            content_name: isBali ? "Заявка на тест-драйв OlyLife P90 (Бали)" : isAstana ? "Сеанс биохакинга OSAM (Астана) со скидкой 50%" : isAlmaty ? "Заявка на тест-драйв OlyLife P90 (Алматы)" : isBishkek ? "Заявка на тест-драйв OlyLife P90 (Бишкек)" : "Заявка на тест-драйв OlyLife P90 (Ташкент)",
             content_category: isAstana ? "Preventive Medicine & Biohacking" : "Wellness & Beauty",
             profession: lead.profession,
             lead_source: lead.source || "Website Form",
-            currency: (isAstana || isAlmaty) ? "KZT" : isBishkek ? "KGS" : "UZS",
+            currency: isBali ? "USD" : (isAstana || isAlmaty) ? "KZT" : isBishkek ? "KGS" : "UZS",
             value: isAstana ? 5000 : 0,
             utm_source: tracking.utm_source || undefined,
             utm_medium: tracking.utm_medium || undefined,
@@ -285,12 +287,13 @@ app.post("/api/leads", async (req, res) => {
       deliveredToFacebook: false,
     };
 
-    // 1. Отправка в Telegram (поддержка отдельных потоков для Астаны, Алматы и Бишкека)
+    // 1. Отправка в Telegram (поддержка отдельных потоков для Бали, Астаны, Алматы и Бишкека)
+    const isBali = newLead.city === "bali";
     const isAstana = newLead.city === "astana";
     const isAlmaty = newLead.city === "almaty";
     const isBishkek = newLead.city === "bishkek";
-    const tgToken = (isAstana && (process.env.ASTANA_TELEGRAM_BOT_TOKEN || process.env.ALMATY_TELEGRAM_BOT_TOKEN)) || (isAlmaty && process.env.ALMATY_TELEGRAM_BOT_TOKEN) || (isBishkek && process.env.BISHKEK_TELEGRAM_BOT_TOKEN) || process.env.TELEGRAM_BOT_TOKEN || "";
-    const tgChatId = (isAstana && (process.env.ASTANA_TELEGRAM_CHAT_ID || process.env.ALMATY_TELEGRAM_CHAT_ID)) || (isAlmaty && process.env.ALMATY_TELEGRAM_CHAT_ID) || (isBishkek && process.env.BISHKEK_TELEGRAM_CHAT_ID) || process.env.TELEGRAM_CHAT_ID || "";
+    const tgToken = (isBali && (process.env.BALI_TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN)) || (isAstana && (process.env.ASTANA_TELEGRAM_BOT_TOKEN || process.env.ALMATY_TELEGRAM_BOT_TOKEN)) || (isAlmaty && process.env.ALMATY_TELEGRAM_BOT_TOKEN) || (isBishkek && process.env.BISHKEK_TELEGRAM_BOT_TOKEN) || process.env.TELEGRAM_BOT_TOKEN || "";
+    const tgChatId = (isBali && (process.env.BALI_TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID)) || (isAstana && (process.env.ASTANA_TELEGRAM_CHAT_ID || process.env.ALMATY_TELEGRAM_CHAT_ID)) || (isAlmaty && process.env.ALMATY_TELEGRAM_CHAT_ID) || (isBishkek && process.env.BISHKEK_TELEGRAM_CHAT_ID) || process.env.TELEGRAM_CHAT_ID || "";
 
     if (tgToken && tgChatId) {
       const tgResult = await sendToTelegram(formatTelegramMessage(newLead), tgToken, tgChatId);
@@ -324,6 +327,12 @@ app.post("/api/leads", async (req, res) => {
 });
 
 async function startServer() {
+  // Canonical redirect for Bali subfolder (preserves query & UTM parameters)
+  app.get(/^\/bali$/, (req, res) => {
+    const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
+    res.redirect(301, "/bali/" + query);
+  });
+
   // Canonical redirect for Astana subfolder (preserves query & UTM parameters)
   app.get(/^\/astana$/, (req, res) => {
     const query = req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "";
@@ -362,6 +371,10 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    app.get("/bali*", (req, res) => {
+      const baliHtml = path.join(distPath, "bali", "index.html");
+      res.sendFile(baliHtml);
+    });
     app.get("/astana*", (req, res) => {
       const astanaHtml = path.join(distPath, "astana", "index.html");
       res.sendFile(astanaHtml);

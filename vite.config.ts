@@ -20,6 +20,7 @@ export default defineConfig(() => {
           kg: path.resolve(__dirname, 'kg/index.html'),
           almaty: path.resolve(__dirname, 'almaty/index.html'),
           astana: path.resolve(__dirname, 'astana/index.html'),
+          bali: path.resolve(__dirname, 'bali/index.html'),
         },
       },
     },

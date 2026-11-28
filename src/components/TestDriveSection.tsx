@@ -75,7 +75,9 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
           {/* Section Header */}
           <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-10 lg:mb-12">
             <span className="inline-block px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#EBF7F0] text-[#0E5E2B] border border-[#C3EBD4] mb-3">
-              {city.id === "almaty"
+              {city.id === "bali"
+                ? "БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ НА БАЛИ"
+                : city.id === "almaty"
                 ? "БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ В АЛМАТЫ"
                 : (isKg ? translations?.testDrive?.badge : `БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`) || `БЕСПЛАТНЫЙ ТЕСТ-ДРАЙВ В ${city.cityName.toUpperCase()}`}
             </span>
@@ -83,7 +85,9 @@ export const TestDriveSection: React.FC<TestDriveSectionProps> = ({
               {translations?.testDrive?.title || "Проверьте на себе и оцените результат!"}
             </h2>
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-              {city.id === "almaty"
+              {city.id === "bali"
+                ? "Приезжайте в наше демо-пространство на Бали, пройдите сеанс, задайте уточняющие вопросы, и мы обсудим персональный план запуска под ваш график."
+                : city.id === "almaty"
                 ? "Приезжайте в наше демо-пространство в центре Алматы, пройдите сеанс, задайте уточняющие вопросы, и мы обсудим персональный план запуска под ваш график."
                 : (isKg
                     ? translations?.testDrive?.description

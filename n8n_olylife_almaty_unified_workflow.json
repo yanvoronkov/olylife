@@ -1,0 +1,1314 @@
+{
+  "id": "F4JDSlQtGbFrKJ2m",
+  "name": "OlyLife Lead Ingestion",
+  "active": true,
+  "isArchived": false,
+  "versionId": "93328fda-0387-43f3-bf63-eb4533ea7038",
+  "activeVersionId": "93328fda-0387-43f3-bf63-eb4533ea7038",
+  "triggerCount": 2,
+  "createdAt": "2026-11-09T14:37:44.999Z",
+  "updatedAt": "2026-11-26T12:10:08.916Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "connections": {
+    "Normalize & Hash Data": {
+      "main": [
+        [
+          {
+            "node": "Save to Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Send to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Telegram": {
+      "main": [
+        [
+          {
+            "node": "Send Meta CAPI Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Meta CAPI Lead": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OlyLife Lead Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize & Hash Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Form Poller (Каждые 5 мин)": {
+      "main": [
+        [
+          {
+            "node": "Meta Form Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Form Config": {
+      "main": [
+        [
+          {
+            "node": "Fetch Leads from Meta Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Leads from Meta Form": {
+      "main": [
+        [
+          {
+            "node": "Parse & Normalize Meta Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Normalize Meta Lead": {
+      "main": [
+        [
+          {
+            "node": "Save Meta Lead to Sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Meta Lead to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "e0c04736-d154-4e0b-85e6-b651800521b0",
+      "name": "OlyLife Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "olylife-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "0697dd93-e92f-42de-98d2-50e2d23fe76f"
+    },
+    {
+      "id": "1f92950e-75f6-4e88-809c-88bb151dbe2c",
+      "name": "Normalize & Hash Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "jsCode": "function sha256(str) {\n  if (!str) return '';\n  const unescaped = unescape(encodeURIComponent(str));\n  function rightRotate(value, amount) {\n    return (value >>> amount) | (value << (32 - amount));\n  }\n  const mathPow = Math.pow;\n  const maxWord = mathPow(2, 32);\n  let lengthProperty = 'length';\n  let i, j;\n  let result = '';\n\n  const words = [];\n  const asciiBitLength = unescaped[lengthProperty] * 8;\n  \n  let hash = [];\n  let k = [];\n  let primeCounter = 0;\n\n  const isComposite = {};\n  for (let candidate = 2; primeCounter < 64; candidate++) {\n    if (!isComposite[candidate]) {\n      for (i = 0; i < 313; i += candidate) {\n        isComposite[i] = candidate;\n      }\n      hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;\n      k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;\n    }\n  }\n  \n  hash = hash.slice(0, 8);\n\n  for (i = 0; i < unescaped[lengthProperty]; i++) {\n    words[i >> 2] |= unescaped.charCodeAt(i) << (24 - ((i % 4) * 8));\n  }\n  words[asciiBitLength >> 5] |= 0x80 << (24 - (asciiBitLength % 32));\n  words[(((asciiBitLength + 64) >> 9) << 4) + 15] = asciiBitLength;\n\n  for (j = 0; j < words[lengthProperty]; j += 16) {\n    const w = words.slice(j, j + 16);\n    const oldHash = hash;\n    hash = hash.slice(0, 8);\n    \n    for (i = 0; i < 64; i++) {\n      const i2 = i + j;\n      const w15 = w[i - 15], w2 = w[i - 2];\n\n      const a = hash[0], e = hash[4];\n      const temp1 = hash[7]\n        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))\n        + ((e & hash[5]) ^ ((~e) & hash[6]))\n        + k[i]\n        + (w[i] = (i < 16) ? (w[i] || 0) : (\n            w[i - 16]\n            + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))\n            + w[i - 7]\n            + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))\n          ) | 0\n        );\n      const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))\n        + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));\n      \n      hash = [(temp1 + temp2) | 0].concat(hash);\n      hash[4] = (hash[4] + temp1) | 0;\n    }\n\n    for (i = 0; i < 8; i++) {\n      hash[i] = (hash[i] + oldHash[i]) | 0;\n    }\n  }\n  \n  for (i = 0; i < 8; i++) {\n    for (j = 3; j >= 0; j--) {\n      const b = (hash[i] >> (8 * j)) & 255;\n      result += ((b < 16) ? '0' : '') + b.toString(16);\n    }\n  }\n  return result;\n}\n\nconst body = $('OlyLife Lead Webhook').item.json.body || {};\nconst headers = $('OlyLife Lead Webhook').item.json.headers || {};\nconst tracking = body.tracking || {};\n\nlet rawPhone = String(body.phone || '').trim();\nlet cleanDigits = rawPhone.replace(/\\D/g, '');\nlet normalizedPhone = '';\nif (cleanDigits.startsWith('8') && cleanDigits.length === 11) {\n  normalizedPhone = '+7' + cleanDigits.slice(1);\n} else if (cleanDigits.startsWith('7') && cleanDigits.length === 11) {\n  normalizedPhone = '+' + cleanDigits;\n} else if (cleanDigits.startsWith('996') && cleanDigits.length === 12) {\n  normalizedPhone = '+' + cleanDigits;\n} else if (cleanDigits.startsWith('0') && cleanDigits.length === 10) {\n  normalizedPhone = '+996' + cleanDigits.slice(1);\n} else if (cleanDigits.length >= 9) {\n  normalizedPhone = '+' + cleanDigits;\n} else {\n  normalizedPhone = rawPhone;\n}\n\nconst cityId = String(body.city || 'almaty').toLowerCase();\nconst isAlmaty = cityId === 'almaty';\nconst isBishkek = cityId === 'bishkek';\nconst cityName = isAlmaty ? 'Алматы' : (isBishkek ? 'Бишкек' : 'Ташкент');\nconst timeZone = isAlmaty ? 'Asia/Almaty' : (isBishkek ? 'Asia/Bishkek' : 'Asia/Tashkent');\n\nconst now = new Date();\nconst dateStr = now.toLocaleString('ru-RU', {\n  timeZone,\n  year: 'numeric',\n  month: '2-digit',\n  day: '2-digit',\n  hour: '2-digit',\n  minute: '2-digit'\n});\n\nconst phoneHash = cleanDigits ? sha256(cleanDigits) : '';\nconst nameTrimmed = String(body.name || '').trim().toLowerCase();\nconst nameHash = nameTrimmed ? sha256(nameTrimmed) : '';\n\nconst eventId = tracking.eventId || ('lead_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7));\nconst externalId = 'olylife_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);\nconst visitorId = body.visitor_ID || tracking.visitor_ID || ('vid_' + Math.random().toString(36).substring(2, 10));\n\nconst clientIp = headers['cf-connecting-ip'] || headers['x-forwarded-for'] || '127.0.0.1';\nconst userAgent = headers['user-agent'] || tracking.userAgent || '';\n\nconst isKg = String(body.language || '').toLowerCase() === 'kg';\nconst cityTag = isAlmaty ? 'АЛМАТЫ 🇰🇿' : (isBishkek ? (isKg ? 'БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]' : 'БИШКЕК 🇰🇬') : 'ТАШКЕНТ 🇺🇿');\nlet tgMessage = '<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (' + cityTag + ')</b>\\n\\n';\ntgMessage += '👤 <b>Имя:</b> ' + (body.name || 'Не указано') + '\\n';\ntgMessage += '📞 <b>Телефон:</b> ' + normalizedPhone + '\\n';\ntgMessage += '💼 <b>Профессия:</b> ' + (body.profession || 'Не указана') + '\\n';\ntgMessage += '📍 <b>Город:</b> ' + cityName + '\\n';\nif (body.source) tgMessage += '📝 <b>Форма:</b> ' + body.source + '\\n';\ntgMessage += '🕒 <b>Время:</b> ' + dateStr + '\\n';\n\nif (tracking.utm_source || tracking.utm_campaign || tracking.utm_content) {\n  tgMessage += '\\n🎯 <b>Маркетинг:</b>\\n';\n  if (tracking.utm_source) tgMessage += '• Источник: ' + tracking.utm_source + '\\n';\n  if (tracking.utm_campaign) tgMessage += '• Кампания: ' + tracking.utm_campaign + '\\n';\n  if (tracking.utm_content) tgMessage += '• Контент: ' + tracking.utm_content + '\\n';\n}\n\n\nconst isBishkekOrKg = isBishkek || isKg || \n  String(tracking.utm_campaign || '').toLowerCase().includes('bishkek') || \n  String(tracking.utm_campaign || '').toLowerCase().includes('nuriza') ||\n  String(tracking.eventSourceUrl || '').includes('/kg') ||\n  String(tracking.eventSourceUrl || '').includes('/bishkek');\n\nconst targetSheetId = isBishkekOrKg \n  ? '192r2G36Z1Ajc0yTTrSUSCFOf1NXw2VsZsxtzZT7ZbvA' \n  : '11-IDiPnzbBha5kb20yTciwfsdNVe5bW-D1Dta7xZG7o';\n\nconst targetTgChatId = isBishkekOrKg \n  ? '-5496306947' \n  : '-5579738380';\n\nconst targetPixelId = isBishkekOrKg \n  ? '1916610452642409' \n  : '1420624392253746';\n\nconst targetPixelToken = isBishkekOrKg \n  ? 'EAANLQNomhl8BSgtm1YASab1tKwuh21h7OtH5K8tnZAZA3xAtvJg6rKTgaZBujrEzYCSkZCkCrt3ffksgN0GAoWo34YtTQDbfY4HVETZBC11O1LxoOkcptEZBOF1YvtDZBW8y7cm3WMn42kqbdLp8ZCLa4pGAZCvHJ3c4tEyKOZAf2xBiJwpg4prh9fJFMGGZCXUcQZDZD' \n  : 'EAAQ9vvjhud0BSbOrioruuz4MENIzUmwYgEXfDQZCYoW5EHItto9I3EZAxWLjZC12bLBPP0xZAqQ34olapE5Y7I8mz7M1bdHadZCns1lu4EZANZCbzIXyTZAvChWJbVwoyCpx9VeNUIngHlK2BIyNydX7NJPgeTyQOvekZC03u0c1LWEld7G3YKUc2G5jOP9fIWgZDZD';\n\nreturn [{\n  json: {\n    created_date: dateStr,\n    name: body.name || '',\n    phone: normalizedPhone,\n    profession: body.profession || 'Не указана',\n    city_name: cityName,\n    status: 'Новый',\n    lead_quality: 'Целевой',\n    deal_value: '',\n    comment: '',\n    ad_id: tracking.ad_id || '',\n    placement: tracking.utm_source ? (tracking.utm_source + ' / ' + (tracking.utm_medium || '')) : (body.source || 'Website'),\n    campaign: tracking.utm_campaign || '',\n    site_source: tracking.eventSourceUrl || 'https://yarkozhivi.space',\n    fbc: tracking.fbc || '',\n    fbp: tracking.fbp || '',\n    visitor_id: visitorId,\n    external_id: externalId,\n    capi_event_id: eventId,\n    lead_status: 'NEW',\n    capi_status_sent: 'Lead',\n    capi_sent_at: dateStr,\n    phone_hash: phoneHash,\n    name_hash: nameHash,\n    client_ip: clientIp,\n    user_agent: userAgent,\n    tg_message: tgMessage,\n    target_sheet_id: targetSheetId,\n    target_tg_chat_id: targetTgChatId,\n    target_pixel_id: targetPixelId,\n    target_pixel_token: targetPixelToken\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "c0b4e7e5-cac1-42b3-b027-c13bee066a62",
+      "name": "Save to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "columns": {
+          "mappingMode": "defineBelow",
+          "schema": [
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Дата создания",
+              "id": "Дата создания",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Имя",
+              "id": "Имя",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Телефон",
+              "id": "Телефон",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Сфера деятельности",
+              "id": "Сфера деятельности",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Город",
+              "id": "Город",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Статус",
+              "id": "Статус",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Сумма сделки",
+              "id": "Сумма сделки",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Комментарий",
+              "id": "Комментарий",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "ad_id",
+              "id": "ad_id",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Источник, место размещения",
+              "id": "Источник, место размещения",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Кампания",
+              "id": "Кампания",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Источник сайта",
+              "id": "Источник сайта",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "fbc",
+              "id": "fbc",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "fbp",
+              "id": "fbp",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "visitor_ID",
+              "id": "visitor_ID",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "external_id",
+              "id": "external_id",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "capi_event_id",
+              "id": "capi_event_id",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "lead_status",
+              "id": "lead_status",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "capi_status_sent",
+              "id": "capi_status_sent",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "capi_sent_at",
+              "id": "capi_sent_at",
+              "type": "string"
+            }
+          ],
+          "value": {
+            "ad_id": "={{ $json.ad_id }}",
+            "capi_event_id": "={{ $json.capi_event_id }}",
+            "capi_sent_at": "={{ $json.capi_sent_at }}",
+            "capi_status_sent": "={{ $json.capi_status_sent }}",
+            "external_id": "={{ $json.external_id }}",
+            "fbc": "={{ $json.fbc }}",
+            "fbp": "={{ $json.fbp }}",
+            "lead_status": "={{ $json.lead_status }}",
+            "visitor_ID": "={{ $json.visitor_id }}",
+            "Город": "={{ $json.city_name }}",
+            "Дата создания": "={{ $json.created_date }}",
+            "Имя": "={{ $json.name }}",
+            "Источник сайта": "={{ $json.site_source }}",
+            "Источник, место размещения": "={{ $json.placement }}",
+            "Кампания": "={{ $json.campaign }}",
+            "Комментарий": "={{ $json.comment }}",
+            "Статус": "={{ $json.status }}",
+            "Сумма сделки": "={{ $json.deal_value }}",
+            "Сфера деятельности": "={{ $json.profession }}",
+            "Телефон": "={{ $json.phone }}"
+          }
+        },
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "={{ $json.target_sheet_id }}"
+        },
+        "operation": "append",
+        "options": {},
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 0
+        }
+      }
+    },
+    {
+      "id": "1efd3b64-fd57-48db-8200-882cc75c380f",
+      "name": "Send to Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot7142034173:AAFw9bCtt3njweCrw9M978UOc9-lbrVituo/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ chat_id: $('Normalize & Hash Data').item.json.target_tg_chat_id, text: $('Normalize & Hash Data').item.json.tg_message, parse_mode: 'HTML', disable_web_page_preview: true }) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "cbf832f4-2e6c-4291-ba07-fd88c27a6dfa",
+      "name": "Send Meta CAPI Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://graph.facebook.com/v21.0/' + $('Normalize & Hash Data').item.json.target_pixel_id + '/events' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $('Normalize & Hash Data').item.json.target_pixel_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ data: [{ event_name: \"Lead\", event_time: Math.floor(Date.now() / 1000), event_id: $('Normalize & Hash Data').item.json.capi_event_id, action_source: \"website\", event_source_url: $('Normalize & Hash Data').item.json.site_source, user_data: { ph: [$('Normalize & Hash Data').item.json.phone_hash], fn: [$('Normalize & Hash Data').item.json.name_hash], client_ip_address: $('Normalize & Hash Data').item.json.client_ip, client_user_agent: $('Normalize & Hash Data').item.json.user_agent, fbp: $('Normalize & Hash Data').item.json.fbp, fbc: $('Normalize & Hash Data').item.json.fbc, external_id: $('Normalize & Hash Data').item.json.external_id }, custom_data: { content_name: \"Заявка на тест-драйв OlyLife P90\", content_category: \"Wellness & Beauty\", lead_city: $('Normalize & Hash Data').item.json.city_name, profession: $('Normalize & Hash Data').item.json.profession } }] }) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "cb44875e-2884-4c75-8c06-12a49b974da8",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, eventId: $('Normalize & Hash Data').item.json.capi_event_id, externalId: $('Normalize & Hash Data').item.json.external_id }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "a3074f19-b96d-4d36-a85b-153a1b01e7b4",
+      "name": "Meta Form Poller (Каждые 5 мин)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        260
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7cb6bf6b-6309-46dd-b1f1-acd3f602b226",
+      "name": "Meta Form Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        260
+      ],
+      "parameters": {
+        "jsCode": "const FORM_ID = \"889112447403153\";\nconst META_TOKEN = \"EAANLQNomhl8BSgtm1YASab1tKwuh21h7OtH5K8tnZAZA3xAtvJg6rKTgaZBujrEzYCSkZCkCrt3ffksgN0GAoWo34YtTQDbfY4HVETZBC11O1LxoOkcptEZBOF1YvtDZBW8y7cm3WMn42kqbdLp8ZCLa4pGAZCvHJ3c4tEyKOZAf2xBiJwpg4prh9fJFMGGZCXUcQZDZD\";\nconst overlapSeconds = 300;\nconst initialLookbackSeconds = 86400;\n\nconst staticData = $getWorkflowStaticData(\"global\");\nconst now = Math.floor(Date.now() / 1000);\n\n// Защита от повторного импорта уже выгруженных 28 лидов\nif (!staticData.almaty_backfill_done) {\n  staticData.lastMetaSuccessTime = now;\n  staticData.almaty_backfill_done = true;\n}\n\nconst sinceTimestamp = staticData.lastMetaSuccessTime\n  ? (staticData.lastMetaSuccessTime - overlapSeconds)\n  : (now - initialLookbackSeconds);\n\nconst filterParam = JSON.stringify([{\n  field: \"time_created\",\n  operator: \"GREATER_THAN\",\n  value: sinceTimestamp\n}]);\n\nreturn [{\n  json: {\n    form_id: FORM_ID,\n    form_name: \"Lead form от 19.08.2026, 14:29\",\n    meta_token: META_TOKEN,\n    current_run_time: now,\n    filter_param: filterParam\n  }\n}];"
+      }
+    },
+    {
+      "id": "f4fc5604-1348-4374-b51c-ef7f01b0d026",
+      "name": "Fetch Leads from Meta Form",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        260
+      ],
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.meta_token }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        },
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,created_time,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,form_id,is_organic,platform,field_data"
+            },
+            {
+              "name": "filtering",
+              "value": "={{ $json.filter_param }}"
+            },
+            {
+              "name": "limit",
+              "value": "100"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "sendQuery": true,
+        "url": "=https://graph.facebook.com/v21.0/{{ $json.form_id }}/leads"
+      }
+    },
+    {
+      "id": "34a4b8e1-42a1-47ba-827c-990aa4bf0bd9",
+      "name": "Parse & Normalize Meta Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        260
+      ],
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst staticData = $getWorkflowStaticData(\"global\");\nconst config = $(\"Meta Form Config\").first().json;\nconst currentRunTime = config.current_run_time || Math.floor(Date.now() / 1000);\n\nstaticData.lastMetaSuccessTime = currentRunTime;\nstaticData.processedLeadIds = Array.isArray(staticData.processedLeadIds)\n  ? staticData.processedLeadIds\n  : [];\n\nconst results = [];\n\nfor (const it of items) {\n  const rawData = it.json;\n  if (!rawData || !rawData.data || !Array.isArray(rawData.data)) continue;\n\n  for (const lead of rawData.data) {\n    const leadId = String(lead.id || \"\").trim();\n    if (!leadId) continue;\n    if (staticData.processedLeadIds.includes(leadId)) {\n      continue;\n    }\n\n    const fieldData = Array.isArray(lead.field_data) ? lead.field_data : [];\n    let rawPhone = \"\";\n    let name = \"\";\n    let sphere = \"\";\n    let email = \"\";\n    let city = \"Алматы\";\n\n    for (const f of fieldData) {\n      const nameLower = (f.name || \"\").toLowerCase();\n      const val = (f.values && f.values[0]) ? String(f.values[0]).trim() : \"\";\n      if (nameLower.includes(\"phone\") || nameLower.includes(\"номер\") || nameLower.includes(\"телефон\")) {\n        rawPhone = val;\n      } else if (nameLower.includes(\"full_name\") || nameLower.includes(\"имя\") || nameLower.includes(\"name\")) {\n        name = val;\n      } else if (nameLower.includes(\"сфер\") || nameLower.includes(\"професс\") || nameLower.includes(\"work\") || nameLower.includes(\"деятельн\")) {\n        sphere = val;\n      } else if (nameLower.includes(\"email\") || nameLower.includes(\"почта\")) {\n        email = val;\n      } else if (nameLower.includes(\"город\") || nameLower.includes(\"city\")) {\n        city = val;\n      }\n    }\n\n    let cleanDigits = rawPhone.replace(/\\D/g, \"\");\n    let normalizedPhone = \"\";\n    if (cleanDigits.startsWith(\"8\") && cleanDigits.length === 11) {\n      normalizedPhone = \"+7\" + cleanDigits.slice(1);\n    } else if (cleanDigits.startsWith(\"7\") && cleanDigits.length === 11) {\n      normalizedPhone = \"+\" + cleanDigits;\n    } else if (cleanDigits.length >= 9) {\n      normalizedPhone = \"+\" + cleanDigits;\n    } else {\n      normalizedPhone = rawPhone;\n    }\n\n    const createdTime = lead.created_time ? new Date(lead.created_time) : new Date();\n    const almatyTime = new Date(createdTime.getTime() + (5 * 60 + createdTime.getTimezoneOffset()) * 60000);\n    const pad = (n) => String(n).padStart(2, \"0\");\n    const dateStr = `${pad(almatyTime.getDate())}.${pad(almatyTime.getMonth() + 1)}.${almatyTime.getFullYear()}, ${pad(almatyTime.getHours())}:${pad(almatyTime.getMinutes())}`;\n\n    let tgMessage = \"<b>⚡ НОВАЯ ЗАЯВКА OLYLIFE (АЛМАТЫ 🇰🇿 [META FORM])</b>\\n\\n\";\n    tgMessage += \"👤 <b>Имя:</b> \" + (name || \"Не указано\") + \"\\n\";\n    tgMessage += \"📞 <b>Телефон:</b> \" + normalizedPhone + \"\\n\";\n    tgMessage += \"💼 <b>Профессия:</b> \" + (sphere || \"Не указана\") + \"\\n\";\n    tgMessage += \"📍 <b>Город:</b> \" + city + \"\\n\";\n    if (email) tgMessage += \"✉️ <b>Email:</b> \" + email + \"\\n\";\n    tgMessage += \"📋 <b>Форма:</b> Lead form от 19.08.2026, 14:29\\n\";\n    tgMessage += \"🕒 <b>Время:</b> \" + dateStr + \"\\n\\n\";\n    tgMessage += \"🎯 <b>Маркетинг Meta:</b>\\n\";\n    tgMessage += \"• Кампания: \" + (lead.campaign_name || \"Биохакинг Алматы 191126\") + \"\\n\";\n    tgMessage += \"• Объявление: \" + (lead.ad_name || lead.ad_id || \"Meta Ad\") + \"\\n\";\n    tgMessage += \"• Платформа: \" + (lead.platform || \"fb / ig\") + \"\\n\";\n\n    staticData.processedLeadIds.push(leadId);\n\n    results.push({\n      json: {\n        lead_id: leadId,\n        created_date: dateStr,\n        name: name,\n        phone: normalizedPhone,\n        profession: sphere || \"Не указана\",\n        city_name: city,\n        status: \"Новый\",\n        deal_value: \"\",\n        comment: email ? (\"Email: \" + email) : \"Лид-форма Meta\",\n        ad_id: lead.ad_id || \"\",\n        placement: \"Meta Instant Form / \" + (lead.platform || \"fb\"),\n        campaign: lead.campaign_name || \"Биохакинг Алматы 191126\",\n        site_source: \"Meta Instant Form (889112447403153)\",\n        fbc: \"\",\n        fbp: \"\",\n        visitor_id: \"\",\n        external_id: \"meta_lead_\" + leadId,\n        capi_event_id: \"lead_\" + leadId,\n        lead_status: \"NEW\",\n        capi_status_sent: \"Lead_Form\",\n        capi_sent_at: dateStr,\n        tg_message: tgMessage,\n        target_sheet_id: \"11-IDiPnzbBha5kb20yTciwfsdNVe5bW-D1Dta7xZG7o\",\n        target_tg_chat_id: \"-5579738380\"\n      }\n    });\n  }\n}\n\nif (staticData.processedLeadIds.length > 1000) {\n  staticData.processedLeadIds = staticData.processedLeadIds.slice(-1000);\n}\n\nreturn results;"
+      }
+    },
+    {
+      "id": "38b61a15-4501-42b7-91ff-4192a28ab503",
+      "name": "Save Meta Lead to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        260
+      ],
+      "parameters": {
+        "columns": {
+          "mappingMode": "defineBelow",
+          "schema": [
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Дата создания",
+              "id": "Дата создания",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Имя",
+              "id": "Имя",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Телефон",
+              "id": "Телефон",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Сфера деятельности",
+              "id": "Сфера деятельности",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Город",
+              "id": "Город",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Статус",
+              "id": "Статус",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Сумма сделки",
+              "id": "Сумма сделки",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Комментарий",
+              "id": "Комментарий",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "ad_id",
+              "id": "ad_id",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Источник, место размещения",
+              "id": "Источник, место размещения",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Кампания",
+              "id": "Кампания",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "Источник сайта",
+              "id": "Источник сайта",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "fbc",
+              "id": "fbc",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "fbp",
+              "id": "fbp",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "visitor_ID",
+              "id": "visitor_ID",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "external_id",
+              "id": "external_id",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "capi_event_id",
+              "id": "capi_event_id",
+              "type": "string"
+            },
+            {
+              "canBeUsedToMatch": true,
+              "displayName": "lead_status",
+              "id": "lead_status",
+              "type": "string"
+            }
+          ],
+          "value": {
+            "ad_id": "={{ $json.ad_id }}",
+            "capi_event_id": "={{ $json.capi_event_id }}",
+            "external_id": "={{ $json.external_id }}",
+            "fbc": "={{ $json.fbc }}",
+            "fbp": "={{ $json.fbp }}",
+            "lead_status": "={{ $json.lead_status }}",
+            "visitor_ID": "={{ $json.visitor_id }}",
+            "Город": "={{ $json.city_name }}",
+            "Дата создания": "={{ $json.created_date }}",
+            "Имя": "={{ $json.name }}",
+            "Источник сайта": "={{ $json.site_source }}",
+            "Источник, место размещения": "={{ $json.placement }}",
+            "Кампания": "={{ $json.campaign }}",
+            "Комментарий": "={{ $json.comment }}",
+            "Статус": "={{ $json.status }}",
+            "Сумма сделки": "={{ $json.deal_value }}",
+            "Сфера деятельности": "={{ $json.profession }}",
+            "Телефон": "={{ $json.phone }}"
+          }
+        },
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "11-IDiPnzbBha5kb20yTciwfsdNVe5bW-D1Dta7xZG7o"
+        },
+        "operation": "append",
+        "options": {},
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 0
+        }
+      }
+    },
+    {
+      "id": "54f96d14-04b1-4a3c-9c75-c4c4c00d723d",
+      "name": "Send Meta Lead to Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        260
+      ],
+      "parameters": {
+        "jsonBody": "={{ JSON.stringify({ chat_id: $('Parse & Normalize Meta Lead').item.json.target_tg_chat_id || '-5579738380', text: $('Parse & Normalize Meta Lead').item.json.tg_message, parse_mode: 'HTML', disable_web_page_preview: true }) }}",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "url": "https://api.telegram.org/bot7142034173:AAFw9bCtt3njweCrw9M978UOc9-lbrVituo/sendMessage"
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "activeVersion": {
+    "nodes": [
+      {
+        "id": "e0c04736-d154-4e0b-85e6-b651800521b0",
+        "name": "OlyLife Lead Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          0
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "olylife-lead",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "0697dd93-e92f-42de-98d2-50e2d23fe76f"
+      },
+      {
+        "id": "1f92950e-75f6-4e88-809c-88bb151dbe2c",
+        "name": "Normalize & Hash Data",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          240,
+          0
+        ],
+        "parameters": {
+          "jsCode": "function sha256(str) {\n  if (!str) return '';\n  const unescaped = unescape(encodeURIComponent(str));\n  function rightRotate(value, amount) {\n    return (value >>> amount) | (value << (32 - amount));\n  }\n  const mathPow = Math.pow;\n  const maxWord = mathPow(2, 32);\n  let lengthProperty = 'length';\n  let i, j;\n  let result = '';\n\n  const words = [];\n  const asciiBitLength = unescaped[lengthProperty] * 8;\n  \n  let hash = [];\n  let k = [];\n  let primeCounter = 0;\n\n  const isComposite = {};\n  for (let candidate = 2; primeCounter < 64; candidate++) {\n    if (!isComposite[candidate]) {\n      for (i = 0; i < 313; i += candidate) {\n        isComposite[i] = candidate;\n      }\n      hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;\n      k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;\n    }\n  }\n  \n  hash = hash.slice(0, 8);\n\n  for (i = 0; i < unescaped[lengthProperty]; i++) {\n    words[i >> 2] |= unescaped.charCodeAt(i) << (24 - ((i % 4) * 8));\n  }\n  words[asciiBitLength >> 5] |= 0x80 << (24 - (asciiBitLength % 32));\n  words[(((asciiBitLength + 64) >> 9) << 4) + 15] = asciiBitLength;\n\n  for (j = 0; j < words[lengthProperty]; j += 16) {\n    const w = words.slice(j, j + 16);\n    const oldHash = hash;\n    hash = hash.slice(0, 8);\n    \n    for (i = 0; i < 64; i++) {\n      const i2 = i + j;\n      const w15 = w[i - 15], w2 = w[i - 2];\n\n      const a = hash[0], e = hash[4];\n      const temp1 = hash[7]\n        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))\n        + ((e & hash[5]) ^ ((~e) & hash[6]))\n        + k[i]\n        + (w[i] = (i < 16) ? (w[i] || 0) : (\n            w[i - 16]\n            + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))\n            + w[i - 7]\n            + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))\n          ) | 0\n        );\n      const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))\n        + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));\n      \n      hash = [(temp1 + temp2) | 0].concat(hash);\n      hash[4] = (hash[4] + temp1) | 0;\n    }\n\n    for (i = 0; i < 8; i++) {\n      hash[i] = (hash[i] + oldHash[i]) | 0;\n    }\n  }\n  \n  for (i = 0; i < 8; i++) {\n    for (j = 3; j >= 0; j--) {\n      const b = (hash[i] >> (8 * j)) & 255;\n      result += ((b < 16) ? '0' : '') + b.toString(16);\n    }\n  }\n  return result;\n}\n\nconst body = $('OlyLife Lead Webhook').item.json.body || {};\nconst headers = $('OlyLife Lead Webhook').item.json.headers || {};\nconst tracking = body.tracking || {};\n\nlet rawPhone = String(body.phone || '').trim();\nlet cleanDigits = rawPhone.replace(/\\D/g, '');\nlet normalizedPhone = '';\nif (cleanDigits.startsWith('8') && cleanDigits.length === 11) {\n  normalizedPhone = '+7' + cleanDigits.slice(1);\n} else if (cleanDigits.startsWith('7') && cleanDigits.length === 11) {\n  normalizedPhone = '+' + cleanDigits;\n} else if (cleanDigits.startsWith('996') && cleanDigits.length === 12) {\n  normalizedPhone = '+' + cleanDigits;\n} else if (cleanDigits.startsWith('0') && cleanDigits.length === 10) {\n  normalizedPhone = '+996' + cleanDigits.slice(1);\n} else if (cleanDigits.length >= 9) {\n  normalizedPhone = '+' + cleanDigits;\n} else {\n  normalizedPhone = rawPhone;\n}\n\nconst cityId = String(body.city || 'almaty').toLowerCase();\nconst isAlmaty = cityId === 'almaty';\nconst isBishkek = cityId === 'bishkek';\nconst cityName = isAlmaty ? 'Алматы' : (isBishkek ? 'Бишкек' : 'Ташкент');\nconst timeZone = isAlmaty ? 'Asia/Almaty' : (isBishkek ? 'Asia/Bishkek' : 'Asia/Tashkent');\n\nconst now = new Date();\nconst dateStr = now.toLocaleString('ru-RU', {\n  timeZone,\n  year: 'numeric',\n  month: '2-digit',\n  day: '2-digit',\n  hour: '2-digit',\n  minute: '2-digit'\n});\n\nconst phoneHash = cleanDigits ? sha256(cleanDigits) : '';\nconst nameTrimmed = String(body.name || '').trim().toLowerCase();\nconst nameHash = nameTrimmed ? sha256(nameTrimmed) : '';\n\nconst eventId = tracking.eventId || ('lead_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7));\nconst externalId = 'olylife_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);\nconst visitorId = body.visitor_ID || tracking.visitor_ID || ('vid_' + Math.random().toString(36).substring(2, 10));\n\nconst clientIp = headers['cf-connecting-ip'] || headers['x-forwarded-for'] || '127.0.0.1';\nconst userAgent = headers['user-agent'] || tracking.userAgent || '';\n\nconst isKg = String(body.language || '').toLowerCase() === 'kg';\nconst cityTag = isAlmaty ? 'АЛМАТЫ 🇰🇿' : (isBishkek ? (isKg ? 'БИШКЕК 🇰🇬 [КЫРГЫЗ ТИЛИ]' : 'БИШКЕК 🇰🇬') : 'ТАШКЕНТ 🇺🇿');\nlet tgMessage = '<b>⚡ НОВАЯ ЗАЯВКА НА ТЕСТ-ДРАЙВ OLYLIFE (' + cityTag + ')</b>\\n\\n';\ntgMessage += '👤 <b>Имя:</b> ' + (body.name || 'Не указано') + '\\n';\ntgMessage += '📞 <b>Телефон:</b> ' + normalizedPhone + '\\n';\ntgMessage += '💼 <b>Профессия:</b> ' + (body.profession || 'Не указана') + '\\n';\ntgMessage += '📍 <b>Город:</b> ' + cityName + '\\n';\nif (body.source) tgMessage += '📝 <b>Форма:</b> ' + body.source + '\\n';\ntgMessage += '🕒 <b>Время:</b> ' + dateStr + '\\n';\n\nif (tracking.utm_source || tracking.utm_campaign || tracking.utm_content) {\n  tgMessage += '\\n🎯 <b>Маркетинг:</b>\\n';\n  if (tracking.utm_source) tgMessage += '• Источник: ' + tracking.utm_source + '\\n';\n  if (tracking.utm_campaign) tgMessage += '• Кампания: ' + tracking.utm_campaign + '\\n';\n  if (tracking.utm_content) tgMessage += '• Контент: ' + tracking.utm_content + '\\n';\n}\n\n\nconst isBishkekOrKg = isBishkek || isKg || \n  String(tracking.utm_campaign || '').toLowerCase().includes('bishkek') || \n  String(tracking.utm_campaign || '').toLowerCase().includes('nuriza') ||\n  String(tracking.eventSourceUrl || '').includes('/kg') ||\n  String(tracking.eventSourceUrl || '').includes('/bishkek');\n\nconst targetSheetId = isBishkekOrKg \n  ? '192r2G36Z1Ajc0yTTrSUSCFOf1NXw2VsZsxtzZT7ZbvA' \n  : '11-IDiPnzbBha5kb20yTciwfsdNVe5bW-D1Dta7xZG7o';\n\nconst targetTgChatId = isBishkekOrKg \n  ? '-5496306947' \n  : '-5579738380';\n\nconst targetPixelId = isBishkekOrKg \n  ? '1916610452642409' \n  : '1420624392253746';\n\nconst targetPixelToken = isBishkekOrKg \n  ? 'EAANLQNomhl8BSgtm1YASab1tKwuh21h7OtH5K8tnZAZA3xAtvJg6rKTgaZBujrEzYCSkZCkCrt3ffksgN0GAoWo34YtTQDbfY4HVETZBC11O1LxoOkcptEZBOF1YvtDZBW8y7cm3WMn42kqbdLp8ZCLa4pGAZCvHJ3c4tEyKOZAf2xBiJwpg4prh9fJFMGGZCXUcQZDZD' \n  : 'EAAQ9vvjhud0BSbOrioruuz4MENIzUmwYgEXfDQZCYoW5EHItto9I3EZAxWLjZC12bLBPP0xZAqQ34olapE5Y7I8mz7M1bdHadZCns1lu4EZANZCbzIXyTZAvChWJbVwoyCpx9VeNUIngHlK2BIyNydX7NJPgeTyQOvekZC03u0c1LWEld7G3YKUc2G5jOP9fIWgZDZD';\n\nreturn [{\n  json: {\n    created_date: dateStr,\n    name: body.name || '',\n    phone: normalizedPhone,\n    profession: body.profession || 'Не указана',\n    city_name: cityName,\n    status: 'Новый',\n    lead_quality: 'Целевой',\n    deal_value: '',\n    comment: '',\n    ad_id: tracking.ad_id || '',\n    placement: tracking.utm_source ? (tracking.utm_source + ' / ' + (tracking.utm_medium || '')) : (body.source || 'Website'),\n    campaign: tracking.utm_campaign || '',\n    site_source: tracking.eventSourceUrl || 'https://yarkozhivi.space',\n    fbc: tracking.fbc || '',\n    fbp: tracking.fbp || '',\n    visitor_id: visitorId,\n    external_id: externalId,\n    capi_event_id: eventId,\n    lead_status: 'NEW',\n    capi_status_sent: 'Lead',\n    capi_sent_at: dateStr,\n    phone_hash: phoneHash,\n    name_hash: nameHash,\n    client_ip: clientIp,\n    user_agent: userAgent,\n    tg_message: tgMessage,\n    target_sheet_id: targetSheetId,\n    target_tg_chat_id: targetTgChatId,\n    target_pixel_id: targetPixelId,\n    target_pixel_token: targetPixelToken\n  }\n}];\n"
+        }
+      },
+      {
+        "id": "c0b4e7e5-cac1-42b3-b027-c13bee066a62",
+        "name": "Save to Google Sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          480,
+          0
+        ],
+        "parameters": {
+          "columns": {
+            "mappingMode": "defineBelow",
+            "schema": [
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Дата создания",
+                "id": "Дата создания",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Имя",
+                "id": "Имя",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Телефон",
+                "id": "Телефон",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Сфера деятельности",
+                "id": "Сфера деятельности",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Город",
+                "id": "Город",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Статус",
+                "id": "Статус",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Сумма сделки",
+                "id": "Сумма сделки",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Комментарий",
+                "id": "Комментарий",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "ad_id",
+                "id": "ad_id",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Источник, место размещения",
+                "id": "Источник, место размещения",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Кампания",
+                "id": "Кампания",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Источник сайта",
+                "id": "Источник сайта",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "fbc",
+                "id": "fbc",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "fbp",
+                "id": "fbp",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "visitor_ID",
+                "id": "visitor_ID",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "external_id",
+                "id": "external_id",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "capi_event_id",
+                "id": "capi_event_id",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "lead_status",
+                "id": "lead_status",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "capi_status_sent",
+                "id": "capi_status_sent",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "capi_sent_at",
+                "id": "capi_sent_at",
+                "type": "string"
+              }
+            ],
+            "value": {
+              "ad_id": "={{ $json.ad_id }}",
+              "capi_event_id": "={{ $json.capi_event_id }}",
+              "capi_sent_at": "={{ $json.capi_sent_at }}",
+              "capi_status_sent": "={{ $json.capi_status_sent }}",
+              "external_id": "={{ $json.external_id }}",
+              "fbc": "={{ $json.fbc }}",
+              "fbp": "={{ $json.fbp }}",
+              "lead_status": "={{ $json.lead_status }}",
+              "visitor_ID": "={{ $json.visitor_id }}",
+              "Город": "={{ $json.city_name }}",
+              "Дата создания": "={{ $json.created_date }}",
+              "Имя": "={{ $json.name }}",
+              "Источник сайта": "={{ $json.site_source }}",
+              "Источник, место размещения": "={{ $json.placement }}",
+              "Кампания": "={{ $json.campaign }}",
+              "Комментарий": "={{ $json.comment }}",
+              "Статус": "={{ $json.status }}",
+              "Сумма сделки": "={{ $json.deal_value }}",
+              "Сфера деятельности": "={{ $json.profession }}",
+              "Телефон": "={{ $json.phone }}"
+            }
+          },
+          "documentId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "={{ $json.target_sheet_id }}"
+          },
+          "operation": "append",
+          "options": {},
+          "sheetName": {
+            "__rl": true,
+            "mode": "list",
+            "value": 0
+          }
+        }
+      },
+      {
+        "id": "1efd3b64-fd57-48db-8200-882cc75c380f",
+        "name": "Send to Telegram",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          720,
+          0
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.telegram.org/bot7142034173:AAFw9bCtt3njweCrw9M978UOc9-lbrVituo/sendMessage",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ chat_id: $('Normalize & Hash Data').item.json.target_tg_chat_id, text: $('Normalize & Hash Data').item.json.tg_message, parse_mode: 'HTML', disable_web_page_preview: true }) }}",
+          "options": {}
+        }
+      },
+      {
+        "id": "cbf832f4-2e6c-4291-ba07-fd88c27a6dfa",
+        "name": "Send Meta CAPI Lead",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          960,
+          0
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "={{ 'https://graph.facebook.com/v21.0/' + $('Normalize & Hash Data').item.json.target_pixel_id + '/events' }}",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "access_token",
+                "value": "={{ $('Normalize & Hash Data').item.json.target_pixel_token }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ data: [{ event_name: \"Lead\", event_time: Math.floor(Date.now() / 1000), event_id: $('Normalize & Hash Data').item.json.capi_event_id, action_source: \"website\", event_source_url: $('Normalize & Hash Data').item.json.site_source, user_data: { ph: [$('Normalize & Hash Data').item.json.phone_hash], fn: [$('Normalize & Hash Data').item.json.name_hash], client_ip_address: $('Normalize & Hash Data').item.json.client_ip, client_user_agent: $('Normalize & Hash Data').item.json.user_agent, fbp: $('Normalize & Hash Data').item.json.fbp, fbc: $('Normalize & Hash Data').item.json.fbc, external_id: $('Normalize & Hash Data').item.json.external_id }, custom_data: { content_name: \"Заявка на тест-драйв OlyLife P90\", content_category: \"Wellness & Beauty\", lead_city: $('Normalize & Hash Data').item.json.city_name, profession: $('Normalize & Hash Data').item.json.profession } }] }) }}",
+          "options": {}
+        }
+      },
+      {
+        "id": "cb44875e-2884-4c75-8c06-12a49b974da8",
+        "name": "Respond Success",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          1200,
+          0
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ success: true, eventId: $('Normalize & Hash Data').item.json.capi_event_id, externalId: $('Normalize & Hash Data').item.json.external_id }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      },
+      {
+        "id": "a3074f19-b96d-4d36-a85b-153a1b01e7b4",
+        "name": "Meta Form Poller (Каждые 5 мин)",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          0,
+          260
+        ],
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "minutes",
+                "minutesInterval": 5
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "7cb6bf6b-6309-46dd-b1f1-acd3f602b226",
+        "name": "Meta Form Config",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          240,
+          260
+        ],
+        "parameters": {
+          "jsCode": "const FORM_ID = \"889112447403153\";\nconst META_TOKEN = \"EAANLQNomhl8BSgtm1YASab1tKwuh21h7OtH5K8tnZAZA3xAtvJg6rKTgaZBujrEzYCSkZCkCrt3ffksgN0GAoWo34YtTQDbfY4HVETZBC11O1LxoOkcptEZBOF1YvtDZBW8y7cm3WMn42kqbdLp8ZCLa4pGAZCvHJ3c4tEyKOZAf2xBiJwpg4prh9fJFMGGZCXUcQZDZD\";\nconst overlapSeconds = 300;\nconst initialLookbackSeconds = 86400;\n\nconst staticData = $getWorkflowStaticData(\"global\");\nconst now = Math.floor(Date.now() / 1000);\n\n// Защита от повторного импорта уже выгруженных 28 лидов\nif (!staticData.almaty_backfill_done) {\n  staticData.lastMetaSuccessTime = now;\n  staticData.almaty_backfill_done = true;\n}\n\nconst sinceTimestamp = staticData.lastMetaSuccessTime\n  ? (staticData.lastMetaSuccessTime - overlapSeconds)\n  : (now - initialLookbackSeconds);\n\nconst filterParam = JSON.stringify([{\n  field: \"time_created\",\n  operator: \"GREATER_THAN\",\n  value: sinceTimestamp\n}]);\n\nreturn [{\n  json: {\n    form_id: FORM_ID,\n    form_name: \"Lead form от 19.08.2026, 14:29\",\n    meta_token: META_TOKEN,\n    current_run_time: now,\n    filter_param: filterParam\n  }\n}];"
+        }
+      },
+      {
+        "id": "f4fc5604-1348-4374-b51c-ef7f01b0d026",
+        "name": "Fetch Leads from Meta Form",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          480,
+          260
+        ],
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "=Bearer {{ $json.meta_token }}"
+              }
+            ]
+          },
+          "options": {
+            "timeout": 15000
+          },
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "fields",
+                "value": "id,created_time,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,form_id,is_organic,platform,field_data"
+              },
+              {
+                "name": "filtering",
+                "value": "={{ $json.filter_param }}"
+              },
+              {
+                "name": "limit",
+                "value": "100"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "sendQuery": true,
+          "url": "=https://graph.facebook.com/v21.0/{{ $json.form_id }}/leads"
+        }
+      },
+      {
+        "id": "34a4b8e1-42a1-47ba-827c-990aa4bf0bd9",
+        "name": "Parse & Normalize Meta Lead",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          720,
+          260
+        ],
+        "parameters": {
+          "jsCode": "const items = $input.all();\nconst staticData = $getWorkflowStaticData(\"global\");\nconst config = $(\"Meta Form Config\").first().json;\nconst currentRunTime = config.current_run_time || Math.floor(Date.now() / 1000);\n\nstaticData.lastMetaSuccessTime = currentRunTime;\nstaticData.processedLeadIds = Array.isArray(staticData.processedLeadIds)\n  ? staticData.processedLeadIds\n  : [];\n\nconst results = [];\n\nfor (const it of items) {\n  const rawData = it.json;\n  if (!rawData || !rawData.data || !Array.isArray(rawData.data)) continue;\n\n  for (const lead of rawData.data) {\n    const leadId = String(lead.id || \"\").trim();\n    if (!leadId) continue;\n    if (staticData.processedLeadIds.includes(leadId)) {\n      continue;\n    }\n\n    const fieldData = Array.isArray(lead.field_data) ? lead.field_data : [];\n    let rawPhone = \"\";\n    let name = \"\";\n    let sphere = \"\";\n    let email = \"\";\n    let city = \"Алматы\";\n\n    for (const f of fieldData) {\n      const nameLower = (f.name || \"\").toLowerCase();\n      const val = (f.values && f.values[0]) ? String(f.values[0]).trim() : \"\";\n      if (nameLower.includes(\"phone\") || nameLower.includes(\"номер\") || nameLower.includes(\"телефон\")) {\n        rawPhone = val;\n      } else if (nameLower.includes(\"full_name\") || nameLower.includes(\"имя\") || nameLower.includes(\"name\")) {\n        name = val;\n      } else if (nameLower.includes(\"сфер\") || nameLower.includes(\"професс\") || nameLower.includes(\"work\") || nameLower.includes(\"деятельн\")) {\n        sphere = val;\n      } else if (nameLower.includes(\"email\") || nameLower.includes(\"почта\")) {\n        email = val;\n      } else if (nameLower.includes(\"город\") || nameLower.includes(\"city\")) {\n        city = val;\n      }\n    }\n\n    let cleanDigits = rawPhone.replace(/\\D/g, \"\");\n    let normalizedPhone = \"\";\n    if (cleanDigits.startsWith(\"8\") && cleanDigits.length === 11) {\n      normalizedPhone = \"+7\" + cleanDigits.slice(1);\n    } else if (cleanDigits.startsWith(\"7\") && cleanDigits.length === 11) {\n      normalizedPhone = \"+\" + cleanDigits;\n    } else if (cleanDigits.length >= 9) {\n      normalizedPhone = \"+\" + cleanDigits;\n    } else {\n      normalizedPhone = rawPhone;\n    }\n\n    const createdTime = lead.created_time ? new Date(lead.created_time) : new Date();\n    const almatyTime = new Date(createdTime.getTime() + (5 * 60 + createdTime.getTimezoneOffset()) * 60000);\n    const pad = (n) => String(n).padStart(2, \"0\");\n    const dateStr = `${pad(almatyTime.getDate())}.${pad(almatyTime.getMonth() + 1)}.${almatyTime.getFullYear()}, ${pad(almatyTime.getHours())}:${pad(almatyTime.getMinutes())}`;\n\n    let tgMessage = \"<b>⚡ НОВАЯ ЗАЯВКА OLYLIFE (АЛМАТЫ 🇰🇿 [META FORM])</b>\\n\\n\";\n    tgMessage += \"👤 <b>Имя:</b> \" + (name || \"Не указано\") + \"\\n\";\n    tgMessage += \"📞 <b>Телефон:</b> \" + normalizedPhone + \"\\n\";\n    tgMessage += \"💼 <b>Профессия:</b> \" + (sphere || \"Не указана\") + \"\\n\";\n    tgMessage += \"📍 <b>Город:</b> \" + city + \"\\n\";\n    if (email) tgMessage += \"✉️ <b>Email:</b> \" + email + \"\\n\";\n    tgMessage += \"📋 <b>Форма:</b> Lead form от 19.08.2026, 14:29\\n\";\n    tgMessage += \"🕒 <b>Время:</b> \" + dateStr + \"\\n\\n\";\n    tgMessage += \"🎯 <b>Маркетинг Meta:</b>\\n\";\n    tgMessage += \"• Кампания: \" + (lead.campaign_name || \"Биохакинг Алматы 191126\") + \"\\n\";\n    tgMessage += \"• Объявление: \" + (lead.ad_name || lead.ad_id || \"Meta Ad\") + \"\\n\";\n    tgMessage += \"• Платформа: \" + (lead.platform || \"fb / ig\") + \"\\n\";\n\n    staticData.processedLeadIds.push(leadId);\n\n    results.push({\n      json: {\n        lead_id: leadId,\n        created_date: dateStr,\n        name: name,\n        phone: normalizedPhone,\n        profession: sphere || \"Не указана\",\n        city_name: city,\n        status: \"Новый\",\n        deal_value: \"\",\n        comment: email ? (\"Email: \" + email) : \"Лид-форма Meta\",\n        ad_id: lead.ad_id || \"\",\n        placement: \"Meta Instant Form / \" + (lead.platform || \"fb\"),\n        campaign: lead.campaign_name || \"Биохакинг Алматы 191126\",\n        site_source: \"Meta Instant Form (889112447403153)\",\n        fbc: \"\",\n        fbp: \"\",\n        visitor_id: \"\",\n        external_id: \"meta_lead_\" + leadId,\n        capi_event_id: \"lead_\" + leadId,\n        lead_status: \"NEW\",\n        capi_status_sent: \"Lead_Form\",\n        capi_sent_at: dateStr,\n        tg_message: tgMessage,\n        target_sheet_id: \"11-IDiPnzbBha5kb20yTciwfsdNVe5bW-D1Dta7xZG7o\",\n        target_tg_chat_id: \"-5579738380\"\n      }\n    });\n  }\n}\n\nif (staticData.processedLeadIds.length > 1000) {\n  staticData.processedLeadIds = staticData.processedLeadIds.slice(-1000);\n}\n\nreturn results;"
+        }
+      },
+      {
+        "id": "38b61a15-4501-42b7-91ff-4192a28ab503",
+        "name": "Save Meta Lead to Sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          960,
+          260
+        ],
+        "parameters": {
+          "columns": {
+            "mappingMode": "defineBelow",
+            "schema": [
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Дата создания",
+                "id": "Дата создания",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Имя",
+                "id": "Имя",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Телефон",
+                "id": "Телефон",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Сфера деятельности",
+                "id": "Сфера деятельности",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Город",
+                "id": "Город",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Статус",
+                "id": "Статус",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Сумма сделки",
+                "id": "Сумма сделки",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Комментарий",
+                "id": "Комментарий",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "ad_id",
+                "id": "ad_id",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Источник, место размещения",
+                "id": "Источник, место размещения",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Кампания",
+                "id": "Кампания",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "Источник сайта",
+                "id": "Источник сайта",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "fbc",
+                "id": "fbc",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "fbp",
+                "id": "fbp",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "visitor_ID",
+                "id": "visitor_ID",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "external_id",
+                "id": "external_id",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "capi_event_id",
+                "id": "capi_event_id",
+                "type": "string"
+              },
+              {
+                "canBeUsedToMatch": true,
+                "displayName": "lead_status",
+                "id": "lead_status",
+                "type": "string"
+              }
+            ],
+            "value": {
+              "ad_id": "={{ $json.ad_id }}",
+              "capi_event_id": "={{ $json.capi_event_id }}",
+              "external_id": "={{ $json.external_id }}",
+              "fbc": "={{ $json.fbc }}",
+              "fbp": "={{ $json.fbp }}",
+              "lead_status": "={{ $json.lead_status }}",
+              "visitor_ID": "={{ $json.visitor_id }}",
+              "Город": "={{ $json.city_name }}",
+              "Дата создания": "={{ $json.created_date }}",
+              "Имя": "={{ $json.name }}",
+              "Источник сайта": "={{ $json.site_source }}",
+              "Источник, место размещения": "={{ $json.placement }}",
+              "Кампания": "={{ $json.campaign }}",
+              "Комментарий": "={{ $json.comment }}",
+              "Статус": "={{ $json.status }}",
+              "Сумма сделки": "={{ $json.deal_value }}",
+              "Сфера деятельности": "={{ $json.profession }}",
+              "Телефон": "={{ $json.phone }}"
+            }
+          },
+          "documentId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "11-IDiPnzbBha5kb20yTciwfsdNVe5bW-D1Dta7xZG7o"
+          },
+          "operation": "append",
+          "options": {},
+          "sheetName": {
+            "__rl": true,
+            "mode": "list",
+            "value": 0
+          }
+        }
+      },
+      {
+        "id": "54f96d14-04b1-4a3c-9c75-c4c4c00d723d",
+        "name": "Send Meta Lead to Telegram",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1200,
+          260
+        ],
+        "parameters": {
+          "jsonBody": "={{ JSON.stringify({ chat_id: $('Parse & Normalize Meta Lead').item.json.target_tg_chat_id || '-5579738380', text: $('Parse & Normalize Meta Lead').item.json.tg_message, parse_mode: 'HTML', disable_web_page_preview: true }) }}",
+          "method": "POST",
+          "options": {},
+          "sendBody": true,
+          "specifyBody": "json",
+          "url": "https://api.telegram.org/bot7142034173:AAFw9bCtt3njweCrw9M978UOc9-lbrVituo/sendMessage"
+        },
+        "onError": "continueRegularOutput"
+      }
+    ],
+    "connections": {
+      "Normalize & Hash Data": {
+        "main": [
+          [
+            {
+              "node": "Save to Google Sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Save to Google Sheet": {
+        "main": [
+          [
+            {
+              "node": "Send to Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send to Telegram": {
+        "main": [
+          [
+            {
+              "node": "Send Meta CAPI Lead",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send Meta CAPI Lead": {
+        "main": [
+          [
+            {
+              "node": "Respond Success",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OlyLife Lead Webhook": {
+        "main": [
+          [
+            {
+              "node": "Normalize & Hash Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Meta Form Poller (Каждые 5 мин)": {
+        "main": [
+          [
+            {
+              "node": "Meta Form Config",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Meta Form Config": {
+        "main": [
+          [
+            {
+              "node": "Fetch Leads from Meta Form",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Fetch Leads from Meta Form": {
+        "main": [
+          [
+            {
+              "node": "Parse & Normalize Meta Lead",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Parse & Normalize Meta Lead": {
+        "main": [
+          [
+            {
+              "node": "Save Meta Lead to Sheet",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Send Meta Lead to Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "tags": [],
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "parentFolderId": null,
+  "description": "Ingestion for OlyLife leads from Website (Webhook + CAPI) and Meta Lead Form (5-min Poller) to Google Sheets CRM & Telegram",
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true
+}

@@ -70,7 +70,7 @@ export const CITIES_CONFIG: Record<CityId, CityConfig> = {
     tgTag: "БИШКЕК 🇰🇬",
     navbarCenterBadge: "Центр Бишкека",
     navbarRightBadge: "Впервые в Кыргызстане",
-    logoAlt: "OliLife Кыргызстан логотип",
+    logoAlt: "OlyLife Кыргызстан логотип",
     heroTitleCity: "Бишкека 🇰🇬",
     formTitle: "🎁 Запишитесь на бесплатный тест-драйв в Бишкеке",
     videoTitle: "Видеопрезентация бизнес-модели и оборудования OlyLife в Бишкеке",
@@ -94,7 +94,7 @@ export const CITIES_CONFIG: Record<CityId, CityConfig> = {
     tgTag: "АЛМАТЫ 🇰🇿",
     navbarCenterBadge: "В центре Алматы",
     navbarRightBadge: "Впервые в Казахстане",
-    logoAlt: "OliLife Казахстан логотип",
+    logoAlt: "OlyLife Казахстан логотип",
     heroTitleCity: "Алматы 🇰🇿",
     formTitle: "🎁 Запишитесь на бесплатный тест-драйв в Алматы",
     videoTitle: "Видеопрезентация бизнес-модели и оборудования OlyLife в Алматы",
@@ -102,6 +102,30 @@ export const CITIES_CONFIG: Record<CityId, CityConfig> = {
     coworkingAlt: "Демонстрационный зал и бьюти-пространство OlyLife в центре Алматы",
     coworkingTitle: "Демонстрационный зал и бьюти-пространство OlyLife в центре Алматы",
     successModalManagerCity: "в Алматы",
+  },
+  bali: {
+    id: "bali",
+    cityName: "Бали",
+    cityNameGenitive: "Бали",
+    cityNamePrepositional: "на Бали",
+    countryName: "Индонезия",
+    flag: "🇮🇩",
+    phoneCode: "+62",
+    phonePlaceholder: "+62 812 3456 7890 или +7 (999) 123-45-67",
+    currency: "USD",
+    timeZone: "Asia/Makassar",
+    timeZoneLabel: "WITA",
+    tgTag: "БАЛИ 🇮🇩",
+    navbarCenterBadge: "На Бали",
+    navbarRightBadge: "Впервые на Бали",
+    logoAlt: "OlyLife Бали логотип",
+    heroTitleCity: "Бали 🇮🇩",
+    formTitle: "🎁 Запишитесь на бесплатный тест-драйв на Бали",
+    videoTitle: "Видеопрезентация бизнес-модели и оборудования OlyLife на Бали",
+    coworkingImg: beautyCoworkingAlmaty,
+    coworkingAlt: "Демонстрационный зал и бьюти-пространство OlyLife на Бали",
+    coworkingTitle: "Демонстрационный зал и бьюти-пространство OlyLife на Бали",
+    successModalManagerCity: "на Бали",
   },
 };
 
@@ -114,6 +138,10 @@ export function getCurrentCity(): CityConfig {
     const datasetLang = document.documentElement.dataset.lang;
     const htmlLang = document.documentElement.lang?.toLowerCase();
     const path = window.location.pathname.toLowerCase();
+
+    if (datasetCity === "bali" || path.includes("/bali")) {
+      return CITIES_CONFIG.bali;
+    }
 
     if (datasetCity === "almaty" || path.includes("/almaty")) {
       return CITIES_CONFIG.almaty;

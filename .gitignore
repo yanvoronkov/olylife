@@ -126,3 +126,7 @@ dist
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Ad creative drafts
+creatives/
+

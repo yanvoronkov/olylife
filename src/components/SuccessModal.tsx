@@ -23,10 +23,11 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  const isBali = city?.id === "bali" || lead?.city === "bali";
   const isAlmaty = city?.id === "almaty" || lead?.city === "almaty";
-  const effectiveManagerCity = managerCity || city?.successModalManagerCity || (isAlmaty ? "в Алматы" : "в Бишкеке");
-  const timeZone = city?.timeZone || (isAlmaty ? "Asia/Almaty" : "Asia/Bishkek");
-  const timeZoneLabel = city?.timeZoneLabel || (isAlmaty ? "ALMT" : "KGT");
+  const effectiveManagerCity = managerCity || city?.successModalManagerCity || (isBali ? "на Бали" : isAlmaty ? "в Алматы" : "в Бишкеке");
+  const timeZone = city?.timeZone || (isBali ? "Asia/Makassar" : isAlmaty ? "Asia/Almaty" : "Asia/Bishkek");
+  const timeZoneLabel = city?.timeZoneLabel || (isBali ? "WITA" : isAlmaty ? "ALMT" : "KGT");
 
   const title = translations?.successModal?.title || "Заявка успешно принята! 🚀";
   const name = lead?.name || "";

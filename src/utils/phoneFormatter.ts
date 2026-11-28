@@ -1,15 +1,17 @@
+import { CityId } from "../types";
+
 /**
  * Flexible non-rigid phone formatter for Kazakhstan (+7), Uzbekistan (+998), Kyrgyzstan (+996),
- * international numbers and messengers.
+ * Indonesia (+62), international numbers and messengers.
  * Features:
  * - Clean, natural Backspace deletion (never gets stuck on prefixes or punctuation).
- * - Automatic formatting for Kazakhstan (+7), Kyrgyzstan (+996) and Uzbekistan (+998).
+ * - Automatic formatting for Kazakhstan (+7), Kyrgyzstan (+996), Uzbekistan (+998) and Indonesia (+62).
  * - Unrestricted input for Telegram/WhatsApp handles (@username) or letters.
  */
 export function formatFlexiblePhone(
   input: string,
   prevValue: string = "",
-  preferredCity: "tashkent" | "bishkek" | "almaty" = "tashkent"
+  preferredCity: CityId = "tashkent"
 ): string {
   if (!input) return "";
 
@@ -26,6 +28,9 @@ export function formatFlexiblePhone(
     "+996 (",
     "+7",
     "+7 (",
+    "+6",
+    "+62",
+    "+62 ",
   ];
   if (isDeleting && prefixPatterns.includes(trimmed)) {
     return "";
@@ -41,7 +46,7 @@ export function formatFlexiblePhone(
   if (!digits) return "";
 
   // If user deleted and only country code remains, allow clearing to empty
-  if (isDeleting && (digits === "998" || digits === "996" || digits === "7")) {
+  if (isDeleting && (digits === "998" || digits === "996" || digits === "7" || digits === "62")) {
     return "";
   }
 
@@ -58,6 +63,25 @@ export function formatFlexiblePhone(
   }
 
   if (!digits) return "";
+
+  // 3.5. Indonesia number with 62 prefix (+62 XXX XXXX XXXX)
+  if (digits.startsWith("62")) {
+    const local = digits.slice(2);
+    if (!local) {
+      return isDeleting ? "" : "+62 ";
+    }
+    let res = "+62 " + local.substring(0, 3);
+    if (local.length > 3) {
+      res += " " + local.substring(3, 7);
+    }
+    if (local.length > 7) {
+      res += " " + local.substring(7, 11);
+    }
+    if (local.length > 11) {
+      res += " " + local.substring(11, 15);
+    }
+    return res;
+  }
 
   // 4. Kazakhstan (+7) formatting when preferredCity is "almaty"
   if (preferredCity === "almaty") {
@@ -141,7 +165,32 @@ export function formatFlexiblePhone(
   }
 
   // 8. Local input according to preferred city
-  if (preferredCity === "bishkek") {
+  if (preferredCity === "bali") {
+    let local = digits;
+    if (local.startsWith("0")) {
+      local = "62" + local.slice(1);
+    }
+    if (local.startsWith("62")) {
+      const rest = local.slice(2);
+      let res = "+62 " + rest.substring(0, 3);
+      if (rest.length > 3) res += " " + rest.substring(3, 7);
+      if (rest.length > 7) res += " " + rest.substring(7, 11);
+      return res;
+    }
+    if (local.startsWith("7") || (local.startsWith("8") && local.length >= 2 && local[1] === "9")) {
+      const rest = local.startsWith("8") ? local.slice(1) : (local.startsWith("7") ? local.slice(1) : local);
+      let res = "+7";
+      if (rest.length > 0) res += " (" + rest.substring(0, 3);
+      if (rest.length >= 3) res += ") " + rest.substring(3, 6);
+      if (rest.length >= 6) res += "-" + rest.substring(6, 8);
+      if (rest.length >= 8) res += "-" + rest.substring(8, 10);
+      return res;
+    }
+    let res = "+62 " + local.substring(0, 3);
+    if (local.length > 3) res += " " + local.substring(3, 7);
+    if (local.length > 7) res += " " + local.substring(7, 11);
+    return res;
+  } else if (preferredCity === "bishkek") {
     // Kyrgyzstan mobile codes typically start with 7, 5, 9, 2
     let res = "+996 (" + digits.substring(0, 3);
     if (digits.length > 3) {
